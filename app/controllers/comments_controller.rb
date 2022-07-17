@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+  include BasicAuthentication
 
   def create
     @article = Article.find(params[:article_id])
