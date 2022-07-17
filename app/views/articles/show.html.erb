@@ -2,6 +2,34 @@
   <h1><%= @article.title %></h1>
   <p><%= @article.body %></p>
 </article>
+
+<section class="article comment">
+  <h2>Comments</h2>
+  <%= form_with model: [ @article, @article.comments.build ] do |form| %>
+    <fieldset>
+      <div class="field">
+        <%= form.label :commenter %><br>
+        <%= form.text_field :commenter %>
+      </div>
+      <div class="field">
+        <%= form.label :body %><br>
+        <%= form.text_field :body %>
+      </div>
+      <div>
+        <%= form.submit %>
+      </div>
+    </fieldset>
+
+    <% @article.comments.each do |comment| %>
+      <div class="comment">
+        <p> <strong>Commenter:</strong> <%= comment.commenter %> </p>
+        <p> <strong>Comment: </strong> <%= comment.body %></p>
+      </div>
+    <% end %>
+  <% end %>
+
+</section>
+
 <aside>
   <ul>
     <li><%= link_to "Edit", edit_article_path(@article) %></li>
