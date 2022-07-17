@@ -3,7 +3,9 @@
 
 <ul>
   <% @articles.each do |a| %>
-    <li><%= link_to a.title, a %></li>
+    <% unless a.archived? %>
+      <li><%= link_to a.title, a %></li>
+    <% end %>
   <% end %>
 </ul>
 .bode

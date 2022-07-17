@@ -1,4 +1,6 @@
-<div class="comment">
-  <p> <strong>Commenter:</strong> <%= comment.commenter %> </p>
-  <p> <strong>Comment: </strong> <%= comment.body %></p>
-</div>
+<% unless a.archived? %>
+  <div class="comment">
+    <p> <strong>Commenter:</strong> <%= comment.commenter %> </p>
+    <p> <strong>Comment: </strong> <%= comment.body %></p>
+  </div>
+<% end %>
