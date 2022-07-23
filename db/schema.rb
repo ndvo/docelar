@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_23_122038) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_23_174857) do
   create_table "articles", force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -37,6 +37,30 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_23_122038) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "nationalities", force: :cascade do |t|
+    t.integer "person_id", null: false
+    t.integer "country_id", null: false
+    t.datetime "granted"
+    t.string "how"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["country_id"], name: "index_nationalities_on_country_id"
+    t.index ["person_id"], name: "index_nationalities_on_person_id"
+  end
+
+  create_table "people", force: :cascade do |t|
+    t.string "name"
+    t.datetime "birth"
+    t.string "country"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "quotes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_hash"
@@ -46,4 +70,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_23_122038) do
   end
 
   add_foreign_key "comments", "articles"
+  add_foreign_key "nationalities", "countries"
+  add_foreign_key "nationalities", "people"
 end
