@@ -11,6 +11,17 @@
   </head>
 
   <body>
+    <% flash.each do |name, msg| %>
+      <%= content_tag :div, msg, id: "flash_#{name}" %>
+    <% end %>
+    <div id="user-status">
+      <% if current_user %>
+        <%= current_user.email %>
+        <%= link_to 'Sair', logout_path %>
+      <% else %>
+        <%= link_to 'Entrar', login_path %>
+      <% end %>
+    </div>
     <%= yield %>
   </body>
 </html>
