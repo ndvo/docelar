@@ -1,0 +1,30 @@
+<main>
+  <h1>Cadastrar pessoa</h1>
+  <%= form_with model: @person do |f| %>
+    <div class="field">
+      <%= f.label :name, 'Nome'  %>
+      <%= f.text_field :name %>
+    </div>
+    <div class="field">
+      <%= f.label :birth, 'Data de Nascimento'  %>
+      <%= f.date_field :birth %>
+    </div>
+    <fieldset>
+      <legend>Nacionalidades</legend>
+      <%= f.fields_for :nationality do |nf| %>
+        <div class="field">
+          <%= nf.label :country, 'País'  %>
+          <%= nf.hidden_field :id %>
+          <%= nf.select :country_id, options_for_select(
+            @countries.map { |c| [c.name, c.id]}
+          ) %>
+        </div>
+        <div class="field">
+          <%= nf.label :how, 'Tipo'  %>
+          <%= nf.text_field :how %>
+        </div>
+      <% end %>
+    </fieldset>
+    <div class="action"><%= f.submit "Salvar pessoa" %></div>
+  <% end %>
+</main>
