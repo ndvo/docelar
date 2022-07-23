@@ -1,0 +1,27 @@
+<h1>Criar conta</h1>
+
+<%= form_for @user do |f| %>
+  <% if @user.errors.any? %>
+    <div class="error">
+      <h2>Por favor, verifique os seguintes errors no formulário.</h2>
+      <ul>
+        <% for message in @user.errors.full_messages %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= f.label :email, "E-mail" %>
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :password, "Senha" %>
+    <%= f.password_field :password %>
+  </div>
+  <div class="field">
+    <%= f.label :password_confirmation, "Confirme sua senha" %>
+    <%= f.password_field :password_confirmation %>
+  </div>
+  <div class="action"><%= f.submit "Criar conta" %></div>
+<% end %>

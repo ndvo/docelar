@@ -1,8 +1,11 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  # https://guides.rubyonrails.org/routing.html
 
   root 'home#index'
 
+  get 'sign_up' => 'users#new', as: 'sign_up'
+
+  resources :users
   resources :articles do
     resources :comments
   end
