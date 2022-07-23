@@ -1,0 +1,11 @@
+<h1>Countries</h1>
+
+<ul>
+  <% @countries.each do |a| %>
+    <% unless a.archived? %>
+      <li><%= link_to a.name, a %></li>
+    <% end %>
+  <% end %>
+</ul>
+
+<%= link_to "Cadastrar país", new_country_path %>

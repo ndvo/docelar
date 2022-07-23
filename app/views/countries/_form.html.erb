@@ -1,0 +1,19 @@
+
+<main>
+<%= form_with model: @country do |f| %>
+
+  <div class="field">
+    <%= f.label :name, 'Nome:' %>
+    <%= f.text_field :name%>
+  </div>
+
+  <div class="field">
+    <%= f.label :aka, 'Apelido:' %>
+    <%= f.text_field :aka%>
+  </div>
+
+  <div class="action">
+    <%= f.submit "Cadastrar país" %>
+  </div>
+<% end %>
+</main>
