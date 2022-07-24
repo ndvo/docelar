@@ -2,5 +2,6 @@ class Person < ApplicationRecord
   has_many :nationalities
   has_many :countries, through: :nationalities
 
-  accepts_nested_attributes_for :nationalities
+  accepts_nested_attributes_for :nationalities,
+                                reject_if: :all_blank
 end
