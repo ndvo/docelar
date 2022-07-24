@@ -24,6 +24,7 @@ class PeopleController < ApplicationController
     @person = Person.new
     @person.nationalities.build
     @countries = Country.all
+    @nationalitiy_hows = Nationality.hows.to_a
   end
 
   def create

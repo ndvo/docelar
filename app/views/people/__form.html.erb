@@ -19,8 +19,10 @@
         ) %>
       </div>
       <div class="field">
-        <%= ff.label :how, 'Tipo'  %>
-        <%= ff.text_field :how %>
+        <% @nationalitiy_hows.map do |n| %> 
+          <%= ff.label :how, n[1]  %>
+          <%= ff.radio_button :how, n[0] %>
+        <% end %>
       </div>
     <% end %>
   </fieldset>
