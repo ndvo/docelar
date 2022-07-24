@@ -13,6 +13,13 @@
  *= require_tree .
  *= require_self
  */
+:root {
+  --margin-tiny: 0.2em;
+  --margin-small: 0.3236em;
+  --margin-normal: 0.5236em;
+  --margin-large: 0.8472em;
+  --margin-enourmous: 1.3708em;
+}
 
 header {
   max-width: 80ch;
@@ -20,7 +27,19 @@ header {
 }
 main {
   max-width: 80ch;
-  margin: 1em auto;
+  margin: var(--margin-enourmous) auto;
+}
+
+.field {
+  padding: var(--margin-tiny);
+}
+.field label {
+  width: 20ch;
+  display: inline-block;
+  text-align: right;
+}
+.field label:after {
+  content: ":";
 }
 
 
