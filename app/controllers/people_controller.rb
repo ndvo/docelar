@@ -20,9 +20,9 @@ class PeopleController < ApplicationController
     end
   end
 
-
   def new
     @person = Person.new
+    @person.nationalities.build
     @countries = Country.all
   end
 
@@ -40,8 +40,8 @@ class PeopleController < ApplicationController
   def person_params
     params.require(:person)
           .permit(:name, :birth,
-                  nationalities_attributes: [
-                    :country
+                  nationalities_attributes: %i[
+                    country_id person_id how
                   ])
   end
 end
