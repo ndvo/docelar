@@ -11,6 +11,16 @@ class PeopleController < ApplicationController
     @person = Person.find(params[:id])
   end
 
+  def update
+    @person = Person.find(params[:id])
+    if @person.update(person_params)
+      redirect_to @person
+    else
+      render action: 'edit'
+    end
+  end
+
+
   def new
     @person = Person.new
     @countries = Country.all
