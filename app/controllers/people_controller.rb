@@ -7,6 +7,10 @@ class PeopleController < ApplicationController
     @person = Person.find(params[:id])
   end
 
+  def edit
+    @person = Person.find(params[:id])
+  end
+
   def new
     @person = Person.new
     @countries = Country.all
