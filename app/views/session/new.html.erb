@@ -1,15 +1,19 @@
-<h1>Login</h1>
+<main>
+  <h1>Login</h1>
 
 
-<%= form_with model: @session do |f|%>
-  <div class="field">
-    <%= f.label :email, "E-mail" %>
-    <%= f.text_field :email %>
-  </div>
-  <div class="field">
-    <%= f.label :password, "Senha" %>
-    <%= f.password_field :password %>
-  </div>
-  <div class="action"><%= f.submit "Entrar" %></div>
-<% end %>
-<%= link_to 'Criar nova conta', new_user_path %>
+  <%= form_with model: @session do |f|%>
+    <div class="field">
+      <%= f.label :email, "E-mail" %>
+      <%= f.text_field :email %>
+    </div>
+    <div class="field">
+      <%= f.label :password, "Senha" %>
+      <%= f.password_field :password %>
+    </div>
+    <div class="actions">
+      <%= f.submit "Entrar" %>
+    </div>
+  <% end %>
+  <%= link_to 'Criar nova conta', new_user_path %>
+</main>
