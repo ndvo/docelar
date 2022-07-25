@@ -1,0 +1,50 @@
+<%= form_with(model: purchase) do |f| %>
+  <% if purchase.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(purchase.errors.count, "error") %> prohibited this purchase from being saved:</h2>
+
+      <ul>
+        <% purchase.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :price, 'Preço' %>
+    <%= f.number_field :price, step: 0.01 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :product_id %>
+    <%= f.select :product_id, options_for_select(
+      @products.map { |c| [c.name, c.id]}
+    ) %>
+  </div>
+
+  <div class="field">
+    <%= f.label :qty_installments, 'Parcelas' %>
+    <%= f.number_field :qty_installments %>
+  </div>
+
+  <fieldset>
+    <legend></legend>
+    <%= f.fields_for :installments do |ff| %>
+
+      <div class="field">
+        <%= f.label :downpayment_id, 'Entrada' %>
+        <%= f.text_field :downpayment_id %>
+      </div>
+
+      <div class="field">
+      </div>
+      <div class="field">
+      </div>
+    <% end %>
+  </fieldset>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>
