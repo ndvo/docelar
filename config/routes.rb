@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :payments
   resources :purchases
   resources :products
   # https://guides.rubyonrails.org/routing.html
