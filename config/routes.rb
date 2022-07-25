@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :products
   # https://guides.rubyonrails.org/routing.html
 
   root 'home#index'
