@@ -13,6 +13,11 @@
   <body>
     <header>
       <h1><a href="/">Doce Lar</a></h1>
+      <nav>
+        <ul>
+          <li><%= link_to 'Produtos', :products %></li>
+          <li><%= link_to 'Compras', :purchases %></li>
+        </ul>
       <div id="user-status">
         <% if current_user %>
           <%= current_user.email %>
