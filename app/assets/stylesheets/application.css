@@ -30,6 +30,11 @@ main {
   margin: var(--margin-enourmous) auto;
 }
 
+fieldset {
+  border: solid thin silver;
+  margin: var(--margin-normal) 0;
+}
+
 .field {
   padding: var(--margin-tiny);
 }
@@ -42,6 +47,12 @@ main {
   content: ":";
 }
 
+.actions {
+  margin: var(--margin-normal) 0;
+  background: #ddd;
+  border: solid thin #888;
+  padding: var(--margin-normal);
+}
 
 table {
   width: 100%;
@@ -52,3 +63,22 @@ tr {
   border-bottom: solid thin silver;
 }
 
+details {
+  border: dashed thin transparent;
+  padding: var(--margin-normal);
+  margin: var(--margin-normal);
+}
+
+details[open] {
+  border-color: #888;
+  background: #eee
+}
+
+fieldset summary {
+  width: 20ch;
+  text-align: right;
+}
+
+.entity {
+  margin: var(--margin-large) 0;
+}
