@@ -29,22 +29,53 @@
   </div>
 
   <fieldset>
-    <legend></legend>
-    <%= f.fields_for :installments do |ff| %>
 
-      <div class="field">
-        <%= f.label :downpayment_id, 'Entrada' %>
-        <%= f.text_field :downpayment_id %>
-      </div>
 
       <div class="field">
       </div>
-      <div class="field">
-      </div>
-    <% end %>
   </fieldset>
 
-  <div>
+
+  <fieldset>
+    <legend>Pagamentos</legend>
+    <p>Defina o número de parcelas ou defina os valores dos pagamentos
+    individualmente.</p>
+    <turbo-frame id="pagamentos">
+      <div class="field">
+        <%= f.label :installments, 'Parcelas' %>
+        <%= f.number_field :qty_installments, min: 1, value: installments %>
+        <%= f.button 'definir parcelas',
+          formmethod: 'post',
+          formaction: set_installments_purchases_path(id: f.object),
+          data: { turbo_frame: "pagamentos" }
+        %>
+
+      </div>
+      <details>
+        <summary>Pagamentos</summary>
+        <% month = nil %>
+        <%= f.fields_for :payments do |ff| %>
+          <% month = installment_month month %>
+
+          <%= ff.hidden_field :purchase_id, value: @purchase.id %>
+
+          <div class="entity payment">
+            <div class="field">
+              <%= ff.label :value, 'Valor' %>
+              <%= ff.number_field :value, step: 0.01, value: installment_value %>
+            </div>
+            <div class="field">
+              <%= ff.label :date, 'Data' %>
+              <%= ff.date_field :date, value: month.to_fs(:db) %>
+            </div>
+          </div>
+
+        <% end %>
+      </details>
+    </turbo-frame>
+  </fieldset>
+
+  <div class="actions">
     <%= f.submit %>
   </div>
 <% end %>
