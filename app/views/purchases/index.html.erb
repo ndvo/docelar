@@ -1,14 +1,13 @@
-<p style="color: green"><%= notice %></p>
+<main>
+  <h1>Compras</h1>
 
-<h1>Purchases</h1>
-
-<div id="purchases">
-  <% @purchases.each do |purchase| %>
-    <%= render purchase %>
-    <p>
-      <%= link_to "Show this purchase", purchase %>
-    </p>
-  <% end %>
-</div>
-
-<%= link_to "New purchase", new_purchase_path %>
+  <%= link_to "Cadastrar compra", new_purchase_path %>
+  <%= render 'simple_table', {
+    keys: %w(Produto Preço), 
+    rows: @purchases.map { |p| [
+      (link_to p.product.name, p),
+      p.price,
+    ]}
+  }
+  %>
+</main>
