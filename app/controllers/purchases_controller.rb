@@ -77,7 +77,11 @@ class PurchasesController < ApplicationController
     (d + 1.month).to_date
   end
 
-  helper_method :installments, :installment_month
+  def installment_value
+    (@purchase.price / installments).round(2) if @purchase.price
+  end
+
+  helper_method :installments, :installment_month, :installment_value
 
   private
 
