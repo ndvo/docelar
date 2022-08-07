@@ -1,9 +1,6 @@
-Rails.application.routes.draw do
-  resources :payments
-  resources :purchases
-  resources :products
-  # https://guides.rubyonrails.org/routing.html
+# frozen_string_literal: true
 
+Rails.application.routes.draw do
   root 'home#index'
 
   get 'sign_up' => 'users#new', as: 'sign_up'
@@ -12,7 +9,12 @@ Rails.application.routes.draw do
   get 'logout' => 'session#destroy', as: 'logout'
 
   resources :countries
+  resources :payments
   resources :people
+  resources :products
+  resources :purchases do
+    post :set_installments, on: :collection
+  end
   resources :quotes
   resources :session
   resources :users
