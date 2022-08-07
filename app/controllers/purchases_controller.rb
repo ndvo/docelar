@@ -1,5 +1,5 @@
 class PurchasesController < ApplicationController
-  before_action :set_purchase, only: %i[ show edit update destroy ]
+  before_action :set_purchase, only: %i[show edit update destroy]
 
   # GET /purchases or /purchases.json
   def index
