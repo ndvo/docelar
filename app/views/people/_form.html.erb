@@ -12,8 +12,8 @@
     <legend>Nacionalidades</legend>
     <%= f.fields_for :nationalities do |ff| %>
       <div class="field">
-        <%= ff.label :country, 'País'  %>
         <%= ff.hidden_field :person_id, value: @person.id %>
+        <%= ff.label :country, 'País'  %>
         <%= ff.select :country_id, options_for_select(
           @countries.map { |c| [c.name, c.id]}
         ) %>
