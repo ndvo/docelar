@@ -17,7 +17,7 @@ class PurchasesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create purchase" do
     assert_difference("Purchase.count") do
-      post purchases_url, params: { purchase: { downpayment_id: @purchase.downpayment_id, installments_id: @purchase.installments_id, price: @purchase.price, product_id: @purchase.product_id } }
+      post purchases_url, params: { purchase: { price: @purchase.price, product_id: @purchase.product_id } }
     end
 
     assert_redirected_to purchase_url(Purchase.last)
@@ -34,7 +34,7 @@ class PurchasesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update purchase" do
-    patch purchase_url(@purchase), params: { purchase: { downpayment_id: @purchase.downpayment_id, installments_id: @purchase.installments_id, price: @purchase.price, product_id: @purchase.product_id } }
+    patch purchase_url(@purchase), params: { purchase: { price: @purchase.price, product_id: @purchase.product_id } }
     assert_redirected_to purchase_url(@purchase)
   end
 

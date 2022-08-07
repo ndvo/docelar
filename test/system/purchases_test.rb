@@ -14,8 +14,6 @@ class PurchasesTest < ApplicationSystemTestCase
     visit purchases_url
     click_on "New purchase"
 
-    fill_in "Downpayment", with: @purchase.downpayment_id
-    fill_in "Installments", with: @purchase.installments_id
     fill_in "Price", with: @purchase.price
     fill_in "Product", with: @purchase.product_id
     click_on "Create Purchase"
@@ -28,8 +26,6 @@ class PurchasesTest < ApplicationSystemTestCase
     visit purchase_url(@purchase)
     click_on "Edit this purchase", match: :first
 
-    fill_in "Downpayment", with: @purchase.downpayment_id
-    fill_in "Installments", with: @purchase.installments_id
     fill_in "Price", with: @purchase.price
     fill_in "Product", with: @purchase.product_id
     click_on "Update Purchase"

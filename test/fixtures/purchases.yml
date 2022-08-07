@@ -3,11 +3,7 @@
 one:
   price: 9.99
   product: one
-  downpayment: one
-  installments: one
 
 two:
   price: 9.99
   product: two
-  downpayment: two
-  installments: two
