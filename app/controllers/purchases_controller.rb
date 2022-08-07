@@ -7,17 +7,20 @@ class PurchasesController < ApplicationController
   end
 
   # GET /purchases/1 or /purchases/1.json
-  def show
-  end
+  def show; end
 
   # GET /purchases/new
   def new
+    use_products
     @purchase = Purchase.new
-    @products = Product.all
+    @purchase.product = Product.new
+    use_payments
   end
 
   # GET /purchases/1/edit
   def edit
+    use_products
+    use_payments
     @products = Product.all
   end
 
@@ -27,7 +30,7 @@ class PurchasesController < ApplicationController
 
     respond_to do |format|
       if @purchase.save
-        format.html { redirect_to purchase_url(@purchase), notice: "Purchase was successfully created." }
+        format.html { redirect_to purchase_url(@purchase), notice: 'Purchase was successfully created.' }
         format.json { render :show, status: :created, location: @purchase }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -40,7 +43,7 @@ class PurchasesController < ApplicationController
   def update
     respond_to do |format|
       if @purchase.update(purchase_params)
-        format.html { redirect_to purchase_url(@purchase), notice: "Purchase was successfully updated." }
+        format.html { redirect_to purchase_url(@purchase), notice: 'Purchase was successfully updated.' }
         format.json { render :show, status: :ok, location: @purchase }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -59,14 +62,48 @@ class PurchasesController < ApplicationController
     end
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_purchase
-      @purchase = Purchase.find(params[:id])
-    end
+  def set_installments
+    use_products
+    @purchase = Purchase.new(purchase_params)
+    qty = [params[:purchase][:qty_installments]&.to_i, 1].max
+    @purchase.qty_installments = qty
+    use_payments
+    render :new
+  end
 
-    # Only allow a list of trusted parameters through.
-    def purchase_params
-      params.require(:purchase).permit(:price, :product_id, :downpayment_id, :installments_id)
+  def installments
+    @purchase.payments.length
+  end
+
+  def installment_month(from_now)
+    d = from_now || DateTime.now
+    (d + 1.month).to_date
+  end
+
+  helper_method :installments, :installment_month
+
+  private
+
+  def set_purchase
+    @purchase = Purchase.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def purchase_params
+    params.require(:purchase)
+          .permit(:price, :product_id, :add_payment, :qty_installments,
+                  payments_attributes: %i[purchase_id value date _destroy],
+                  product_attributes: %i[name description brand kind])
+  end
+
+  def use_products
+    @products = Product.all.pluck :name, :id
+  end
+
+  def use_payments
+    puts "INSTALLMENTS #{installments}    qty #{@purchase.qty_installments}"
+    (@purchase.qty_installments - installments).times do
+      @purchase.payments.build
     end
+  end
 end
