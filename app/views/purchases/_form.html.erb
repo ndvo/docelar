@@ -11,28 +11,45 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :price, 'Preço' %>
-    <%= f.number_field :price, step: 0.01 %>
-  </div>
-
-  <div class="field">
-    <%= f.label :product_id %>
-    <%= f.select :product_id, options_for_select(
-      @products.map { |c| [c.name, c.id]}
-    ) %>
-  </div>
-
-  <div class="field">
-    <%= f.label :qty_installments, 'Parcelas' %>
-    <%= f.number_field :qty_installments %>
-  </div>
-
   <fieldset>
-
-
+    <legend>Produto</legend>
+    <div class="field">
+      <%= f.label :product_id, 'Produto' %>
+      <%= f.select :product_id, options_for_select([''] +  @products) %>
       <div class="field">
+      <details>
+        <summary>Novo Produto</summary>
+        <%= f.fields_for :product do |ff| %>
+
+          <div>
+            <%= ff.label :name %>
+            <%= ff.text_field :name %>
+          </div>
+
+          <div>
+            <%= ff.label :description %>
+            <%= ff.text_area :description %>
+          </div>
+
+          <div>
+            <%= ff.label :brand %>
+            <%= ff.text_field :brand %>
+          </div>
+
+          <div>
+            <%= ff.label :kind %>
+            <%= ff.text_field :kind %>
+          </div>
+
+        <% end %>
+      </details>
       </div>
+    </div>
+
+    <div class="field">
+      <%= f.label :price, 'Preço' %>
+      <%= f.number_field :price, step: 0.01 %>
+    </div>
   </fieldset>
 
 
