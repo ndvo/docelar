@@ -101,7 +101,6 @@ class PurchasesController < ApplicationController
   end
 
   def use_payments
-    puts "INSTALLMENTS #{installments}    qty #{@purchase.qty_installments}"
     (@purchase.qty_installments - installments).times do
       @purchase.payments.build
     end
