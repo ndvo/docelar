@@ -15,7 +15,10 @@
     <legend>Produto</legend>
     <div class="field">
       <%= f.label :product_id, 'Produto' %>
-      <%= f.select :product_id, options_for_select([''] +  @products) %>
+      <%= f.select :product_id,
+        options_from_collection_for_select(@products, 'id', 'name'),
+        selected: @purchase.product.id
+      %>
       <div class="field">
       <details>
         <summary>Novo Produto</summary>
@@ -78,12 +81,12 @@
 
           <div class="entity payment">
             <div class="field">
-              <%= ff.label :value, 'Valor' %>
-              <%= ff.number_field :value, step: 0.01, value: installment_value %>
+              <%= ff.label :due_amount, 'Valor' %>
+              <%= ff.number_field :due_amount, step: 0.01, value: installment_value %>
             </div>
             <div class="field">
-              <%= ff.label :date, 'Data' %>
-              <%= ff.date_field :date, value: month.to_fs(:db) %>
+              <%= ff.label :due_at, 'Data' %>
+              <%= ff.date_field :due_at, value: month.to_fs(:db) %>
             </div>
           </div>
 

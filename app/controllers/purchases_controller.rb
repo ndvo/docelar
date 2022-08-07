@@ -93,12 +93,12 @@ class PurchasesController < ApplicationController
   def purchase_params
     params.require(:purchase)
           .permit(:price, :product_id, :add_payment, :qty_installments,
-                  payments_attributes: %i[purchase_id value date _destroy],
+                  payments_attributes: %i[purchase_id due_amount due_at _destroy],
                   product_attributes: %i[name description brand kind])
   end
 
   def use_products
-    @products = Product.all.pluck :name, :id
+    @products = Product.all
   end
 
   def use_payments
