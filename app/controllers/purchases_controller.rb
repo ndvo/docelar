@@ -1,5 +1,6 @@
 class PurchasesController < ApplicationController
   before_action :set_purchase, only: %i[show edit update destroy]
+  before_action :use_products, only: %i[new edit set_installments]
 
   # GET /purchases or /purchases.json
   def index
@@ -11,7 +12,6 @@ class PurchasesController < ApplicationController
 
   # GET /purchases/new
   def new
-    use_products
     @purchase = Purchase.new
     @purchase.product = Product.new
     use_payments
@@ -19,9 +19,7 @@ class PurchasesController < ApplicationController
 
   # GET /purchases/1/edit
   def edit
-    use_products
     use_payments
-    @products = Product.all
   end
 
   # POST /purchases or /purchases.json
@@ -63,7 +61,6 @@ class PurchasesController < ApplicationController
   end
 
   def set_installments
-    use_products
     @purchase = Purchase.new(purchase_params)
     qty = [params[:purchase][:qty_installments]&.to_i, 1].max
     @purchase.qty_installments = qty
