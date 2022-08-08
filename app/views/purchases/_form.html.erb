@@ -64,7 +64,7 @@
     <turbo-frame id="pagamentos">
       <div class="field">
         <%= f.label :installments, 'Parcelas' %>
-        <%= f.number_field :qty_installments, min: 1, value: installments %>
+        <%= f.number_field :qty_installments, min: 1, value: @purchase.qty_installments %>
         <%= f.button 'definir parcelas',
           formmethod: 'post',
           formaction: set_installments_purchases_path(id: f.object),
