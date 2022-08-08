@@ -14,6 +14,7 @@ class PurchasesController < ApplicationController
   def new
     @purchase = Purchase.new
     @purchase.product = Product.new
+    @purchase.qty_installments = 1
     use_payments
   end
 
