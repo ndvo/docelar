@@ -16,6 +16,7 @@
     <div class="field">
       <%= f.label :product_id, 'Produto' %>
       <%= f.select :product_id,
+        content_tag(:option, '-- nenhum --', value: '') +
         options_from_collection_for_select(@products, 'id', 'name'),
         selected: @purchase.product.id
       %>
