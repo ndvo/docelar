@@ -5,8 +5,7 @@
   <%= render 'simple_table', {
     keys: %w(Produto Preço), 
     rows: @purchases.map { |p| [
-      (link_to p.product.name, p),
-      p.price,
+      (link_to p.product.name, p), p.price,
     ]}
   }
   %>
