@@ -1,14 +1,16 @@
-<p style="color: green"><%= notice %></p>
+<main>
+  <h1>Relatório de Gastos</h1>
 
-<h1>Payments</h1>
+  <%= render 'simple_table', {
+    keys: %w(Produto Preço Parcela Pago Vencimento Pagamento),
+    rows: @payments.map { |p| [
+      p.purchase.product.name,
+      p.purchase.price,
+      p.due_amount,
+      p.paid_amount,
+      p.due_at&.strftime("%d/%m/%Y"),
+      p.paid_at&.strftime("%d/%m/%Y")
+    ]}
+  }%>
 
-<div id="payments">
-  <% @payments.each do |payment| %>
-    <%= render payment %>
-    <p>
-      <%= link_to "Show this payment", payment %>
-    </p>
-  <% end %>
-</div>
-
-<%= link_to "New payment", new_payment_path %>
+</main>
