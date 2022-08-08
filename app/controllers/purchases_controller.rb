@@ -26,7 +26,6 @@ class PurchasesController < ApplicationController
   # POST /purchases or /purchases.json
   def create
     @purchase = Purchase.new(purchase_params)
-
     respond_to do |format|
       if @purchase.save
         format.html { redirect_to purchase_url(@purchase), notice: 'Purchase was successfully created.' }
@@ -96,6 +95,9 @@ class PurchasesController < ApplicationController
           .permit(:price, :product_id, :add_payment, :qty_installments,
                   payments_attributes: %i[purchase_id due_amount due_at _destroy],
                   product_attributes: %i[name description brand kind])
+          .select do |k|
+            k != 'product_attributes' || !params[:purchase][:product_id]
+          end
   end
 
   def use_products
