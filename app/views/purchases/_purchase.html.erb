@@ -1,12 +1,19 @@
-<div id="<%= dom_id purchase %>">
+<h1>
+  <%= purchase.product.name %>
+</h1>
+<div>
   <p>
-    <strong>Price:</strong>
-    <%= purchase.price %>
+  <strong>Price:</strong>
+  <%= purchase.price %>
   </p>
-
-  <p>
-    <strong>Product:</strong>
-    <%= purchase.product_id %>
-  </p>
-
+  <%= render 'simple_table', {
+    keys: %w(Preço Parcela Pago Vencimento Pagamento),
+    rows: purchase.payments.map { |p| [
+      p.purchase.price,
+      p.due_amount,
+      p.paid_amount,
+      p.due_at&.strftime("%d/%m/%Y"),
+      p.paid_at&.strftime("%d/%m/%Y")
+    ]}
+  }%>
 </div>
