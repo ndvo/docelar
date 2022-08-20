@@ -1,6 +1,7 @@
 class PurchasesController < ApplicationController
   before_action :set_purchase, only: %i[show edit update destroy]
   before_action :use_products, only: %i[new edit set_installments]
+  before_action :set_products, only: %i[new edit create update]
 
   # GET /purchases or /purchases.json
   def index
@@ -15,6 +16,7 @@ class PurchasesController < ApplicationController
     @purchase = Purchase.new
     @purchase.product = Product.new
     @purchase.qty_installments = 1
+    @product = Product.new
     use_payments
   end
 
@@ -25,6 +27,7 @@ class PurchasesController < ApplicationController
 
   # POST /purchases or /purchases.json
   def create
+    choose_product
     @purchase = Purchase.new(purchase_params)
     respond_to do |format|
       if @purchase.save
@@ -95,9 +98,24 @@ class PurchasesController < ApplicationController
           .permit(:price, :product_id, :add_payment, :qty_installments,
                   payments_attributes: %i[purchase_id due_amount due_at _destroy],
                   product_attributes: %i[name description brand kind])
-          .select do |k|
-            k != 'product_attributes' || !params[:purchase][:product_id]
+          .select do |k, v|
+            if k == 'product_id'
+              v != ''
+            else
+              !(k == 'product_attributes' && params[:purchase][:product_id] != '')
+            end
           end
+  end
+
+  private
+
+  def choose_product
+    debugger
+    if params[:product_id]
+      Product.find(params[:product_id])
+    else
+      Product.find_or_create_by(params[:product_attributes])
+    end
   end
 
   def use_products
@@ -108,5 +126,9 @@ class PurchasesController < ApplicationController
     (@purchase.qty_installments - installments).times do
       @purchase.payments.build
     end
+  end
+
+  def set_products
+    @products = Product.all
   end
 end
