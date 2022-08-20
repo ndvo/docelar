@@ -14,13 +14,13 @@
   <fieldset>
     <legend>Produto</legend>
     <div class="field">
+      <div>
       <%= f.label :product_id, 'Produto' %>
-      <%= f.select :product_id,
-        content_tag(:option, '-- nenhum --', value: '') +
-        options_from_collection_for_select(@products, 'id', 'name'),
-        selected: @purchase.product.id
-      %>
-      <div class="field">
+        <%= f.select :product_id,
+          content_tag(:option, '-- nenhum --', value: '') +
+          options_from_collection_for_select(@products, 'id', 'name'),
+          selected: @purchase&.product&.id
+        %>
       <details>
         <summary>Novo Produto</summary>
         <%= f.fields_for :product do |ff| %>
@@ -47,7 +47,6 @@
 
         <% end %>
       </details>
-      </div>
     </div>
 
     <div class="field">

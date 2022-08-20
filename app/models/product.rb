@@ -1,3 +1,4 @@
 class Product < ApplicationRecord
-  validate_uniqueness_of :name, scope: %i[brand kind]
+  has_many :purchases, inverse_of: :product
+  validates_uniqueness_of :name, scope: %i[brand kind]
 end
