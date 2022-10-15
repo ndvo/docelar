@@ -3,7 +3,18 @@ class PaymentsController < ApplicationController
 
   # GET /payments or /payments.json
   def index
-    @payments = Payment.all
+    @payments = list_month
+  end
+
+  # Public: Payments paid or due this month
+  # 
+  # Uses the date param to query the database for payments that are either due
+  # or paid in the 'date' month.  'date' defaultts to today.
+  #
+  def list_month
+    str_date = query_payment_params['date']
+    today = str_date.nil? ? Date.today : Date.parse(str_date)
+    Payment.paid_at_month(today).or(Payment.due_at_month(today))
   end
 
   # GET /payments/1 or /payments/1.json
