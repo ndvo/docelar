@@ -1,24 +1,6 @@
-# README
+# Doce Lar
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a sandbox application, created so that I have a place to learn Rails given I started working in a Rails project comming from programming in Python/PHP/Javascript.
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+All original code in this project is published under the Public Domain.
+I do not recommend anyone to rely on this code.
