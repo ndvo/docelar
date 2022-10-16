@@ -1,6 +1,15 @@
 <main>
   <h1>Compras</h1>
 
+  <fieldset>
+    <legend>Navegar</legend>
+    <div class="month-navigation" data-controller="month-navigation">
+      <a href="" data-month-navigation-target="previous">mês anterior</a>
+      <a href="" data-month-navigation-target="next">mês seguinte</a>
+    </div>
+  </fieldset>
+
+
   <%= link_to "Cadastrar compra", new_purchase_path %>
   <%= render 'simple_table', {
     keys: %w(Produto Preço), 
