@@ -5,7 +5,7 @@ class PurchasesController < ApplicationController
 
   # GET /purchases or /purchases.json
   def index
-    @purchases = Purchase.all
+    @purchases = Purchase.month month
   end
 
   # GET /purchases/1 or /purchases/1.json
@@ -16,6 +16,8 @@ class PurchasesController < ApplicationController
     @purchase = Purchase.new
     @purchase.product = Product.new
     @purchase.qty_installments = 1
+    @purchase.quantity = 1
+    @purchase.purchase_at = DateTime.now.to_date
     @product = Product.new
     use_payments
   end
@@ -88,6 +90,10 @@ class PurchasesController < ApplicationController
 
   private
 
+  def month
+    query_params[:month] || DateTime.now
+  end
+
   def set_purchase
     @purchase = Purchase.find(params[:id])
   end
@@ -107,10 +113,11 @@ class PurchasesController < ApplicationController
           end
   end
 
-  private
+  def query_params
+    params.permit(:from, :to, :month, :day, :month_relative)
+  end
 
   def choose_product
-    debugger
     if params[:product_id]
       Product.find(params[:product_id])
     else
