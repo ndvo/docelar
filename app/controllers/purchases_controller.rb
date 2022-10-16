@@ -91,7 +91,10 @@ class PurchasesController < ApplicationController
   private
 
   def month
-    query_params[:month] || DateTime.now
+    provided_month = query_params[:month]
+    return Date.today unless provided_month
+
+    Date.parse(provided_month)
   end
 
   def set_purchase
@@ -101,7 +104,7 @@ class PurchasesController < ApplicationController
   # Only allow a list of trusted parameters through.
   def purchase_params
     params.require(:purchase)
-          .permit(:price, :product_id, :add_payment, :qty_installments,
+          .permit(:price, :product_id, :add_payment, :qty_installments, :purchase_at,
                   payments_attributes: %i[purchase_id due_amount due_at _destroy],
                   product_attributes: %i[name description brand kind])
           .select do |k, v|
