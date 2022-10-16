@@ -12,6 +12,13 @@
   <% end %>
 
   <fieldset>
+    <div class="field">
+        <%= f.label :purchase_at %>
+        <%= f.date_field :purchase_at %>
+    </div>
+  </fieldset>
+
+  <fieldset>
     <legend>Produto</legend>
     <div class="field">
       <div>
@@ -52,6 +59,11 @@
     <div class="field">
       <%= f.label :price, 'Preço' %>
       <%= f.number_field :price, step: 0.01 %>
+    </div>
+
+    <div class="field">
+      <%= f.label :quantity, 'Quantidade' %>
+      <%= f.number_field :quantity, step: 1 %>
     </div>
   </fieldset>
 
