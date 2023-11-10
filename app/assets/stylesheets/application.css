@@ -32,11 +32,11 @@
 }
 
 header {
-  max-width: 80ch;
+  max-width: 120ch;
   margin: 0 auto;
 }
 main {
-  max-width: 80ch;
+  max-width: 120ch;
   margin: var(--margin-enourmous) auto;
 }
 
@@ -91,4 +91,19 @@ fieldset summary {
 
 .entity {
   margin: var(--margin-large) 0;
+}
+
+header {
+  border-bottom: solid thin silver;
+}
+
+header nav ul {
+  padding-left: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+header nav ul li {
+  padding: 1ch;
+  display: inline;
 }
