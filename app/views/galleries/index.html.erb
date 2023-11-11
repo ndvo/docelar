@@ -1,0 +1,13 @@
+<main>
+  <h1>Galeria</h1>
+
+  <div>
+    <%= button_to "Buscar galerias", action: "find_new_galleries" %>
+  </div>
+
+  <ul>
+    <% @folders.map do |gallery| %>
+      <li><%= link_to gallery, gallery_path(gallery) %></li>
+    <% end %>
+  </ul>
+</main>
