@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  resources :tasks
   root 'home#index'
 
   get 'sign_up' => 'users#new', as: 'sign_up'
