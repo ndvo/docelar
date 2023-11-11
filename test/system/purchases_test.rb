@@ -16,7 +16,7 @@ class PurchasesTest < ApplicationSystemTestCase
 
     fill_in "Price", with: @purchase.price
     fill_in "Product", with: @purchase.product_id
-    click_on "Create Purchase"
+    click_on "Cadastrar Compra"
 
     assert_text "Purchase was successfully created"
     click_on "Back"
