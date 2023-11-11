@@ -19,6 +19,10 @@ Rails.application.routes.draw do
   resources :session
   resources :users
 
+  resources :galleries, only: [:index, :show] do
+    post :find_new_galleries, on: :collection
+  end
+
   resources :articles do
     resources :comments
   end
