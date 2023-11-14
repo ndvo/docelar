@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_10_221033) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_14_163525) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -64,6 +64,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_10_221033) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "status"
+  end
+
+  create_table "dogs", force: :cascade do |t|
+    t.integer "ownership_id", null: false
+    t.string "race"
+    t.integer "sex"
+    t.date "birth"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ownership_id"], name: "index_dogs_on_ownership_id"
   end
 
   create_table "galleries", force: :cascade do |t|
@@ -161,6 +172,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_10_221033) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "articles"
+  add_foreign_key "dogs", "ownerships"
   add_foreign_key "nationalities", "countries"
   add_foreign_key "nationalities", "people"
   add_foreign_key "payments", "purchases"
