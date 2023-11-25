@@ -1,7 +1,5 @@
 <main>
-  <%= @gallery_folder %>
   <% @pictures.map do |picture| %>
-    <%= picture %>
-    <!-- <%= image_tag picture, width: "100px", height: "100px", object_fit: "cover" %> -->
+    <%= image_tag picture, width: "100px", height: "100px", object_fit: "cover" %>
   <% end %>
 </main>

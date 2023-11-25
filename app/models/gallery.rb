@@ -1,33 +1,76 @@
 class Gallery < ActiveRecord::Base
-  def list_files
-    entries = Dir.children(fs_path)
-    entries.map { |i| "#{casamento_folder}/#{@gallery}/#{i}" }
+  belongs_to :gallery, optional: true
+
+  def file_names
+    Dir.glob("#{fs_path}/*.{png,jpeg,jpg}")
+  end
+
+  def thumbnails
+    Dir.children(fs_thumbs_path).map do |path|
+      i = File.basename(path)
+      "/#{url_thumbs_path}/#{i}"
+    end
   end
 
   def generate_thumbnails
+    Dir.children(fs_path).each do |path|
+      i = File.basename(path)
+      next if File.exists? "#{fs_thumbs_path}/#{i}"
+      system "convert #{fs_path}/#{i} -set option:distort:viewport \"%[fx:min(w,h)]x%[fx:min(w,h)]+%[fx:max((w-h)/2,0)]+%[fx:max((h-w)/2,0)]\"  -filter point -distort SRT 0  +repage  #{fs_thumbs_path}/#{i}"
+    end
   end
 
   def url_path
-    "galleries/#{folder_name}"
+    "#{self.class.gallery_folder}/#{folder_name}"
+  end
+
+  def url_thumbs_path
+    "#{self.class.thumbs_folder}/#{folder_name}"
   end
 
   def fs_path
     "#{self.class.path}/#{folder_name}"
   end
 
-  def self.find_new_galleries(gallery)
+  def fs_thumbs_path
+    full_path = "#{self.class.thumb_path}/#{folder_name}"
+    FileUtils.mkdir_p(full_path) unless File.directory?(full_path)
+    full_path
+  end
+
+  def self.find_new_galleries(gallery = nil)
     in_folder_galleries = Dir.children(path_for(gallery))
 
     new_galleries = in_folder_galleries - Gallery.all.pluck(:name)
 
-    Gallery.insert_all(new_galleries.map { |name| { name: name } }) if new_galleries.present?
+    Gallery.insert_all(new_galleries.map do |name|
+      {
+        name:,
+        folder_name: name,
+        gallery_id: gallery&.id
+      }
+    end) if new_galleries.present?
+
+    new_galleries
   end
 
-  def self.path_for(gallery)
+  def self.path_for(gallery = nil)
     File.join(*[path, gallery].compact)
   end
 
   def self.path
-    "#{Rails.public_path}/galleries"
+    "#{Rails.public_path}/#{gallery_folder}"
+  end
+
+  def self.thumb_path
+    "#{Rails.public_path}/#{thumbs_folder}"
+  end
+
+  def self.gallery_folder
+    "galleries"
+  end
+
+  def self.thumbs_folder
+    "galleries_thumbs"
   end
 end

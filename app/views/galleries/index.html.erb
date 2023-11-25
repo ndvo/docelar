@@ -6,8 +6,8 @@
   </div>
 
   <ul>
-    <% @folders.map do |gallery| %>
-      <li><%= link_to gallery, gallery_path(gallery) %></li>
+    <% @galleries.map do |gallery| %>
+      <li><%= link_to gallery.name, gallery_path(gallery) %></li>
     <% end %>
   </ul>
 </main>
