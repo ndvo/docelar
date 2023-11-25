@@ -14,29 +14,61 @@
  *= require_self
  */
 /*
---prussian-blue: hsla(209, 80%, 16%, 1);
---blush: hsla(345, 65%, 60%, 1);
---shimmering-blush: hsla(348, 66%, 69%, 1);
---mauvelous: hsla(348, 67%, 79%, 1);
---baby-pink: hsla(350, 70%, 88%, 1);
---sage: hsla(58, 31%, 67%, 1);
---army-green: hsla(89, 66%, 16%, 1);
---phthalo-green: hsla(89, 67%, 12%, 1);
 */
 :root {
+  /* layout definition */
+  --page-width: 120ch;
+
   --margin-tiny: 0.2em;
   --margin-small: 0.3236em;
   --margin-normal: 0.5236em;
   --margin-large: 0.8472em;
   --margin-enourmous: 1.3708em;
+
+  /* colors definition */
+  --prussian-blue: hsla(209, 80%, 16%, 1);
+  --blush: hsla(345, 65%, 60%, 1);
+  --shimmering-blush: hsla(348, 66%, 69%, 1);
+  --mauvelous: hsla(348, 67%, 79%, 1);
+  --baby-pink: hsla(350, 70%, 88%, 1);
+  --sage: hsla(58, 31%, 67%, 1);
+  --army-green: hsla(89, 66%, 16%, 1);
+  --phthalo-green: hsla(89, 67%, 12%, 1);
+
+  /* color usage */
+  --primary: var(--phthalo-green);
+  --secondary: var(--army-green);
+  --tertiary: var(--sage);
+  --background: white;
+  --alert: var(--blush);
+  --warning: var(--prussian-blue);
+  --highlight: var(--mauvelous);
+  --highlight-background: var(--sage);
+}
+
+
+
+body {
+  color: var(--primary);
+  background: var(--background);
+  margin: 0;
+}
+
+a {
+  color: var(--primary);
 }
 
 header {
-  max-width: 120ch;
+  max-width: var(--page-width);
   margin: 0 auto;
+  background: var(--highlight-background);
+  padding: var(--margin-normal);
+  box-shadow: var(--page-width) 0 0 var(--highlight-background),
+              calc( -1 * var(--page-width)) 0 0 var(--highlight-background)
+  ;
 }
 main {
-  max-width: 120ch;
+  max-width: var(--page-width);
   margin: var(--margin-enourmous) auto;
 }
 
@@ -93,10 +125,6 @@ fieldset summary {
   margin: var(--margin-large) 0;
 }
 
-header {
-  border-bottom: solid thin silver;
-}
-
 header nav ul {
   padding-left: 0;
   display: flex;
@@ -106,4 +134,17 @@ header nav ul {
 header nav ul li {
   padding: 1ch;
   display: inline;
+}
+
+#flash-messages {
+  margin-left: calc( -0.5 * var(--page-width));
+  padding: 1ch;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  left: 50%;
+  width: var(--page-width);
+  background: var(--alert);
+  display: grid;
+  grid-template-columns: 1fr 20px;
 }
