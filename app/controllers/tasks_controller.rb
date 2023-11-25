@@ -3,7 +3,14 @@ class TasksController < ApplicationController
 
   # GET /tasks or /tasks.json
   def index
-    @tasks = Task.all
+    case index_params[:completed]
+    when 'true'
+      @tasks = Task.where(is_completed: true)
+    when 'false'
+      @tasks = Task.where(is_completed: false)
+    else
+      @tasks = Task.all
+    end
   end
 
   # GET /tasks/1 or /tasks/1.json
@@ -65,6 +72,10 @@ class TasksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def task_params
-      params.require(:task).permit(:user_id, :task_id, :name, :description)
+      params.require(:task).permit(:user_id, :task_id, :name, :description, :is_completed)
+    end
+
+    def index_params
+      params.permit(:completed)
     end
 end

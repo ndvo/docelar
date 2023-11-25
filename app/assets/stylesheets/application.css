@@ -105,6 +105,11 @@ tr {
   border-bottom: solid thin silver;
 }
 
+th {
+  padding: 0.5em;
+  text-align: left;
+}
+
 details {
   border: dashed thin transparent;
   padding: var(--margin-normal);
