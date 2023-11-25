@@ -24,12 +24,12 @@ class PurchasesController < ApplicationController
 
   # GET /purchases/1/edit
   def edit
+    @purchase = Purchase.find_by(params[:id])
     use_payments
   end
 
   # POST /purchases or /purchases.json
   def create
-    choose_product
     @purchase = Purchase.new(purchase_params)
     respond_to do |format|
       if @purchase.save
