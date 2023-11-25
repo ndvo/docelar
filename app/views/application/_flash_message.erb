@@ -1,0 +1,14 @@
+<% if flash.present? %>
+<div id="flash-messages" data-controller="flash_message">
+  <div class="messages">
+  <% flash.each do |name, msg| %>
+    <div id="flash_<%= name %>">
+      <%= msg %>
+    </div>
+  <% end %>
+  </div>
+  <button class="dismiss" onclick="this.parentElement.remove();">
+    x
+  </button>
+</div>
+<% end %>
