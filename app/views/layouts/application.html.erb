@@ -32,8 +32,6 @@
       </div>
     </header>
     <%= yield %>
-    <% flash.each do |name, msg| %>
-      <%= content_tag :div, msg, id: "flash_#{name}" %>
-    <% end %>
+    <%= render partial: "flash_message" %>
   </body>
 </html>
