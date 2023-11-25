@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   resources :session
   resources :users
 
-  resources :galleries, only: [:index, :show] do
+  resources :galleries do
     post :find_new_galleries, on: :collection
   end
 
