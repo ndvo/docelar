@@ -22,7 +22,7 @@
     <legend>Produto</legend>
     <div class="field">
       <div>
-      <%= f.label :product_id, 'Produto' %>
+        <%= f.label :product_id, 'Produto' %>
         <%= f.select :product_id,
           content_tag(:option, '-- nenhum --', value: '') +
           options_from_collection_for_select(
@@ -30,33 +30,35 @@
             @purchase.product_id
           )
         %>
-      <details>
-        <summary>Novo Produto</summary>
-        <%= f.fields_for :product do |ff| %>
+      <% if @purchase.new_record? %>
+        <details>
+          <summary>Novo Produto</summary>
+          <%= f.fields_for :product do |ff| %>
 
-          <div>
-            <%= ff.label :name %>
-            <%= ff.text_field :name %>
-          </div>
+            <div>
+              <%= ff.label :name %>
+              <%= ff.text_field :name %>
+            </div>
 
-          <div>
-            <%= ff.label :description %>
-            <%= ff.text_area :description %>
-          </div>
+            <div>
+              <%= ff.label :description %>
+              <%= ff.text_area :description %>
+            </div>
 
-          <div>
-            <%= ff.label :brand %>
-            <%= ff.text_field :brand %>
-          </div>
+            <div>
+              <%= ff.label :brand %>
+              <%= ff.text_field :brand %>
+            </div>
 
-          <div>
-            <%= ff.label :kind %>
-            <%= ff.text_field :kind %>
-          </div>
+            <div>
+              <%= ff.label :kind %>
+              <%= ff.text_field :kind %>
+            </div>
 
-        <% end %>
-      </details>
-    </div>
+          <% end %>
+        </details>
+      <% end %>
+      </div>
 
     <div class="field">
       <%= f.label :price, 'Preço' %>
@@ -67,46 +69,11 @@
       <%= f.label :quantity, 'Quantidade' %>
       <%= f.number_field :quantity, step: 1 %>
     </div>
-  </fieldset>
 
-
-  <fieldset>
-    <legend>Pagamentos</legend>
-    <p>Defina o número de parcelas ou defina os valores dos pagamentos
-    individualmente.</p>
-    <turbo-frame id="pagamentos">
-      <div class="field">
-        <%= f.label :installments, 'Parcelas' %>
-        <%= f.number_field :qty_installments, min: 1, value: @purchase.qty_installments %>
-        <%= f.button 'definir parcelas',
-          formmethod: 'post',
-          formaction: set_installments_purchases_path(id: f.object),
-          data: { turbo_frame: "pagamentos" }
-        %>
-
-      </div>
-      <details>
-        <summary>Pagamentos</summary>
-        <% month = nil %>
-        <%= f.fields_for :payments do |ff| %>
-          <% month = installment_month month %>
-
-          <%= ff.hidden_field :purchase_id, value: @purchase.id %>
-
-          <div class="entity payment">
-            <div class="field">
-              <%= ff.label :due_amount, 'Valor' %>
-              <%= ff.number_field :due_amount, step: 0.01, value: installment_value %>
-            </div>
-            <div class="field">
-              <%= ff.label :due_at, 'Data' %>
-              <%= ff.date_field :due_at, value: month.to_fs(:db) %>
-            </div>
-          </div>
-
-        <% end %>
-      </details>
-    </turbo-frame>
+    <div class="field">
+      <%= f.label :installments, 'Parcelas' %>
+      <%= f.number_field :qty_installments, min: 1, value: @purchase.qty_installments %>
+    </div>
   </fieldset>
 
   <div class="actions">

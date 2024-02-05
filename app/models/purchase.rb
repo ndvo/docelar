@@ -1,6 +1,6 @@
 class Purchase < ApplicationRecord
   belongs_to :product
-  has_many :payments
+  has_many :payments, dependent: :destroy
 
   scope :month, ->(m) { where('purchase_at >= ? and purchase_at <= ?', *(date_begin_end m)) }
 
@@ -9,14 +9,27 @@ class Purchase < ApplicationRecord
                                 allow_destroy: true
 
   def qty_installments
-    @target_qty || payments.count
+    payments.count
   end
 
-  def qty_installments=(value)
-    @target_qty = value
-  end
+  def qty_installments=(qty)
+    qty = [qty&.to_i, 1].max
+    installment_value = (price / qty).round(2)
 
-  accepts_nested_attributes_for :product
+    first_value = price - (installment_value * (qty - 1))
+
+    self.payments = (0...qty).map do |idx|
+      if self.payments[idx]&.present?
+        self.payments[idx].due_amount = idx == 0 ? first_value : installment_value
+        self.payments[idx]
+      else
+        self.payments.build(
+          due_amount: idx == 0 ? first_value : installment_value,
+          due_at: created_at + idx.months
+        )
+      end
+    end
+  end
 
   validates :product, presence: true
   validates_associated :payments, :product
