@@ -14,7 +14,8 @@ class Purchase < ApplicationRecord
 
   def qty_installments=(qty)
     qty = [qty&.to_i, 1].max
-    return if prise.blank?
+    return if price.blank?
+
     installment_value = (price / qty).round(2)
 
     first_value = price - (installment_value * (qty - 1))
