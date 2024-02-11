@@ -72,23 +72,6 @@ main {
   margin: var(--margin-enourmous) auto;
 }
 
-fieldset {
-  border: solid thin silver;
-  margin: var(--margin-normal) 0;
-}
-
-.field {
-  padding: var(--margin-tiny);
-}
-.field label {
-  width: 20ch;
-  display: inline-block;
-  text-align: right;
-}
-.field label:after {
-  content: ":";
-}
-
 .actions {
   margin: var(--margin-normal) 0;
   background: #ddd;
@@ -130,15 +113,17 @@ fieldset summary {
   margin: var(--margin-large) 0;
 }
 
-header nav ul {
-  padding-left: 0;
-  display: flex;
-  justify-content: space-between;
-}
+@media only screen and (min-width: 600px) {
+  header nav ul {
+    padding-left: 0;
+    display: flex;
+    justify-content: space-between;
+  }
 
-header nav ul li {
-  padding: 1ch;
-  display: inline;
+  header nav ul li {
+    padding: 1ch;
+    display: inline;
+  }
 }
 
 #flash-messages {
@@ -152,4 +137,42 @@ header nav ul li {
   background: var(--alert);
   display: grid;
   grid-template-columns: 1fr 20px;
+}
+
+/** Forms **/
+
+
+input[type="text"], input[type="number"], input[type="date"]{
+  width: 100%;
+  padding: 1ch;
+  box-sizing: border-box;
+}
+
+fieldset {
+  border: solid thin silver;
+  margin: var(--margin-normal);
+}
+
+.field {
+  padding: var(--margin-tiny);
+}
+.field label {
+  width: 20ch;
+  display: inline-block;
+  text-align: right;
+}
+.field label:after {
+  content: ": ";
+}
+
+@media only screen and (min-width: 600px) {
+  .field {
+    display: flex;
+  }
+  .field label {
+    padding: 1ch;
+  }
+  fieldset {
+    margin: var(--margin-normal) 0;
+  }
 }

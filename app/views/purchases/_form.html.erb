@@ -21,15 +21,15 @@
   <fieldset>
     <legend>Produto</legend>
     <div class="field">
-      <div>
-        <%= f.label :product_id, 'Produto' %>
-        <%= f.select :product_id,
+      <%= f.label :product_id, 'Produto' %>
+      <%= f.select :product_id,
           content_tag(:option, '-- nenhum --', value: '') +
           options_from_collection_for_select(
             @products, 'id', 'name',
             @purchase.product_id
           )
         %>
+    </div>
       <% if @purchase.new_record? %>
         <details>
           <summary>Novo Produto</summary>
@@ -46,7 +46,7 @@
             </div>
 
             <div>
-              <%= ff.label :brand %>
+              </div>
               <%= ff.text_field :brand %>
             </div>
 
@@ -58,22 +58,21 @@
           <% end %>
         </details>
       <% end %>
+
+      <div class="field">
+        <%= f.label :price, 'Preço' %>
+        <%= f.number_field :price, step: 0.01 %>
       </div>
 
-    <div class="field">
-      <%= f.label :price, 'Preço' %>
-      <%= f.number_field :price, step: 0.01 %>
-    </div>
+      <div class="field">
+        <%= f.label :quantity, 'Quantidade' %>
+        <%= f.number_field :quantity, step: 1 %>
+      </div>
 
-    <div class="field">
-      <%= f.label :quantity, 'Quantidade' %>
-      <%= f.number_field :quantity, step: 1 %>
-    </div>
-
-    <div class="field">
-      <%= f.label :installments, 'Parcelas' %>
-      <%= f.number_field :qty_installments, min: 1, value: @purchase.qty_installments %>
-    </div>
+      <div class="field">
+        <%= f.label :installments, 'Parcelas' %>
+        <%= f.number_field :qty_installments, min: 1, value: @purchase.qty_installments %>
+      </div>
   </fieldset>
 
   <div class="actions">
