@@ -27,7 +27,7 @@ class Purchase < ApplicationRecord
       else
         self.payments.build(
           due_amount: idx == 0 ? first_value : installment_value,
-          due_at: created_at + idx.months
+          due_at: (created_at || Date.today) + idx.months
         )
       end
     end
