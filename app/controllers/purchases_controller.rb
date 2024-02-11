@@ -27,9 +27,10 @@ class PurchasesController < ApplicationController
 
   # POST /purchases or /purchases.json
   def create
+    product_id = params[:purchase][:product_id]
 
-    product = if params[:product_id].present?
-                Product.find(params[:product_id])
+    product = if product_id.present?
+                Product.find(product_id)
               else
                 Product.create(product_params)
               end
