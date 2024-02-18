@@ -1,5 +1,6 @@
 class Purchase < ApplicationRecord
   belongs_to :product
+  belongs_to :card, optional: true
   has_many :payments, dependent: :destroy
 
   scope :month, ->(m) { where('purchase_at >= ? and purchase_at <= ?', *(date_begin_end m)) }
@@ -17,19 +18,28 @@ class Purchase < ApplicationRecord
     return if price.blank?
 
     installment_value = (price / qty).round(2)
-
     first_value = price - (installment_value * (qty - 1))
 
     self.payments = (0...qty).map do |idx|
-      if self.payments[idx]&.present?
-        self.payments[idx].due_amount = idx == 0 ? first_value : installment_value
-        self.payments[idx]
+      installment = self.payments[idx].presence
+      installment_data = {
+        due_amount: (idx == 0 ? first_value : installment_value),
+        due_at: installment_due_date(idx)
+      }
+      if installment.present?
+        installment.assign_attributes(installment_data)
+        installment
       else
-        self.payments.build(
-          due_amount: idx == 0 ? first_value : installment_value,
-          due_at: (created_at || Date.today) + idx.months
-        )
+        self.payments.build(installment_data)
       end
+    end
+  end
+
+  def installment_due_date(idx)
+    if card.present?
+      card.next_due_date_from(purchase_at) + idx.months
+    else
+      (purchase_at || Date.today) + idx.months
     end
   end
 
