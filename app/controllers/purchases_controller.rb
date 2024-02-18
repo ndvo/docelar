@@ -1,5 +1,5 @@
 class PurchasesController < ApplicationController
-  before_action :set_purchase, only: %i[show edit update destroy]
+  before_action :set_purchase, only: %i[show edit update destroy payments_bulk_update]
   before_action :use_products, only: %i[new edit set_installments]
   before_action :set_products, only: %i[new edit create update]
 
@@ -64,9 +64,24 @@ class PurchasesController < ApplicationController
     @purchase.destroy
 
     respond_to do |format|
-      format.html { redirect_to purchases_url, notice: "Purchase was successfully destroyed." }
+      format.html { redirect_to purchases_url, notice: "Produto apagado com sucesso." }
       format.json { head :no_content }
     end
+  end
+
+  def payments_bulk_update
+    checked_payment_ids = params[:payment_ids]
+
+    @purchase.payments.each do |payment|
+      if checked_payment_ids.include?(payment.id.to_s)
+        payment.paid_at ||= Date.today
+      else
+        payment.paid_at = nil
+      end
+    end
+
+    @purchase.save
+    redirect_to purchase_url(@purchase), notice: 'Pagamentos atualizados com sucesso.' 
   end
 
   def installments
@@ -106,6 +121,7 @@ class PurchasesController < ApplicationController
         :purchase_at,
         :qty_installments,
         :quantity,
+        :card_id,
         payments_attributes: %i[purchase_id due_amount due_at _destroy])
   end
 

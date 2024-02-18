@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  resources :cards
   resources :dogs
   resources :tasks
   root 'home#index'
@@ -15,6 +16,7 @@ Rails.application.routes.draw do
   resources :people
   resources :products
   resources :purchases do
+    post :payments_bulk_update, on: :member
     post :set_installments, on: :collection
   end
   resources :quotes
