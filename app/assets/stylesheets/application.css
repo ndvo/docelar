@@ -109,7 +109,7 @@ details[open] {
 fieldset {
   border: solid thin silver;
   margin: var(--margin-normal);
-  box-shadow: var(--margin-normal) var(--margin-normal) var(--margin-large) silver;
+  box-shadow: var(--margin-tiny) var(--margin-tiny) var(--margin-normal) silver;
 }
 
 fieldset summary {
