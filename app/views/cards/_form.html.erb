@@ -1,0 +1,54 @@
+<%= form_with(model: card) do |f| %>
+  <% if card.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(card.errors.count, "error") %> prohibited this card from being saved:</h2>
+
+      <ul>
+        <% card.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <fieldset>
+    <div class="field">
+        <%= f.label :brand, 'Banndeira' %>
+        <%= f.text_field :brand  %>
+    </div>
+
+    <div class="field">
+        <%= f.label :number, 'Número' %>
+        <%= f.text_field :number  %>
+    </div>
+
+    <div class="field">
+        <%= f.label :name, 'Nome' %>
+        <%= f.text_field :name  %>
+    </div>
+
+    <div class="field">
+        <%= f.label :expiry_year, 'Validade (ano)' %>
+        <%= f.text_field :expiry_year  %>
+    </div>
+
+    <div class="field">
+        <%= f.label :expiry_month, 'Validade (mês)' %>
+        <%= f.text_field :expiry_month  %>
+    </div>
+
+    <div class="field">
+        <%= f.label :due_day, 'Dia de vencimento' %>
+        <%= f.text_field :due_day  %>
+    </div>
+
+    <div class="field">
+        <%= f.label :invoice_day, 'Dia de fechamento da fatura' %>
+        <%= f.text_field :invoice_day  %>
+    </div>
+  </fieldset>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>
