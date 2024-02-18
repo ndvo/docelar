@@ -70,6 +70,12 @@
       </div>
 
       <div class="field">
+        <%= f.label :card, 'Cartão' %>
+        <%= f.collection_select :card_id, Card.all, :id, :display_name, include_blank: true %>
+      </div>
+
+
+      <div class="field">
         <%= f.label :installments, 'Parcelas' %>
         <%= f.number_field :qty_installments, min: 1, value: @purchase.qty_installments %>
       </div>
