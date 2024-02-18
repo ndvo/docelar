@@ -52,6 +52,7 @@ body {
   color: var(--primary);
   background: var(--background);
   margin: 0;
+  font-size: 16px;
 }
 
 a {
@@ -77,6 +78,7 @@ main {
   background: #ddd;
   border: solid thin #888;
   padding: var(--margin-normal);
+  text-align: right;
 }
 
 table {
@@ -102,6 +104,12 @@ details {
 details[open] {
   border-color: #888;
   background: #eee
+}
+
+fieldset {
+  border: solid thin silver;
+  margin: var(--margin-normal);
+  box-shadow: var(--margin-normal) var(--margin-normal) var(--margin-large) silver;
 }
 
 fieldset summary {
@@ -148,9 +156,13 @@ input[type="text"], input[type="number"], input[type="date"]{
   box-sizing: border-box;
 }
 
-fieldset {
-  border: solid thin silver;
-  margin: var(--margin-normal);
+input[type="checkbox"] {
+  width: 2em;
+  height: 2em;
+}
+
+input[type="submit"], button[type="submit"] {
+  padding: 0.5em 1em;
 }
 
 .field {
