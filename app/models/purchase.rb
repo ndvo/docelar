@@ -10,7 +10,7 @@ class Purchase < ApplicationRecord
                                 allow_destroy: true
 
   def qty_installments
-    payments.count
+    [payments.count, 1].max
   end
 
   def qty_installments=(qty)
