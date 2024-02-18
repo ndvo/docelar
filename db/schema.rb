@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_05_133600) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_13_213430) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -45,6 +45,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_133600) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "status"
+  end
+
+  create_table "cards", force: :cascade do |t|
+    t.string "number"
+    t.string "brand"
+    t.string "name"
+    t.integer "expiry_year"
+    t.integer "expiry_month"
+    t.integer "due_day"
+    t.integer "invoice_day"
+    t.decimal "limit", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "comments", force: :cascade do |t|
@@ -141,6 +154,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_133600) do
     t.string "quantity"
     t.string "integer"
     t.datetime "purchase_at"
+    t.integer "card_id"
+    t.index ["card_id"], name: "index_purchases_on_card_id"
     t.index ["product_id"], name: "index_purchases_on_product_id"
   end
 
@@ -175,6 +190,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_133600) do
   add_foreign_key "nationalities", "countries"
   add_foreign_key "nationalities", "people"
   add_foreign_key "payments", "purchases"
+  add_foreign_key "purchases", "cards"
   add_foreign_key "purchases", "products"
   add_foreign_key "tasks", "tasks"
   add_foreign_key "tasks", "users"
