@@ -37,10 +37,15 @@ class Purchase < ApplicationRecord
 
   def installment_due_date(idx)
     if card.present?
-      card.next_due_date_from(purchase_at) + idx.months
+      card_installment_due_date(idx)
     else
       (purchase_at || Date.today) + idx.months
     end
+  end
+
+  def card_installment_due_date(idx)
+    next_due = card.next_due_date_from(purchase_at)
+    next_due ? card.next_due_date_from(purchase_at) + idx.months : nil
   end
 
   validates :product, presence: true

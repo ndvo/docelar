@@ -2,15 +2,15 @@
   <h1>Relatório de Gastos</h1>
 
   <%= render 'simple_table', {
-    keys: %w(Produto Preço Parcela Pago Vencimento Pagamento),
+    keys: %w(Produto Preço Parcela Pago Vencimento Pagamento Pago),
     rows: @payments.map { |p| [
       p.purchase.product.name,
       p.purchase.price,
       p.due_amount,
       p.paid_amount,
       p.due_at&.strftime("%d/%m/%Y"),
-      p.paid_at&.strftime("%d/%m/%Y")
+      p.paid_at&.strftime("%d/%m/%Y"),
     ]}
   }%>
-
+  <%= submit_tag "Atualizar pagamentos" %>
 </main>:
