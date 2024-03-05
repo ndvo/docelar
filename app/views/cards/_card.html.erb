@@ -5,6 +5,6 @@
     <dt>Nome</dt><dd><%= card.name %></dd>
     <dt>Validade</dt><dd><%= card.expiry_year %>-<%= card.expiry_month %></dd>
     <dt>Vencimento</dt><dd><%= card.due_day %></dd>
-    <dt>Melhor dia de compras</dt><dd><%= card.invoice_day + 1 %></dd>
+    <dt>Melhor dia de compras</dt><dd><%= card.invoice_day ? card.invoice_day + 1 : 'não informado' %></dd>
   </dl>
 </div>
