@@ -1,13 +1,13 @@
 <main>
 
-  <%= render @purchase %>
-
-  <div class="navigation"
-    <%= link_to "Edit this purchase", edit_purchase_path(@purchase) %> |
-    <%= link_to "Back to purchases", purchases_path %>
+  <div class="navigation">
+    <%= link_to "Editar", edit_purchase_path %> |
   </div>
 
+  <%= render @purchase %>
+
   <div class="actions">
-    <%= button_to "Destroy this purchase", @purchase, method: :delete %>
+    <%= button_to "Editar", edit_purchase_path %>
+    <%= button_to "Apagar", @purchase, method: :delete %>
   </div>
 </main>
