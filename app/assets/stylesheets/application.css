@@ -10,8 +10,8 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require_tree .
- *= require_self
+
+
  */
 /*
 */
@@ -46,8 +46,6 @@
   --highlight-background: var(--sage);
 }
 
-
-
 body {
   color: var(--primary);
   background: var(--background);
@@ -79,11 +77,16 @@ main {
   border: solid thin #888;
   padding: var(--margin-normal);
   text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--margin-normal);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  border-top: double silver;
+  border-bottom: double silver;
 }
 
 tr {
@@ -93,6 +96,10 @@ tr {
 th {
   padding: 0.5em;
   text-align: left;
+}
+
+td {
+  padding: 0.5em;
 }
 
 details {
@@ -129,7 +136,6 @@ fieldset summary {
   }
 
   header nav ul li {
-    padding: 1ch;
     display: inline;
   }
 }
@@ -187,4 +193,14 @@ input[type="submit"], button[type="submit"] {
   fieldset {
     margin: var(--margin-normal) 0;
   }
+}
+
+/* Key value pairs */
+dl {
+  display: flex;
+  align-content: space-between;
+}
+
+dt {
+  font-weight: bold;
 }
