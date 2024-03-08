@@ -1,16 +1,23 @@
 <main>
-  <h1>Relatório de Gastos</h1>
+  <h1>Pagamentos do mês</h1>
 
-  <%= render 'simple_table', {
-    keys: %w(Produto Preço Parcela Pago Vencimento Pagamento Pago),
-    rows: @payments.map { |p| [
-      p.purchase.product.name,
-      p.purchase.price,
-      p.due_amount,
-      p.paid_amount,
-      p.due_at&.strftime("%d/%m/%Y"),
-      p.paid_at&.strftime("%d/%m/%Y"),
-    ]}
-  }%>
-  <%= submit_tag "Atualizar pagamentos" %>
+  <%= form :payment, url: { action: 'payments_bulk_update' }, method: :post do %>
+    <fieldset>
+      <%= render 'simple_table', {
+        keys: %w(Produto Preço Parcela Pago Vencimento Pagamento Pago),
+        rows: @payments.map { |p| [
+          p.purchase.product.name,
+          p.purchase.price,
+          p.due_amount,
+          p.paid_amount,
+          p.due_at&.strftime("%d/%m/%Y"),
+          p.paid_at&.strftime("%d/%m/%Y"),
+          check_box_tag("payment_ids[]", p.id, p.paid_at.present?, id: "payment_#{p.id}")
+        ]}
+      }%>
+    <div class="actions">
+      <%= submit_tag "Atualizar pagamentos" %>
+    </div>
+    </fieldset>
+  <% end %>
 </main>:
