@@ -7,7 +7,7 @@
   <%= render @purchase %>
 
   <div class="actions">
-    <%= button_to "Editar", edit_purchase_path %>
+    <%= link_to "Editar", edit_purchase_path %>
     <%= button_to "Apagar", @purchase, method: :delete %>
   </div>
 </main>
