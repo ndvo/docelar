@@ -1,17 +1,33 @@
 <main>
-  <h1>Pagamentos do mês</h1>
+  <nav class="picker calendar month">
+    <%= link_to "<― #{@previous_month.strftime("%Y/%m")}", { date: @previous_month } %> 
+    <%= link_to "#{@next_month.strftime("%Y/%m")} ―>", { date: @next_month } %>
+  </nav>
 
-  <%= form :payment, url: { action: 'payments_bulk_update' }, method: :post do %>
+  <h1>Pagamentos do mês <%= @chosen_month.strftime("%Y/%m") %></h1>
+
+  <%= render 'simple_table', {
+    keys: ['', 'Devido', 'Pago',  'A Pagar'],
+    rows: [[
+      'Totais do mês',
+      brl(@total_due),
+      brl(@total_paid),
+      brl(@total_due - @total_paid)
+    ]]
+  }%>
+
+  <%= form_with url: { action: 'payments_bulk_update' }, method: :post do |form| %>
     <fieldset>
       <%= render 'simple_table', {
-        keys: %w(Produto Preço Parcela Pago Vencimento Pagamento Pago),
+        optional: [1, 3, 5],
+        keys: %w(Produto Preço Parcela Pago Venc. Pgto Pago),
         rows: @payments.map { |p| [
-          p.purchase.product.name,
-          p.purchase.price,
-          p.due_amount,
-          p.paid_amount,
-          p.due_at&.strftime("%d/%m/%Y"),
-          p.paid_at&.strftime("%d/%m/%Y"),
+          link_to(product_short_description(p), purchase_path(p.purchase)),
+          brl(p.purchase.price),
+          brl(p.due_amount),
+          brl(p.paid_amount),
+          p.due_at&.strftime("%d"),
+          p.paid_at&.strftime("%d"),
           check_box_tag("payment_ids[]", p.id, p.paid_at.present?, id: "payment_#{p.id}")
         ]}
       }%>
