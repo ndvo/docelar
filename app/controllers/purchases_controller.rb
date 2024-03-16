@@ -73,7 +73,7 @@ class PurchasesController < ApplicationController
     checked_payment_ids = params[:payment_ids]
 
     @purchase.payments.each do |payment|
-      if checked_payment_ids.include?(payment.id.to_s)
+      if checked_payment_ids&.include?(payment.id.to_s)
         payment.paid_at ||= Date.today
       else
         payment.paid_at = nil
