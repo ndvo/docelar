@@ -1,0 +1,30 @@
+<nav>
+  <input type="checkbox" id="toggle-menu" name="toggle-menu" />
+  <label class="menu toggle" for="toggle-menu">
+    <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+  </label>
+  <label class="menu overlay" for="toggle-menu"></label>
+  <div class="menu">
+    <h1>Menu</h1>
+    <ul>
+      <label class="menu toggle" for="toggle-menu">
+        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </label>
+      <li>
+        <div>Finanças</div>
+        <ul>
+          <li><%= link_to 'Produtos', :products %></li>
+          <li><%= link_to 'Compras', :purchases %></li>
+          <li><%= link_to 'Relatório de Gastos', :payments %></li>
+        </ul>
+      </li>
+      <li><%= link_to 'Galeria', :galleries %></li>
+      <li><%= link_to 'Tarefas', :tasks %></li>
+      <li><%= link_to 'Turminha', :dogs %></li>
+      <li><%= link_to 'Cartões', :cards %></li>
+    </ul>
+  </div>
+</nav>
