@@ -1,8 +1,9 @@
+<% optional ||= [] %>
 <table>
   <thead>
   <tr>
-    <% keys.each do |k| %>
-      <th><%= k %></th>
+    <% keys.each_with_index do |k, index| %>
+      <th <%= optional.include?(index) ? 'class=optional' : '' %>><%= k %></th>
     <% end %>
   </tr>
   </thead>
@@ -10,8 +11,8 @@
   <tbody>
     <% rows.each do |row| %>
       <tr>
-        <% row.each do |cell| %>
-          <td><%= cell %></td>
+        <% row.each_with_index do |cell, index| %>
+          <td <%= optional.include?(index) ? 'class=optional' : '' %>><%= cell %></td>
         <% end %>
       </tr>
     <% end %>
