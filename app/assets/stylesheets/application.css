@@ -38,23 +38,27 @@
   /* color usage */
   --primary: var(--phthalo-green);
   --secondary: var(--army-green);
-  --tertiary: var(--sage);
   --background: white;
   --alert: var(--blush);
   --warning: var(--prussian-blue);
-  --highlight: var(--mauvelous);
-  --highlight-background: var(--sage);
+  --highlight: var(--sage);
+  --highlight-background: var(--army-green);
+  --link: var(--prussian-blue);
 }
 
 body {
   color: var(--primary);
   background: var(--background);
   margin: 0;
-  font-size: 16px;
 }
 
 a {
-  color: var(--primary);
+  color: var(--link);
+  font-weight: bold;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
 }
 
 header {
@@ -66,15 +70,18 @@ header {
               calc( -1 * var(--page-width)) 0 0 var(--highlight-background)
   ;
 }
+header a {
+  color: var(--highlight);
+}
 main {
   max-width: var(--page-width);
   margin: var(--margin-enourmous) auto;
+  padding: var(--margin-normal);
 }
 
 .actions {
   margin: var(--margin-normal) 0;
-  background: #ddd;
-  border: solid thin #888;
+  background: var(--highlight);
   padding: var(--margin-normal);
   text-align: right;
   display: flex;
@@ -94,12 +101,23 @@ tr {
 }
 
 th {
-  padding: 0.5em;
+  padding: 0.5em 0;
   text-align: left;
 }
 
+@media only screen and (max-width: 599px) {
+  td.optional, th.optional {
+    display: none;
+  }
+}
+
 td {
-  padding: 0.5em;
+  padding: 0.5em 0;
+}
+@media only screen and (min-width: 600px) {
+  td, th {
+    paddig-left: 0.5em;
+  }
 }
 
 details {
@@ -114,10 +132,19 @@ details[open] {
 }
 
 fieldset {
-  border: solid thin silver;
-  margin: var(--margin-normal);
-  box-shadow: var(--margin-tiny) var(--margin-tiny) var(--margin-normal) silver;
+  border: none;
+  margin: var(--margin-normal) 0;
+  padding: 0;
 }
+
+@media only screen and (min-width: 600px) {
+  fieldset {
+    border: solid thin silver;
+    margin: var(--margin-normal);
+    padding: var(--margin-normal);
+  }
+}
+
 
 fieldset summary {
   width: 20ch;
@@ -128,17 +155,6 @@ fieldset summary {
   margin: var(--margin-large) 0;
 }
 
-@media only screen and (min-width: 600px) {
-  header nav ul {
-    padding-left: 0;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  header nav ul li {
-    display: inline;
-  }
-}
 
 #flash-messages {
   margin-left: calc( -0.5 * var(--page-width));
@@ -169,6 +185,15 @@ input[type="checkbox"] {
 
 input[type="submit"], button[type="submit"] {
   padding: 0.5em 1em;
+  background: var(--background);
+  border-radius: var(--margin-small);
+  border: none;
+  color: var(--link);
+  font-weight: bold;
+}
+
+input[type="submit"] a, button[type="submit"] a {
+  color: var(--baby-pink);
 }
 
 .field {
@@ -204,3 +229,185 @@ dl {
 dt {
   font-weight: bold;
 }
+
+.calendar.month.picker {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--margin-large);
+  box-shadow: var(--margin-tiny) var(--margin-tiny) var(--margin-normal) silver;
+}
+
+
+/**
+ * Hamburger Menu
+ */
+/**
+
+header nav ul li ul {
+  display: none;
+}
+
+header nav ul li:hover ul {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 120px;
+}
+
+header nav ul {
+  padding-left: 0;
+}
+
+header nav ul li {
+  width: 120px;
+  background: var(--secondary);
+  color: var(--highlight);
+  padding: var(--margin-normal);
+  position: relative;
+}
+
+header nav ul li a {
+  color: var(--highlight);
+}
+
+header nav ul li li {
+  border-radius: 0;
+}
+
+@media only screen and (min-width: 600px) {
+  header nav ul {
+    padding-left: 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  header nav ul li {
+    display: inline-block;
+    width: 120px;
+    text-align: center;
+    background: var(--secondary);
+    color: var(--highlight);
+    padding: var(--margin-normal);
+    border-radius: var(--margin-small);
+    position: relative;
+  }
+  header nav ul li a {
+    color: var(--highlight);
+  }
+  header nav ul li li {
+    border-radius: 0;
+  }
+
+  header nav ul li:hover ul {
+    top: 2.2em;
+    left: 0;
+  }
+}
+
+header nav ul li:hover ul li {
+  display: block;
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+}
+*/
+
+header nav [type="checkbox"][name="toggle-menu"] {
+  display: none;
+}
+header nav label.menu.toggle {
+  cursor: pointer;
+}
+
+div.menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 450px;
+  width: calc(100vw - 30px);
+  height: 100%;
+  transform: translate3d(-450px, 0, 0);
+  transition: transform 0.35s;
+  z-index: 1;
+  overflow: hidden;
+}
+
+input[name="toggle-menu"]:checked ~ label.overlay{
+  display: block;
+  left: 0;
+  background: var(--background);
+}
+
+input[name="toggle-menu"]:checked ~ div.menu {
+  transform: translate3d(0, 0, 0);
+}
+
+header nav label.menu.overlay {
+  background-color: var(--background);
+  position: absolute;
+  top: 0;
+  width: 100%;
+  bottom: 0;
+  z-index: 1;
+  display: none;
+}
+header nav .menu h2 {
+  padding: 0 16px;
+  height: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 1px solid #e8e8e8;
+}
+header nav .menu h1 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+}
+header nav .menu .menu {
+  transform: translate3d(480px, 0, 0);
+}
+header nav .menu ul {
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--margin-normal);
+}
+header nav .menu ul li a, nav .menu ul li label {
+  display: block;
+  text-align: left;
+  padding: 0 15px;
+  line-height: 47px;
+  text-decoration: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 1rem;
+  border-bottom: 1px solid #e8e8e8;
+  position: relative;
+}
+header nav .menu ul li label.chevron::after {
+  content: "";
+  position: absolute;
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  border-color: #333;
+  border-style: solid;
+  border-width: 1px 1px 0 0;
+  transform: rotate(45deg);
+  top: 50%;
+  margin-top: -5px;
+  right: 16px;
+}
+header nav .m-menu ul li .-invisible {
+  border-bottom: 0;
+}
+header nav .menu .menu label.toggle {
+  display: flex;
+  border-bottom: 0;
+  padding: 0;
+  box-sizing: content-box;
+}
+
