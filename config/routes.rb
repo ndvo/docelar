@@ -12,7 +12,9 @@ Rails.application.routes.draw do
   get 'logout' => 'session#destroy', as: 'logout'
 
   resources :countries
-  resources :payments
+  resources :payments do
+    post :payments_bulk_update, on: :collection
+  end
   resources :people
   resources :products
   resources :purchases do

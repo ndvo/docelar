@@ -3,7 +3,9 @@ class PaymentsController < ApplicationController
 
   # GET /payments or /payments.json
   def index
-    @payments = list_month
+    @payments = list_month || []
+    @total_paid = @payments.reduce(0) { |acc, cur| acc + (cur.paid_amount || 0) }
+    @total_due = @payments.reduce(0) { |acc, cur| acc + (cur.due_amount || 0) }
   end
 
   # Public: Payments paid or due this month
@@ -12,9 +14,19 @@ class PaymentsController < ApplicationController
   # or paid in the 'date' month.  'date' defaultts to today.
   #
   def list_month
+    @previous_month = chosen_month - 1.month
+    @next_month ||= chosen_month + 1.month
+    @list_month ||=
+      Payment.paid_at_month(chosen_month)
+      .or(Payment.due_at_month(chosen_month))
+      .or(Payment.late)
+      .order(due_at: :asc)
+  end
+
+  def chosen_month
     str_date = query_payment_params['date']
     today = str_date.nil? ? Date.today : Date.parse(str_date)
-    Payment.paid_at_month(today).or(Payment.due_at_month(today))
+    @chosen_month ||= today.change(day: 1)
   end
 
   # GET /payments/1 or /payments/1.json
@@ -66,6 +78,15 @@ class PaymentsController < ApplicationController
       format.html { redirect_to payments_url, notice: "Payment was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def payments_bulk_update
+    checked_payment_ids = params[:payment_ids]
+
+    list_month.where(id: checked_payment_ids, paid_at: nil).update_all("paid_at = date('now'), paid_amount = due_amount")
+    list_month.where.not(id: checked_payment_ids).update_all("paid_at = null, paid_amount = null")
+
+    redirect_to action: :index, notice: 'Pagamentos atualizados com sucesso.' 
   end
 
   private
