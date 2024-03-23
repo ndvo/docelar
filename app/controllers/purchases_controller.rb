@@ -3,12 +3,16 @@ class PurchasesController < ApplicationController
   before_action :use_products, only: %i[new edit set_installments]
   before_action :set_products, only: %i[new edit create update]
 
+  include DateNavigation
+
   # GET /purchases or /purchases.json
   def index
-    @purchases = Purchase.month month
+    set_month_navigation
+    @purchases = Purchase.month @chosen_month
   end
 
   # GET /purchases/1 or /purchases/1.json
+
   def show; end
 
   # GET /purchases/new
