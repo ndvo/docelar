@@ -1,0 +1,4 @@
+<nav class="picker calendar month">
+  <%= link_to "<― #{@previous_month.strftime("%Y/%m")}", { date: @previous_month } %> 
+  <%= link_to "#{@next_month.strftime("%Y/%m")} ―>", { date: @next_month } %>
+</nav>
