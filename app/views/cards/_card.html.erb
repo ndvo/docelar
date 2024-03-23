@@ -1,5 +1,5 @@
-<div id="<%= dom_id card %>">
-  <dl class="card">
+<div id="<%= dom_id card %>" class="card">
+  <dl>
     <dt>Bandeira</dt><dd><%= card.brand %></dd>
     <dt>Número</dt><dd><%= card.number %></dd>
     <dt>Nome</dt><dd><%= card.name %></dd>
@@ -7,4 +7,5 @@
     <dt>Vencimento</dt><dd><%= card.due_day %></dd>
     <dt>Melhor dia de compras</dt><dd><%= card.invoice_day ? card.invoice_day + 1 : 'não informado' %></dd>
   </dl>
+  <%= link_to "Editar", edit_card_path(id: card.id) %>
 </div>
