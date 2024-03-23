@@ -1,14 +1,15 @@
-<% if @tasks.blank? %>
-  <%= render 'empty_collection', resource: 'tarefa' %>
-<% else %>
-  <main>
-    <h1>Tasks</h1>
+<main>
+  <h1>Tasks</h1>
 
-    <%= link_to "Nova tarefa", new_task_path %>
+  <%= link_to "Nova tarefa", new_task_path %>
+
+  <% if @tasks.blank? %>
+    <%= render 'empty_collection', resource: 'tarefa' %>
+  <% else %>
     <%= render 'simple_table', {
       keys: %w(Tarefa Detalhes ✓), 
       rows: @tasks.map { |t| [ (link_to t.name, t), t.description, t.is_completed? ? '✓' : '' ] }
       }
     %>
-  </main>
-<% end %>
+  <% end %>
+</main>
