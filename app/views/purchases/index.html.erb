@@ -1,16 +1,12 @@
 <main>
-  <h1>Compras</h1>
+  <%= render 'simple_month_navigator', { date: @chosen_month } %>
 
-  <fieldset>
-    <legend>Navegar</legend>
-    <div class="month-navigation" data-controller="month-navigation">
-      <a href="" data-month-navigation-target="previous">mês anterior</a>
-      <a href="" data-month-navigation-target="next">mês seguinte</a>
-    </div>
-  </fieldset>
+  <h1>Compras do mês <%= @chosen_month.strftime("%Y/%m") %></h1>
 
+  <div class="actions">
+    <%= link_to "Cadastrar compra", new_purchase_path %>
+  </div>
 
-  <%= link_to "Cadastrar compra", new_purchase_path %>
   <%= render 'simple_table', {
     keys: %w(Produto Preço), 
     rows: @purchases.map { |p| [
