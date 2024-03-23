@@ -1,6 +1,8 @@
 class PaymentsController < ApplicationController
   before_action :set_payment, only: %i[ show edit update destroy ]
 
+  include DateNavigation
+
   # GET /payments or /payments.json
   def index
     @payments = list_month || []
@@ -14,19 +16,12 @@ class PaymentsController < ApplicationController
   # or paid in the 'date' month.  'date' defaultts to today.
   #
   def list_month
-    @previous_month = chosen_month - 1.month
-    @next_month ||= chosen_month + 1.month
+    set_month_navigation
     @list_month ||=
-      Payment.paid_at_month(chosen_month)
-      .or(Payment.due_at_month(chosen_month))
+      Payment.paid_at_month(@chosen_month)
+      .or(Payment.due_at_month(@chosen_month))
       .or(Payment.late)
       .order(due_at: :asc)
-  end
-
-  def chosen_month
-    str_date = query_payment_params['date']
-    today = str_date.nil? ? Date.today : Date.parse(str_date)
-    @chosen_month ||= today.change(day: 1)
   end
 
   # GET /payments/1 or /payments/1.json
@@ -99,9 +94,5 @@ class PaymentsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def payment_params
     params.require(:payment).permit(:due_amount, :due_at, :paid_amount, :paid_at, :purchase_id)
-  end
-
-  def query_payment_params
-    params.permit(:date)
   end
 end
