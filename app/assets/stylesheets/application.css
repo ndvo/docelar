@@ -44,6 +44,11 @@
   --highlight: var(--sage);
   --highlight-background: var(--army-green);
   --link: var(--prussian-blue);
+
+  /** widths */
+  --width-short: 20ch;
+  --width-regular: 40ch;
+  --width-large: 80ch;
 }
 
 body {
@@ -222,8 +227,8 @@ input[type="submit"] a, button[type="submit"] a {
 
 /* Key value pairs */
 dl {
-  display: flex;
-  align-content: space-between;
+  display: grid;
+  grid-template-columns: auto auto;
 }
 
 dt {
@@ -411,3 +416,17 @@ header nav .menu .menu label.toggle {
   box-sizing: content-box;
 }
 
+
+/* Cards */
+div#cards {
+  width: 100%;
+  display: grid;
+  gap: var(--margin-normal);
+  grid-auto-columns: var(--width-regular);
+}
+
+.card {
+  display: block;
+  padding: var(--margin-normal);
+  box-shadow: var(--margin-tiny) var(--margin-tiny) var(--margin-normal) silver;
+}
