@@ -10,11 +10,10 @@
     <fieldset>
       <legend>Parcelas</legend>
       <%= render 'simple_table', {
-        keys: %w(Preço Parcela Pago Vencimento Pagamento ✔),
-        rows: purchase.payments.map { |p| [
-          p.purchase.price,
+        keys: %w(Parcela Valor Vencimento Pagamento ✔),
+        rows: purchase.payments.each_with_index.map { |p, i| [
+          link_to("Parcela #{i + 1 }", p),
           p.due_amount,
-          p.paid_amount,
           p.due_at&.strftime("%d/%m/%Y"),
           p.paid_at&.strftime("%d/%m/%Y"),
           check_box_tag("payment_ids[]", p.id, p.paid_at.present?, id: "payment_#{p.id}")
