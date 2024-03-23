@@ -3,7 +3,9 @@ class Purchase < ApplicationRecord
   belongs_to :card, optional: true
   has_many :payments, dependent: :destroy
 
-  scope :month, ->(m) { where('purchase_at >= ? and purchase_at <= ?', *(date_begin_end m)) }
+  include Datable
+
+  scope :month, ->(m) { at_month m, 'purchase_at' }
 
   accepts_nested_attributes_for :payments,
                                 reject_if: :all_blank,
@@ -50,10 +52,4 @@ class Purchase < ApplicationRecord
 
   validates :product, presence: true
   validates_associated :payments, :product
-
-  private
-
-  def self.date_begin_end(a_date)
-    [a_date.at_beginning_of_month.to_s, a_date.at_end_of_month.to_s]
-  end
 end
