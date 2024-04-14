@@ -1,5 +1,4 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
   name: Sabão em Pó
   description: Omo dupla ação
@@ -11,3 +10,9 @@ two:
   description: Rolo
   brand: Sem marca
   kind: Pequeno
+
+with_no_purchases:
+  name: Produto nunca adquirido
+  description: nunca adquirido
+  brand: Alguma
+  kind: ruim
