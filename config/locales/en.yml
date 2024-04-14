@@ -33,3 +33,6 @@ en:
   hello: "Hello world"
   messages:
     saved: "The information was successfully saved."
+  errors:
+    messages:
+      cannot_destroy_with_purchases: 'It is not possible to remove a product with purchases'

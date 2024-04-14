@@ -134,6 +134,7 @@ pt-BR:
       present: deve ficar em branco
       required: é obrigatório(a)
       taken: já está em uso
+      cannot_destroy_with_purchases: 'Não é possível remover um produto para o qual existam compras'
       too_long:
         one: 'é muito longo (máximo: %{count} caracter)'
         other: 'é muito longo (máximo: %{count} caracteres)'
