@@ -2,10 +2,10 @@
 
 one:
   commenter: MyString
-  boy: MyText
+  body: MyText
   article: one
 
 two:
   commenter: MyString
-  boy: MyText
+  body: MyText
   article: two

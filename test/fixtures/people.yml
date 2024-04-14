@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  country: MyString
+  name: João
+  nationality_id: 1
 
 two:
-  name: MyString
-  country: MyString
+  name: Pedro
+  nationality_id: 2

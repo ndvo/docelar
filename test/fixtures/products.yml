@@ -1,13 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  description: MyText
-  brand: MyString
-  kind: MyString
+  name: Sabão em Pó
+  description: Omo dupla ação
+  brand: Omo
+  kind: Caixa
 
 two:
-  name: MyString
-  description: MyText
-  brand: MyString
-  kind: MyString
+  name: Saquinho de cocô
+  description: Rolo
+  brand: Sem marca
+  kind: Pequeno
