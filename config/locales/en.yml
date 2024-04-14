@@ -31,3 +31,5 @@
 
 en:
   hello: "Hello world"
+  messages:
+    saved: "The information was successfully saved."
