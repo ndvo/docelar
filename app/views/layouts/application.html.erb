@@ -26,5 +26,6 @@
     </header>
     <%= yield %>
     <%= render partial: "flash_message" %>
+    <%= Rails.env.development? && console %>
   </body>
 </html>
