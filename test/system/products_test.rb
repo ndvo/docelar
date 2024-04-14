@@ -34,7 +34,7 @@ class ProductsTest < ApplicationSystemTestCase
     fill_in "Name", with: @product.name
     click_on "Update Product"
 
-    assert_text "Product was successfully updated"
+    assert_text I18n.t('messages.saved')
     click_on "Back"
   end
 

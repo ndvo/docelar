@@ -38,7 +38,7 @@ class CardsController < ApplicationController
   def update
     respond_to do |format|
       if @card.update(card_params)
-        format.html { redirect_to card_url(@card), notice: "Card was successfully updated." }
+        format.html { redirect_to card_url(@card), notice: I18n.t('messages.saved') }
         format.json { render :show, status: :ok, location: @card }
       else
         format.html { render :edit, status: :unprocessable_entity }

@@ -32,7 +32,7 @@ class PaymentsTest < ApplicationSystemTestCase
     fill_in "Value", with: @payment.value
     click_on "Update Payment"
 
-    assert_text "Payment was successfully updated"
+    assert_text I18n.t('messages.saved')
     click_on "Back"
   end
 

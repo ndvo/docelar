@@ -38,7 +38,7 @@ class DogsController < ApplicationController
   def update
     respond_to do |format|
       if @dog.update(dog_params)
-        format.html { redirect_to dog_url(@dog), notice: "Dog was successfully updated." }
+        format.html { redirect_to dog_url(@dog), notice: I18n.t('messages.saved') }
         format.json { render :show, status: :ok, location: @dog }
       else
         format.html { render :edit, status: :unprocessable_entity }

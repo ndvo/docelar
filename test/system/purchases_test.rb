@@ -30,7 +30,7 @@ class PurchasesTest < ApplicationSystemTestCase
     fill_in "Product", with: @purchase.product_id
     click_on "Update Purchase"
 
-    assert_text "Purchase was successfully updated"
+    assert_text I18n.t('messages.saved')
     click_on "Back"
   end
 
