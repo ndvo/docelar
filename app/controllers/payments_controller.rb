@@ -78,8 +78,18 @@ class PaymentsController < ApplicationController
   def payments_bulk_update
     checked_payment_ids = params[:payment_ids]
 
-    list_month.where(id: checked_payment_ids, paid_at: nil).update_all("paid_at = date('now'), paid_amount = due_amount")
-    list_month.where.not(id: checked_payment_ids).update_all("paid_at = null, paid_amount = null")
+    paid_at = DateTime.now
+
+    list_month.where(id: checked_payment_ids, paid_at: nil).each do |p|
+      p.paid_at = DateTime.now
+      p.paid_amount = due_amount
+      p.save
+    end
+    list_month.where.not(id: checked_payment_ids).each do |p|
+      p.paid_at = nil
+      p.paid_amount = nil
+      p.save
+    end
 
     redirect_to action: :index, notice: 'Pagamentos atualizados com sucesso.' 
   end
