@@ -1,21 +1,30 @@
 <div id="<%= dom_id payment %>">
   <p>
-    <strong>Value:</strong>
+    <strong>Valor Devido:</strong>
     <%= payment.due_amount %>
   </p>
-
   <p>
     <strong>Due at:</strong>
     <%= payment.due_at %>
   </p>
 
-  <p>
-    <strong>Paid at:</strong>
-    <%= payment.due_at %>
-  </p>
+
+  <% if payment.paid_at.present? %>
+    <fieldset>
+      <legend>Pago</legend>
+      <p>
+      <strong>Pago em:</strong>
+      <%= payment.due_at %>
+      </p>
+      <p>
+      <strong>Valor pago:</strong>
+      <%= payment.paid_amount %>
+      </p>
+    </fieldset>
+  <% end %>
 
   <p>
-    <strong>Purchase:</strong>
+    <strong>Relativo à compra:</strong>
     <%= payment.purchase_id %>
   </p>
 
