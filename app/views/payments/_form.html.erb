@@ -12,13 +12,19 @@
   <% end %>
 
   <div>
-    <%= form.label :value, style: "display: block" %>
-    <%= form.text_field :value %>
+    <%= form.label :due_amount, style: "display: block" %>
+    <%= form.number_field :due_amount %>
   </div>
 
   <div>
-    <%= form.label :date, style: "display: block" %>
-    <%= form.datetime_field :date %>
+    <%= form.label :paid_amount, style: "display: block" %>
+    <%= form.number_field :paid_amount %>
+  </div>
+
+
+  <div>
+    <%= form.label :paid_at, style: "display: block" %>
+    <%= form.date_field :paid_at %>
   </div>
 
   <div>
