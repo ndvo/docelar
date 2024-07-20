@@ -109,6 +109,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_20_143155) do
     t.index ["person_id"], name: "index_nationalities_on_person_id"
   end
 
+  create_table "patients", force: :cascade do |t|
+    t.string "individual_type", null: false
+    t.integer "individual_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["individual_type", "individual_id"], name: "index_patients_on_individual"
+  end
+
   create_table "payments", force: :cascade do |t|
     t.decimal "due_amount"
     t.datetime "due_at"

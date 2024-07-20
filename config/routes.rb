@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  resources :patients
   resources :cards
   resources :dogs
   resources :tasks
