@@ -6,10 +6,24 @@
   <% if @tasks.blank? %>
     <%= render 'empty_collection', resource: 'tarefa' %>
   <% else %>
-    <%= render 'simple_table', {
-      keys: %w(Tarefa Detalhes ✓), 
-      rows: @tasks.map { |t| [ (link_to t.name, t), t.description, t.is_completed? ? '✓' : '' ] }
-      }
-    %>
+    <%= form_with url: { action: 'bulk_update' }, method: :post do |form| %>
+      <% @tasks.each do |i| %>
+        <%= hidden_field_tag("task_ids[#{i.id}]", nil) %>
+      <% end %>
+      <fieldset>
+        <%= render 'simple_table', {
+          keys: %w(Tarefa Detalhes ✓), 
+          rows: @tasks.map { |i| [
+            (link_to i.name, i),
+            i.description,
+            check_box_tag("task_ids[]", i.id, i.is_completed?, { multiple: true }),
+          ] }
+        }
+        %>
+        <div class="actions">
+          <%= submit_tag "Salvar" %>
+        </div>
+      </fieldset>
+    <% end %>
   <% end %>
 </main>

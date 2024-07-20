@@ -1,6 +1,8 @@
 class TasksController < ApplicationController
   before_action :set_task, only: %i[ show edit update destroy ]
 
+  include DateNavigation
+
   # GET /tasks or /tasks.json
   def index
     case index_params[:completed]
@@ -20,10 +22,14 @@ class TasksController < ApplicationController
   # GET /tasks/new
   def new
     @task = Task.new
+    @users = User.all
+    @tasks = Task.all
   end
 
   # GET /tasks/1/edit
   def edit
+    @users = User.all
+    @tasks = Task.all
   end
 
   # POST /tasks or /tasks.json
@@ -62,6 +68,11 @@ class TasksController < ApplicationController
       format.html { redirect_to tasks_url, notice: "Task was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def bulk_update
+    checked_ids = params[:task_ids]
+
   end
 
   private
