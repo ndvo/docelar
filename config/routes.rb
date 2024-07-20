@@ -4,7 +4,9 @@ Rails.application.routes.draw do
   resources :patients
   resources :cards
   resources :dogs
-  resources :tasks
+  resources :tasks do
+    post :bulk_update, on: :collection
+  end
   root 'home#index'
 
   get 'sign_up' => 'users#new', as: 'sign_up'
