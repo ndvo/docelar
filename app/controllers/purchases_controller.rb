@@ -19,7 +19,7 @@ class PurchasesController < ApplicationController
   def new
     @purchase = Purchase.new
     @purchase.product = Product.new
-    @purchase.qty_installments = 1
+    @purchase.number_of_installments = 1
     @purchase.quantity = 1
     @purchase.purchase_at = DateTime.now.to_date
     @product = Product.new
@@ -123,7 +123,7 @@ class PurchasesController < ApplicationController
         :add_payment,
         :price,
         :purchase_at,
-        :qty_installments,
+        :number_of_installments,
         :quantity,
         :card_id,
         payments_attributes: %i[purchase_id due_amount due_at _destroy])

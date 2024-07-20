@@ -11,18 +11,35 @@ class Purchase < ApplicationRecord
                                 reject_if: :all_blank,
                                 allow_destroy: true
 
-  def qty_installments
+  after_initialize :adjust_payments
+
+  validates :product, presence: true
+  validates_associated :payments, :product
+
+  # store in memory during build to adjust payments after_initialize
+  def number_of_installments=(qty)
+    write_attribute(:number_of_installments, [qty&.to_i, 1].max)
+  end
+
+  def number_of_installments
     [payments.count, 1].max
   end
 
-  def qty_installments=(qty)
-    qty = [qty&.to_i, 1].max
+  def number_of_installments
+    raw_value = read_attribute(:number_of_installments)
+    return payments.count if raw_value.nil?
+
+    raw_value
+  end
+
+  def adjust_payments
+    installments = number_of_installments
     return if price.blank?
 
-    installment_value = (price / qty).round(2)
-    first_value = price - (installment_value * (qty - 1))
+    installment_value = (value_total / installments).round(2)
+    first_value = value_total - (installment_value * (installments - 1))
 
-    self.payments = (0...qty).map do |idx|
+    self.payments = (0...installments).map do |idx|
       installment = self.payments[idx].presence
       installment_data = {
         due_amount: (idx == 0 ? first_value : installment_value),
@@ -50,6 +67,7 @@ class Purchase < ApplicationRecord
     next_due ? card.next_due_date_from(purchase_at) + idx.months : nil
   end
 
-  validates :product, presence: true
-  validates_associated :payments, :product
+  def value_total
+    price * quantity
+  end
 end

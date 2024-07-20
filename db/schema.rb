@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_13_213430) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_20_143155) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -151,10 +151,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_213430) do
     t.integer "product_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "quantity"
+    t.bigint "quantity"
     t.string "integer"
     t.datetime "purchase_at"
     t.integer "card_id"
+    t.integer "number_of_installments"
     t.index ["card_id"], name: "index_purchases_on_card_id"
     t.index ["product_id"], name: "index_purchases_on_product_id"
   end
