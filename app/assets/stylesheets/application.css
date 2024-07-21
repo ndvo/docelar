@@ -129,7 +129,6 @@ details {
   border: dashed thin transparent;
   padding: var(--margin-normal);
   margin: var(--margin-normal);
-}
 
 details[open] {
   border-color: #888;
@@ -241,83 +240,6 @@ dt {
   padding: var(--margin-large);
   box-shadow: var(--margin-tiny) var(--margin-tiny) var(--margin-normal) silver;
 }
-
-
-/**
- * Hamburger Menu
- */
-/**
-
-header nav ul li ul {
-  display: none;
-}
-
-header nav ul li:hover ul {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 120px;
-}
-
-header nav ul {
-  padding-left: 0;
-}
-
-header nav ul li {
-  width: 120px;
-  background: var(--secondary);
-  color: var(--highlight);
-  padding: var(--margin-normal);
-  position: relative;
-}
-
-header nav ul li a {
-  color: var(--highlight);
-}
-
-header nav ul li li {
-  border-radius: 0;
-}
-
-@media only screen and (min-width: 600px) {
-  header nav ul {
-    padding-left: 0;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  header nav ul li {
-    display: inline-block;
-    width: 120px;
-    text-align: center;
-    background: var(--secondary);
-    color: var(--highlight);
-    padding: var(--margin-normal);
-    border-radius: var(--margin-small);
-    position: relative;
-  }
-  header nav ul li a {
-    color: var(--highlight);
-  }
-  header nav ul li li {
-    border-radius: 0;
-  }
-
-  header nav ul li:hover ul {
-    top: 2.2em;
-    left: 0;
-  }
-}
-
-header nav ul li:hover ul li {
-  display: block;
-}
-
-header nav {
-  display: flex;
-  align-items: center;
-}
-*/
 
 header nav [type="checkbox"][name="toggle-menu"] {
   display: none;
