@@ -21,6 +21,7 @@ class PaymentsController < ApplicationController
       Payment.paid_at_month(@chosen_month)
       .or(Payment.due_at_month(@chosen_month))
       .or(Payment.late)
+      .includes(purchase: :card).order("cards.name")
       .order(due_at: :asc)
   end
 

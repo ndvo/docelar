@@ -11,7 +11,7 @@ class Purchase < ApplicationRecord
                                 reject_if: :all_blank,
                                 allow_destroy: true
 
-  after_initialize :adjust_payments
+  before_save :adjust_payments
 
   validates :product, presence: true
   validates_associated :payments, :product

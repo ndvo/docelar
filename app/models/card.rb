@@ -1,4 +1,7 @@
 class Card < ApplicationRecord
+  has_many :purchases
+  has_many :payments, through: :purchases, inverse_of: :card
+
   def display_name
     "#{brand} - #{name} - #{masked_number}"
   end
@@ -13,5 +16,12 @@ class Card < ApplicationRecord
     due_date += 1.month if date.day >= invoice_day;
     due_date += 1.month if invoice_day > due_day;
     due_date
+  end
+
+  def pay_current_month
+    debugger
+    to_pay = payments.pending.due_this_month
+    to_pay.each &:pay
+    to_pay
   end
 end

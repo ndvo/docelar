@@ -3,6 +3,9 @@
 Rails.application.routes.draw do
   resources :patients
   resources :cards
+  resources :cards do
+    match :pay, via: [:patch, :post, :put], on: :member
+  end
   resources :dogs
   resources :tasks do
     post :bulk_update, on: :collection

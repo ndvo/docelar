@@ -1,10 +1,38 @@
-<p style="color: green"><%= notice %></p>
-
+<main>
 <%= render @card %>
 
-<div>
-  <%= link_to "Edit this card", edit_card_path(@card) %> |
-  <%= link_to "Back to cards", cards_path %>
+<div class="actions">
+  <%= link_to "Ver todos os cartões", cards_path %>
+  <%= link_to "Editar cartão", edit_card_path(id: @card.id) %>
 
-  <%= button_to "Destroy this card", @card, method: :delete %>
+  <%= button_to "Pagar fatura", [:pay, @card] %>
+  <%= button_to "Apagar cartão", @card, method: :delete %>
 </div>
+
+  <h1>Lançamentos do mês</h1>
+
+  <%= render 'simple_table', {
+    keys: ['', 'Devido', 'Pago',  'A Pagar'],
+    rows: [[
+      'Totais do mês',
+      brl(@total_due),
+      brl(@total_paid),
+      brl([@total_due, @total_paid].filter(&:present?).reduce(&:-))
+    ]]
+  }%>
+
+    <fieldset>
+      <%= render 'simple_table', {
+        optional: [1, 3, 5],
+        keys: %w(Produto Preço Parcela Venc. Pgto  Pago),
+        rows: @payments.map { |p| [
+          link_to(product_short_description(p), purchase_path(p.purchase)),
+          brl(p.purchase.price),
+          p.paid_amount ? brl(p.paid_amount) : brl(p.due_amount),
+          p.due_at&.strftime("%d"),
+          p.paid_at&.strftime("%d"),
+          check_box_tag("payment_ids[]", p.id, p.paid_at.present?, id: "payment_#{p.id}", disabled: true)
+        ]}
+      }%>
+    </fieldset>
+</main>

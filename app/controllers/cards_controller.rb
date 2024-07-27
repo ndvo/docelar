@@ -1,5 +1,5 @@
 class CardsController < ApplicationController
-  before_action :set_card, only: %i[ show edit update destroy ]
+  before_action :set_card, only: %i[ destroy edit pay show update ]
 
   # GET /cards or /cards.json
   def index
@@ -8,6 +8,9 @@ class CardsController < ApplicationController
 
   # GET /cards/1 or /cards/1.json
   def show
+    @total_due = @card.payments.due_this_month.pluck(:due_amount).reduce(:+)
+    @total_paid = @card.payments.paid.paid_this_month.pluck(:paid_amount).reduce(:+)
+    @payments = @card.payments.due_this_month
   end
 
   # GET /cards/new
@@ -54,6 +57,19 @@ class CardsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to cards_url, notice: "Card was successfully destroyed." }
       format.json { head :no_content }
+    end
+  end
+
+  def pay
+    payments_made = @card.pay_current_month
+    respond_to do |format|
+      if payments_made.present? && payments_made.all?
+        format.html { redirect_to card_url(@card), notice: "Pagamentos registrados" }
+        format.json { render :show, status: :ok }
+      else
+        format.html { redirect_to card_url(@card), notice: "Ocorreu um erro ao salvar" }
+        format.json { render json: payments_made.map(&:errors), status: :unprocessable_entity }
+      end
     end
   end
 

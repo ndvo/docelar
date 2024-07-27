@@ -1,4 +1,7 @@
-<div id="<%= dom_id card %>" class="card">
+<%
+  card_class = action_name == 'index' ? 'card' : ''
+%>
+<div id="<%= dom_id card %>" class="<%= 'card_class' %>">
   <dl>
     <dt>Bandeira</dt><dd><%= card.brand %></dd>
     <dt>Número</dt><dd><%= card.number %></dd>
@@ -7,5 +10,11 @@
     <dt>Vencimento</dt><dd><%= card.due_day %></dd>
     <dt>Melhor dia de compras</dt><dd><%= card.invoice_day ? card.invoice_day + 1 : 'não informado' %></dd>
   </dl>
-  <%= link_to "Editar", edit_card_path(id: card.id) %>
+
+  <% if action_name == 'index' %>
+    <div class="actions">
+      <%= link_to "Ver detalhes", card_path(id: card.id) %>
+      <%= button_to "Pagar", action: "pay", id: card.id, remote: true %>
+    </div>
+  <% end %>
 </div>
