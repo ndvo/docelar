@@ -83,7 +83,7 @@ class PaymentsController < ApplicationController
 
     list_month.where(id: checked_payment_ids, paid_at: nil).each do |p|
       p.paid_at = DateTime.now
-      p.paid_amount = due_amount
+      p.paid_amount = p.due_amount
       p.save
     end
     list_month.where.not(id: checked_payment_ids).each do |p|
