@@ -429,4 +429,5 @@ div#cards {
   display: block;
   padding: var(--margin-normal);
   box-shadow: var(--margin-tiny) var(--margin-tiny) var(--margin-normal) silver;
+  border-radius: var(--margin-tiny);
 }
