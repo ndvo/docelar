@@ -19,7 +19,6 @@ class Card < ApplicationRecord
   end
 
   def pay_current_month
-    debugger
     to_pay = payments.pending.due_this_month
     to_pay.each &:pay
     to_pay
