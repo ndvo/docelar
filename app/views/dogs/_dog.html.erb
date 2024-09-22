@@ -1,23 +1,17 @@
-<div id="<%= dom_id dog %>">
+<div id="<%= dom_id dog %>" class="card dog">
+  <p>
+    <strong>Name:</strong>
+    <%= dog.name %>
+  </p>
 
   <p>
     <strong>Race:</strong>
     <%= dog.race %>
+    | <strong><%= dog.sex %></strong>
   </p>
 
   <p>
-    <strong>Sex:</strong>
-    <%= dog.sex %>
-  </p>
-
-  <p>
-    <strong>Birth:</strong>
-    <%= dog.birth %>
-  </p>
-
-  <p>
-    <strong>Name:</strong>
-    <%= dog.name %>
+    <strong>☆</strong> <%= dog.birth %> 
   </p>
 
 </div>
