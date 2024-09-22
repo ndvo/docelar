@@ -12,6 +12,7 @@ class PatientsController < ApplicationController
 
   # GET /patients/new
   def new
+    @individuals = Dog.all
     @patient = Patient.new
   end
 
@@ -21,8 +22,10 @@ class PatientsController < ApplicationController
 
   # POST /patients or /patients.json
   def create
-    @patient = Patient.new(patient_params)
+    @individual = Dog.find(patient_params[:individual_id])
 
+    @patient = Patient.new(individual: @individual)
+    
     respond_to do |format|
       if @patient.save
         format.html { redirect_to patient_url(@patient), notice: "Patient was successfully created." }

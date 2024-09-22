@@ -1,0 +1,17 @@
+<main>
+<h1>Medicações</h1>
+
+<div id="medications">
+  <div class="actions">
+    <%= link_to "Cadastrar medicação", new_medication_path %>
+  </div>
+
+  <%= render 'simple_table', {
+    keys: ['Nome', 'Princípio Ativo'],
+    rows: @medications.map do |i|
+      [link_to(i.name, i), i.active_principle]
+    end
+  } %>
+</div>
+
+</main>

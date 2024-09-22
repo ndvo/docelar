@@ -1,0 +1,12 @@
+<h1>Pharmacotherapies</h1>
+
+<div id="pharmacotherapies">
+  <% @pharmacotherapies.each do |pharmacotherapy| %>
+    <%= render pharmacotherapy %>
+    <p>
+      <%= link_to "Show this pharmacotherapy", pharmacotherapy %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New pharmacotherapy", new_pharmacotherapy_path %>

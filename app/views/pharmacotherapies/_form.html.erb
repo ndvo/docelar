@@ -1,0 +1,57 @@
+<%= form_with(model: pharmacotherapy) do |form| %>
+  <% if pharmacotherapy.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(pharmacotherapy.errors.count, "error") %> prohibited this pharmacotherapy from being saved:</h2>
+
+      <ul>
+        <% pharmacotherapy.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :treatment_id, style: "display: block" %>
+    <%= form.text_field :treatment_id %>
+  </div>
+
+  <div>
+    <%= form.label :medication_id, style: "display: block" %>
+    <%= form.text_field :medication_id %>
+  </div>
+
+  <div>
+    <%= form.label :frequency_value, style: "display: block" %>
+    <%= form.text_field :frequency_value %>
+  </div>
+
+  <div>
+    <%= form.label :frequency_unit, style: "display: block" %>
+    <%= form.text_field :frequency_unit %>
+  </div>
+
+  <div>
+    <%= form.label :dosage_value, style: "display: block" %>
+    <%= form.text_field :dosage_value %>
+  </div>
+
+  <div>
+    <%= form.label :dosage_unit, style: "display: block" %>
+    <%= form.text_field :dosage_unit %>
+  </div>
+
+  <div>
+    <%= form.label :duration, style: "display: block" %>
+    <%= form.number_field :duration %>
+  </div>
+
+  <div>
+    <%= form.label :end_date, style: "display: block" %>
+    <%= form.date_field :end_date %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,8 @@
+<%= render @pharmacotherapy %>
+
+<div>
+  <%= link_to "Edit this pharmacotherapy", edit_pharmacotherapy_path(@pharmacotherapy) %> |
+  <%= link_to "Back to pharmacotherapies", pharmacotherapies_path %>
+
+  <%= button_to "Destroy this pharmacotherapy", @pharmacotherapy, method: :delete %>
+</div>

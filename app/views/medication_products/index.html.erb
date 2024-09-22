@@ -1,0 +1,12 @@
+<h1>Medication products</h1>
+
+<div id="medication_products">
+  <% @medication_products.each do |medication_product| %>
+    <%= render medication_product %>
+    <p>
+      <%= link_to "Show this medication product", medication_product %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New medication product", new_medication_product_path %>

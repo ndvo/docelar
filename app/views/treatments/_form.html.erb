@@ -1,0 +1,48 @@
+<%= form_with(model: treatment) do |form| %>
+  <% if treatment.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(treatment.errors.count, "error") %> prohibited this treatment from being saved:</h2>
+
+      <ul>
+        <% treatment.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :patient_id, style: "display: block" %>
+    <%= form.select :patient_id, options_for_select(@patients&.collect { | patient | [patient.individual.name, patient.id] }, @patient&.id), {}, {} %>
+  </div>
+
+  <fieldset>
+    <legend>Tratamentos</legend>
+    <%= form.fields_for :pharmacotherapies do |p_form| %>
+      <div>
+        <%= p_form.label :medication_id, style: "display: block" %>
+        <%= p_form.select :medication_id, options_for_select(@medications&.collect { | medication | [medication.name, medication.id] }, @medication&.id), {}, {} %>
+      </div>
+      <div>
+        <%= p_form.label :dosage_value, style: "display: block" %>
+        <%= p_form.text_field :dosage_value %>
+      </div>
+      <div>
+        <%= p_form.label :dosage_unit, style: "display: block" %>
+        <%= p_form.text_field :dosage_unit %>
+      </div>
+      <div>
+        <%= p_form.label :frequency_value, style: "display: block" %>
+        <%= p_form.text_field :frequency_value %>
+      </div>
+      <div>
+        <%= p_form.label :frequency_unit, style: "display: block" %>
+        <%= p_form.text_field :frequency_unit %>
+      </div>
+    <% end %>
+  </fieldset>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

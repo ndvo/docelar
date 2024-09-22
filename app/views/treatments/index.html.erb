@@ -1,0 +1,14 @@
+<main>
+<h1>Tratamentos</h1>
+
+<div id="treatments">
+  <% @treatments.each do |treatment| %>
+    <%= render treatment %>
+    <p>
+      <%= link_to "Show this treatment", treatment %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New treatment", new_treatment_path %>
+</main>
