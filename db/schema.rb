@@ -98,6 +98,26 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_20_143155) do
     t.index ["gallery_id"], name: "index_galleries_on_gallery_id"
   end
 
+  create_table "medication_products", force: :cascade do |t|
+    t.string "name"
+    t.string "brand"
+    t.string "form"
+    t.integer "per"
+    t.string "per_unit_unit"
+    t.string "picture"
+    t.integer "medication_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["medication_id"], name: "index_medication_products_on_medication_id"
+  end
+
+  create_table "medications", force: :cascade do |t|
+    t.string "name"
+    t.string "active_principle"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "nationalities", force: :cascade do |t|
     t.integer "person_id", null: false
     t.integer "country_id", null: false
@@ -135,6 +155,21 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_20_143155) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["nationality_id"], name: "index_people_on_nationality_id"
+  end
+
+  create_table "pharmacotherapies", force: :cascade do |t|
+    t.integer "treatment_id", null: false
+    t.integer "medication_id", null: false
+    t.float "frequency_value"
+    t.string "frequency_unit"
+    t.float "dosage_value"
+    t.string "dosage_unit"
+    t.integer "duration"
+    t.date "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["medication_id"], name: "index_pharmacotherapies_on_medication_id"
+    t.index ["treatment_id"], name: "index_pharmacotherapies_on_treatment_id"
   end
 
   create_table "photos", force: :cascade do |t|
@@ -185,6 +220,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_20_143155) do
     t.index ["user_id"], name: "index_tasks_on_user_id"
   end
 
+  create_table "treatments", force: :cascade do |t|
+    t.string "name"
+    t.integer "patient_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["patient_id"], name: "index_treatments_on_patient_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_hash"
@@ -196,9 +239,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_20_143155) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "articles"
+  add_foreign_key "medication_products", "medications"
   add_foreign_key "nationalities", "countries"
   add_foreign_key "nationalities", "people"
   add_foreign_key "payments", "purchases"
+  add_foreign_key "pharmacotherapies", "medications"
+  add_foreign_key "pharmacotherapies", "treatments"
   add_foreign_key "purchases", "cards"
   add_foreign_key "purchases", "products"
   add_foreign_key "tasks", "tasks"
