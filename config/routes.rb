@@ -3,6 +3,10 @@
 Rails.application.routes.draw do
   resources :patients
   resources :cards
+  resources :medication_products
+  resources :medications
+  resources :pharmacotherapies
+  resources :treatments
   resources :cards do
     match :pay, via: [:patch, :post, :put], on: :member
   end
