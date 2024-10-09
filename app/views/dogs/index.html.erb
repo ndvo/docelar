@@ -1,14 +1,13 @@
 <main>
-<h1>Turminha</h1>
+  <h1>Turminha</h1>
 
-<div id="dogs">
-  <% @dogs.each do |dog| %>
-    <%= render dog %>
-    <p>
-      <%= link_to "Show this dog", dog %>
-    </p>
-  <% end %>
-</div>
+  <div class="actions">
+    <%= link_to "New dog", new_dog_path %>
+  </div>
 
-<%= link_to "New dog", new_dog_path %>
+  <div id="dogs">
+    <% @dogs.each do |dog| %>
+      <%= render dog %>
+    <% end %>
+  </div>
 </main>
