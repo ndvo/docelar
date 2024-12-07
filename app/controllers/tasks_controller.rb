@@ -7,9 +7,9 @@ class TasksController < ApplicationController
   def index
     case index_params[:completed]
     when 'true'
-      @tasks = Task.where(is_completed: true)
+      @tasks = Task.completed
     when 'false'
-      @tasks = Task.where(is_completed: false)
+      @tasks = Task.pending
     else
       @tasks = Task.all
     end
