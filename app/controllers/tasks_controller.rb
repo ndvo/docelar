@@ -71,8 +71,13 @@ class TasksController < ApplicationController
   end
 
   def bulk_update
-    checked_ids = params[:task_ids]
+    Task.pending.where(id: bulk_update_params[:task_ids]).update(is_completed: true)
+    Task.completed.where(id:  bulk_update_params[:all_task_ids].split -  bulk_update_params[:task_ids]).update(is_completed: false)
 
+    respond_to do |format|
+      format.html { redirect_to tasks_url, notice: "Tasks was successfully updated." }
+      format.json { head :no_content }
+    end
   end
 
   private
@@ -84,6 +89,10 @@ class TasksController < ApplicationController
     # Only allow a list of trusted parameters through.
     def task_params
       params.require(:task).permit(:user_id, :task_id, :name, :description, :is_completed)
+    end
+
+    def bulk_update_params
+      params.permit(:all_task_ids, task_ids: [])
     end
 
     def index_params

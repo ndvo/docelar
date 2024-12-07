@@ -18,16 +18,14 @@
     <%= render 'empty_collection', resource: 'tarefa' %>
   <% else %>
     <%= form_with url: { action: 'bulk_update' }, method: :post do |form| %>
-      <% @tasks.each do |i| %>
-        <%= hidden_field_tag("task_ids[#{i.id}]", nil) %>
-      <% end %>
+      <%= hidden_field_tag("all_task_ids", @tasks.pluck(:id)) %>
       <fieldset>
         <%= render 'simple_table', {
           keys: %w(Tarefa Detalhes ✓), 
           rows: @tasks.map { |i| [
             (link_to i.name, i),
             i.description,
-            check_box_tag("task_ids[]", i.id, i.is_completed?, { multiple: true }),
+            check_box_tag("task_ids[]", i.id, i.is_completed?),
           ] }
         }
       %>
