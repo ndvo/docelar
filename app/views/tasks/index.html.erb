@@ -5,11 +5,11 @@
 
   <div class="actions">
     <%= form_with url: { action: 'index' }, method: :get do |form| %>
-      <%= form.radio_button :completed, true, checked: params[:completed] == "true" %>
+      <%= form.radio_button :completed, true, checked: @filter_is_completed == "true" %>
       <%= form.label :completed_true, "Completed" %>
-      <%= form.radio_button :completed, false, checked: params[:completed] == "false" %>
+      <%= form.radio_button :completed, false, checked: @filter_is_completed == "false" %>
       <%= form.label :completed_false, "Pending" %>
-      <%= form.radio_button :completed, "all", checked: params[:completed] == "all" %>
+      <%= form.radio_button :completed, "all", checked: @filter_is_completed == "all" %>
       <%= form.label :completed_all, "All" %>
       <%= form.submit "Filter" %>
     <% end %>

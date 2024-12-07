@@ -5,7 +5,8 @@ class TasksController < ApplicationController
 
   # GET /tasks or /tasks.json
   def index
-    case index_params[:completed]
+    @filter_is_completed = index_params[:completed] || 'false'
+    case @filter_is_completed
     when 'true'
       @tasks = Task.completed
     when 'false'
