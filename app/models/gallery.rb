@@ -12,11 +12,11 @@ class Gallery < ActiveRecord::Base
     end
   end
 
-  def generate_thumbnails
+  def generate_thumbnails(regenerate: false)
     Dir.children(fs_path).each do |path|
       i = File.basename(path)
-      next if File.exists? "#{fs_thumbs_path}/#{i}"
-      system "convert \"#{fs_path}/#{i}\" -set option:distort:viewport \"%[fx:min(w,h)]x%[fx:min(w,h)]+%[fx:max((w-h)/2,0)]+%[fx:max((h-w)/2,0)]\"  -filter point -distort SRT 0  +repage  \"#{fs_thumbs_path}/#{i}\""
+      next if !regenerate && File.exists?("#{fs_thumbs_path}/#{i}")
+      system "convert \"#{fs_path}/#{i}\" -thumbnail 200x200^ -gravity center -crop 200x200+0+0 \"#{fs_thumbs_path}/#{i}\""
     end
   end
 
