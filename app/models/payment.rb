@@ -19,4 +19,8 @@ class Payment < ApplicationRecord
   def pay(date: Time.now, amount: due_amount)
     update(paid_at: date, paid_amount: amount)
   end
+
+  def installment_number
+    purchase.payments.order('due_at asc').pluck(:id).index(id) + 1
+  end
 end
