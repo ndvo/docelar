@@ -1,6 +1,5 @@
 class PurchasesController < ApplicationController
   before_action :set_purchase, only: %i[show edit update destroy payments_bulk_update]
-  before_action :use_products, only: %i[new edit set_installments]
   before_action :set_products, only: %i[new edit create update]
 
   include DateNavigation
@@ -137,11 +136,7 @@ class PurchasesController < ApplicationController
     params.permit(:from, :to, :month, :day, :month_relative)
   end
 
-  def use_products
-    @products = Product.all
-  end
-
   def set_products
-    @products = Product.all
+    @products = Product.all.order('name ASC')
   end
 end
