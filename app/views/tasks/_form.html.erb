@@ -49,6 +49,7 @@
   </div>
 
   <div>
+    <%= button_to "Salvar e criar nova tarefa", action: "create", form: { redirect_to: new_task_path } %>
     <%= form.submit %>
   </div>
 <% end %>

@@ -1,20 +1,18 @@
-<main>
-  <h1>Pessoas</h1>
+<h1>Pessoas</h1>
 
-  <%= link_to 'Cadastrar pessoa', new_person_path %>
-  <table>
-    <thead>
+<%= link_to 'Cadastrar pessoa', new_person_path %>
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @people.each do |p| %>
       <tr>
-        <th>Nome</th>
-        <th>Ações</th>
+        <th><%= p.name %></th>
+        <th><%= link_to 'editar', edit_person_path(p) %></th>
       </tr>
-    </thead>
-    <tbody>
-      <% @people.each do |p| %>
-        <tr>
-          <th><%= p.name %></th>
-          <th><%= link_to 'editar', edit_person_path(p) %></th>
-        </tr>
-      <% end %>
-    </tbody>
-</main>
+    <% end %>
+  </tbody>

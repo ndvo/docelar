@@ -1,17 +1,16 @@
-<main>
-  <%= render 'simple_month_navigator', { date: @chosen_month } %>
+<%= render 'simple_month_navigator', { date: @chosen_month } %>
 
-  <h1>Pagamentos do mês <%= @chosen_month.strftime("%Y/%m") %></h1>
+<h1>Pagamentos do mês <%= @chosen_month.strftime("%Y/%m") %></h1>
 
-  <%= render 'simple_table', {
-    keys: ['', 'Devido', 'Pago',  'A Pagar'],
-    rows: [[
-      'Totais do mês',
-      brl(@total_due),
-      brl(@total_paid),
-      brl(@total_due - @total_paid)
-    ]]
-  }%>
+<%= render 'simple_table', {
+  keys: ['', 'Devido', 'Pago',  'A Pagar'],
+  rows: [[
+    'Totais do mês',
+    brl(@total_due),
+    brl(@total_paid),
+    brl(@total_due - @total_paid)
+  ]]
+}%>
 
   <%= form_with url: { action: 'payments_bulk_update' }, method: :post do |form| %>
     <fieldset>
@@ -33,4 +32,3 @@
     </div>
     </fieldset>
   <% end %>
-</main>:

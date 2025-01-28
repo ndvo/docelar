@@ -23,7 +23,9 @@
         <% end %>
       </div>
     </header>
-    <%= yield %>
+    <main>
+      <%= yield %>
+    </main>
     <%= render partial: "flash_message" %>
     <% if Rails.env.development? %>
     <%=  console %>

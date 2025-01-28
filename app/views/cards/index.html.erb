@@ -1,11 +1,9 @@
-<main>
-  <h1>Cards</h1>
+<h1>Cards</h1>
 
-  <div class="actions">
+<div class="actions">
   <%= link_to "Cadastrar Cartão Novo", new_card_path %>
-  </div>
+</div>
 
-  <div id="cards">
+<div id="cards">
   <%= render partial: 'card', collection: @cards%>
-  </div>
-</main>
+</div>

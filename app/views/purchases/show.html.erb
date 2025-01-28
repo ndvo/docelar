@@ -1,13 +1,10 @@
-<main>
+<div class="navigation">
+  <%= link_to "Editar", edit_purchase_path %> |
+</div>
 
-  <div class="navigation">
-    <%= link_to "Editar", edit_purchase_path %> |
-  </div>
+<%= render @purchase %>
 
-  <%= render @purchase %>
-
-  <div class="actions">
-    <%= link_to "Editar", edit_purchase_path %>
-    <%= button_to "Apagar", @purchase, method: :delete %>
-  </div>
-</main>
+<div class="actions">
+  <%= link_to "Editar", edit_purchase_path %>
+  <%= button_to "Apagar", @purchase, method: :delete %>
+</div>

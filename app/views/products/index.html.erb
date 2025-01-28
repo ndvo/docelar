@@ -1,18 +1,15 @@
-<main>
-  <h1>Produtos</h1>
+<h1>Produtos</h1>
 
-  <div class="actions">
-    <%= link_to "Cadastrar novo produto", new_product_path %>
-  </div>
-  <%= render 'simple_table', {
-    keys: %w(Produto Tipo Descrição Marca), 
-    rows: @products.map { |p| [
-      (link_to p.name, p),
-      p.kind,
-      p.description,
-      p.brand
-    ]}
-  }
-  %>
-
-</main>
+<div class="actions">
+  <%= link_to "Cadastrar novo produto", new_product_path %>
+</div>
+<%= render 'simple_table', {
+  keys: %w(Produto Tipo Descrição Marca), 
+  rows: @products.map { |p| [
+    (link_to p.name, p),
+    p.kind,
+    p.description,
+    p.brand
+  ]}
+}
+%>

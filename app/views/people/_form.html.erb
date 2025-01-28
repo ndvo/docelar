@@ -5,7 +5,11 @@
     <%= f.text_field :name %>
   </div>
   <div class="field">
-    <%= f.label :birth, 'Data de Nascimento'  %>
+    <%= f.label :borned_on, 'Data de Nascimento'  %>
+    <%= f.date_field :birth %>
+  </div>
+  <div class="field">
+    <%= f.label :dead_on, 'Data de Nascimento'  %>
     <%= f.date_field :birth %>
   </div>
   <fieldset>

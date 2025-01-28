@@ -1,17 +1,15 @@
-<main>
-  <%= render 'simple_month_navigator', { date: @chosen_month } %>
+<%= render 'simple_month_navigator', { date: @chosen_month } %>
 
-  <h1>Compras do mês <%= @chosen_month.strftime("%Y/%m") %></h1>
+<h1>Compras do mês <%= @chosen_month.strftime("%Y/%m") %></h1>
 
-  <div class="actions">
-    <%= link_to "Cadastrar compra", new_purchase_path %>
-  </div>
+<div class="actions">
+  <%= link_to "Cadastrar compra", new_purchase_path %>
+</div>
 
-  <%= render 'simple_table', {
-    keys: %w(Produto Preço), 
-    rows: @purchases.map { |p| [
-      (link_to p.product.name, p), p.price,
-    ]}
-  }
+<%= render 'simple_table', {
+  keys: %w(Produto Preço), 
+  rows: @purchases.map { |p| [
+    (link_to p.product.name, p), p.price,
+  ]}
+}
   %>
-</main>

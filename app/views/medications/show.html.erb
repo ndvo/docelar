@@ -1,4 +1,3 @@
-<main>
 <%= render @medication %>
 
 <div>
@@ -7,4 +6,10 @@
 
   <%= button_to "Destroy this medication", @medication, method: :delete %>
 </div>
-</main>
+
+<fieldset>
+  <legend>Produtos</legend>
+  <% @products.each do |medication_product| %>
+    <%= render "medication_products/form", medication_product: %>
+  <% end %>
+</fieldset>

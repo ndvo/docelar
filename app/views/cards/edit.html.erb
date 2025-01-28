@@ -1,11 +1,9 @@
-<main>
-  <h1>Editando cartão <%= @card.brand %> <%= @card.number %> <%= @card.name %></h1>
+<h1>Editando cartão <%= @card.brand %> <%= @card.number %> <%= @card.name %></h1>
 
-  <%= render "form", card: @card %>
+<%= render "form", card: @card %>
 
-  <br>
+<br>
 
-  <div>
-    <%= link_to "Ver cartões", cards_path %>
-  </div>
-</main>
+<div>
+  <%= link_to "Ver cartões", cards_path %>
+</div>
