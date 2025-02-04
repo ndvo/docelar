@@ -18,7 +18,7 @@
     </div>
   </fieldset>
 
-  <fieldset>
+  <fieldset data-controller="purchase-form">
     <legend>Produto</legend>
     <div class="field">
       <%= f.label :product_id, 'Produto' %>
@@ -61,7 +61,12 @@
 
       <div class="field">
         <%= f.label :price, 'Preço' %>
-        <%= f.number_field :price, step: 0.01 %>
+        <%= f.number_field :price, step: 0.01, 'data-action' => 'purchase-form#onPriceChange', 'data-purchase-form-target' => 'price' %>
+      </div>
+
+      <div class="field">
+        <%= f.label :installment_price, 'Parcela' %>
+        <%= f.number_field :installment_price, step: 0.01, 'data-action' => 'change->purchase-form#onInstallmentPriceChange', 'data-purchase-form-target' => 'installmentPrice' %>
       </div>
 
       <div class="field">
@@ -77,7 +82,7 @@
 
       <div class="field">
         <%= f.label :installments, 'Parcelas' %>
-        <%= f.number_field :number_of_installments, min: 1, value: @purchase.number_of_installments %>
+        <%= f.number_field :number_of_installments, min: 1, value: @purchase.number_of_installments, 'data-purchase-form-target' => 'installments', 'data-action' => 'purchase-form#onPriceChange' %>
       </div>
   </fieldset>
 
