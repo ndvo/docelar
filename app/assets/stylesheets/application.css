@@ -431,3 +431,9 @@ div#cards {
   box-shadow: var(--margin-tiny) var(--margin-tiny) var(--margin-normal) silver;
   border-radius: var(--margin-tiny);
 }
+
+form {
+  textarea {
+    width: 100%;
+  }
+}
