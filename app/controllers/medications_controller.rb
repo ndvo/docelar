@@ -8,6 +8,7 @@ class MedicationsController < ApplicationController
 
   # GET /medications/1 or /medications/1.json
   def show
+    set_products
   end
 
   # GET /medications/new
@@ -66,5 +67,9 @@ class MedicationsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def medication_params
       params.require(:medication).permit(:name, :active_principle)
+    end
+
+    def set_products
+      @products = MedicationProduct.where(medication_id: params[:id]) + [ MedicationProduct.new(medication_id: params[:id]) ]
     end
 end
