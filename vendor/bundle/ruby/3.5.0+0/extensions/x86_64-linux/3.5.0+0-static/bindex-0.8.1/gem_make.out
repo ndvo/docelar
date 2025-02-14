@@ -1,0 +1,18 @@
+current directory: /home/nelson/docelar/vendor/bundle/ruby/3.5.0+0/gems/bindex-0.8.1/ext/skiptrace
+/home/nelson/.rbenv/versions/3.2.0-dev/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /home/nelson/docelar/vendor/bundle/ruby/3.5.0+0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= sitearchdir\=./.gem.20250128-2469327-fdik5y sitelibdir\=./.gem.20250128-2469327-fdik5y clean
+
+current directory: /home/nelson/docelar/vendor/bundle/ruby/3.5.0+0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= sitearchdir\=./.gem.20250128-2469327-fdik5y sitelibdir\=./.gem.20250128-2469327-fdik5y
+compiling cruby.c
+linking shared-object skiptrace/internal/cruby.so
+
+current directory: /home/nelson/docelar/vendor/bundle/ruby/3.5.0+0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= sitearchdir\=./.gem.20250128-2469327-fdik5y sitelibdir\=./.gem.20250128-2469327-fdik5y install
+/usr/bin/install -c -m 0755 cruby.so ./.gem.20250128-2469327-fdik5y/skiptrace/internal
+
+current directory: /home/nelson/docelar/vendor/bundle/ruby/3.5.0+0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= sitearchdir\=./.gem.20250128-2469327-fdik5y sitelibdir\=./.gem.20250128-2469327-fdik5y clean
