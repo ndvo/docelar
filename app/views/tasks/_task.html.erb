@@ -1,22 +1,25 @@
 <div id="<%= dom_id task %>">
-  <p>
-    <strong>User:</strong>
-    <%= task.user_id %>
-  </p>
+  <h1><%= task.name %></h1>
 
+  <% if task.responsible_id %>
   <p>
-    <strong>Task:</strong>
-    <%= task.task_id %>
+    <strong>Responsável:</strong>
+    <%= task.responsible.name %>
   </p>
+  <% end %>
 
+  <% if task.task_id %>
   <p>
-    <strong>Name:</strong>
-    <%= task.name %>
+    <strong>Projeto:</strong>
+    <%= task.task.name %>
   </p>
+  <% end %>
 
+  <% if task.description.present? %>
   <p>
     <strong>Description:</strong>
     <%= task.description %>
   </p>
+  <% end %>
 
 </div>

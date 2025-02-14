@@ -1,5 +1,8 @@
 <%= render @task %>
 
+<%= link_to "Incluir nova tarefa", {action: :new, parent_id: @task.id } %>
+<%= render 'task_table' %>
+
 <div>
   <%= link_to "Edit this task", edit_task_path(@task) %> |
   <%= link_to "Back to tasks", tasks_path %>

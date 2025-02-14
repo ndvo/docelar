@@ -1,0 +1,33 @@
+
+<div class="actions">
+  <%= form_with url: request.path, method: :get do |form| %>
+    <%= form.radio_button :completed, true, checked: @filter_is_completed == "true" %>
+    <%= form.label :completed_true, "Completed" %>
+    <%= form.radio_button :completed, false, checked: @filter_is_completed == "false" %>
+    <%= form.label :completed_false, "Pending" %>
+    <%= form.radio_button :completed, "all", checked: @filter_is_completed == "all" %>
+    <%= form.label :completed_all, "All" %>
+    <%= form.submit "Filter" %>
+  <% end %>
+</div>
+<% if @tasks.blank? %>
+  <%= render 'empty_collection', resource: 'tarefa' %>
+<% else %>
+  <%= form_with url: { action: 'bulk_update' }, method: :post do |form| %>
+    <%= hidden_field_tag("all_task_ids", @tasks.pluck(:id)) %>
+    <fieldset>
+      <%= render 'simple_table', {
+        keys: %w(Tarefa Detalhes ✓), 
+        rows: @tasks.map { |i| [
+          (link_to i.name, i),
+          i.description,
+          check_box_tag("task_ids[]", i.id, i.is_completed?),
+        ] }
+      }
+    %>
+  <div class="actions">
+    <%= submit_tag "Salvar" %>
+  </div>
+    </fieldset>
+  <% end %>
+<% end %>

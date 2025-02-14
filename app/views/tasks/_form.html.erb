@@ -12,12 +12,12 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :user_id %>
-    <%= form.select :user_id,
+    <%= form.label :responsible_id %>
+    <%= form.select :responsible_id,
       content_tag(:option, '-- nenhum --', value: '') +
       options_from_collection_for_select(
-        @users, 'id', 'name',
-        @task.user_id
+        @responsibles, 'id', 'name',
+        @task.responsible_id
       )
     %>
   </div>
@@ -49,7 +49,7 @@
   </div>
 
   <div>
-    <%= button_to "Salvar e criar nova tarefa", action: "create", form: { redirect_to: new_task_path } %>
+    <%= button_to "Salvar e criar nova tarefa", action: "create", params: { redirect_to: new_task_path } %>
     <%= form.submit %>
   </div>
 <% end %>

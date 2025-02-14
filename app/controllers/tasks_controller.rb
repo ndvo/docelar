@@ -2,34 +2,30 @@ class TasksController < ApplicationController
   before_action :set_task, only: %i[ show edit update destroy ]
 
   include DateNavigation
+  include UserProductivity
 
   # GET /tasks or /tasks.json
   def index
-    @filter_is_completed = index_params[:completed] || 'false'
-    case @filter_is_completed
-    when 'true'
-      @tasks = Task.completed
-    when 'false'
-      @tasks = Task.pending
-    else
-      @tasks = Task.all
-    end
+    @tasks = tasks
   end
 
   # GET /tasks/1 or /tasks/1.json
   def show
+    @task = Task.find(params[:id])
+    @tasks = tasks.where(task: @task)
   end
 
   # GET /tasks/new
   def new
-    @task = Task.new
-    @users = User.all
+    @parent = Task.find(params[:parent_id])
+    @task = Task.new(task: @parent, responsible: @parent&.responsible)
+    @responsibles = Responsible.all
     @tasks = Task.all
   end
 
   # GET /tasks/1/edit
   def edit
-    @users = User.all
+    @responsibles = Responsible.all
     @tasks = Task.all
   end
 
@@ -39,7 +35,8 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
-        format.html { redirect_to task_url(@task), notice: "Task was successfully created." }
+        destination = navigation_params[:redirect_to]&.presence || task_url(@task)
+        format.html { redirect_to destination, notice: "Task was successfully created." and return}
         format.json { render :show, status: :created, location: @task }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -89,7 +86,7 @@ class TasksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def task_params
-      params.require(:task).permit(:user_id, :task_id, :name, :description, :is_completed)
+      params.require(:task).permit(:responsible_id, :task_id, :name, :description, :is_completed)
     end
 
     def bulk_update_params
@@ -98,5 +95,17 @@ class TasksController < ApplicationController
 
     def index_params
       params.permit(:completed)
+    end
+
+    def tasks
+      @filter_is_completed = index_params[:completed] || 'false'
+      case @filter_is_completed
+      when 'true'
+        Task.completed
+      when 'false'
+        Task.pending
+      else
+        Task.all
+      end
     end
 end
