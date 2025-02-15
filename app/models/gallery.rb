@@ -1,4 +1,6 @@
 class Gallery < ActiveRecord::Base
+  include Paginatable
+
   belongs_to :gallery, optional: true
 
   def file_names
