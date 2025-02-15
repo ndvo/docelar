@@ -18,7 +18,7 @@
     </div>
   </fieldset>
 
-  <fieldset data-controller="purchase-form">
+  <fieldset data-controller="form purchase-form">
     <legend>Produto</legend>
     <div class="field">
       <%= f.label :product_id, 'Produto' %>
@@ -64,26 +64,37 @@
         <%= f.number_field :price, step: 0.01, 'data-action' => 'purchase-form#onPriceChange', 'data-purchase-form-target' => 'price' %>
       </div>
 
-      <div class="field">
-        <%= f.label :installment_price, 'Parcela' %>
-        <%= f.number_field :installment_price, step: 0.01, 'data-action' => 'change->purchase-form#onInstallmentPriceChange', 'data-purchase-form-target' => 'installmentPrice' %>
-      </div>
+      <details>
+        <summary>Parcelamento</summary>
+        <div class="field">
+          <%= f.label :card, 'Cartão' %>
+          <%= f.collection_select :card_id, Card.all, :id, :display_name, include_blank: true %>
+        </div>
 
-      <div class="field">
-        <%= f.label :quantity, 'Quantidade' %>
-        <%= f.number_field :quantity, step: 1 %>
-      </div>
+        <div class="field">
+          <%= f.label :installments, 'Parcelas' %>
+          <%= f.number_field :number_of_installments, min: 1, value: @purchase.number_of_installments, 'data-purchase-form-target' => 'installments', 'data-action' => 'purchase-form#onPriceChange' %>
+        </div>
 
-      <div class="field">
-        <%= f.label :card, 'Cartão' %>
-        <%= f.collection_select :card_id, Card.all, :id, :display_name, include_blank: true %>
-      </div>
+        <div class="field">
+          <%= f.label :installment_price, 'Parcela' %>
+          <%= f.number_field :installment_price, step: 0.01, 'data-action' => 'change->purchase-form#onInstallmentPriceChange', 'data-purchase-form-target' => 'installmentPrice' %>
+        </div>
+      </details>
 
+      <details>
+        <summary>Detalhes</summary>
+        <div class="field">
+          <%= f.label :quantity, 'Quantidade' %>
+          <%= f.number_field :quantity, step: 1 %>
+        </div>
 
-      <div class="field">
-        <%= f.label :installments, 'Parcelas' %>
-        <%= f.number_field :number_of_installments, min: 1, value: @purchase.number_of_installments, 'data-purchase-form-target' => 'installments', 'data-action' => 'purchase-form#onPriceChange' %>
-      </div>
+        <div class="field">
+          <%= f.label :paid, 'Pago' %>
+          <%= f.check_box :paid %>
+        </div>
+      </details>
+
   </fieldset>
 
   <div class="actions">
