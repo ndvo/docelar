@@ -1,27 +1,23 @@
 class SessionController < ApplicationController
-  def new; end
+  allow_unauthenticated_access only: %i[new create]
+
+  def new
+    @session = false
+  end
 
   def create
-    user_params
-    user = User.authenticate(params[:email], params[:password])
+    user = User.authenticate_by(params.permit(:email_address, :password))
     if user
+      start_new_session_for user
       session[:user_id] = user.id
-      redirect_to root_url, notice: 'Seja bem-vindo'
+      redirect_to after_authentication_url, notice: 'Seja bem-vindo'
     else
-      flash.now.alert = 'Há um erro no email ou na senha.'
-      render 'new', status: :unprocessable_entity
+      redirect_to new_session_path, alert: 'Há um erro no email ou na senha.'
     end
   end
 
   def destroy
     session[:user_id] = nil
     redirect_to root_url, notice: 'Sessão encerrada com sucesso'
-  end
-
-  private
-
-  def user_params
-    params.require(:email)
-    params.require(:password)
   end
 end
