@@ -7,21 +7,6 @@ class Gallery < ActiveRecord::Base
     Dir.glob("#{fs_path}/*.{png,jpeg,jpg}")
   end
 
-  def thumbnails
-    Dir.children(fs_thumbs_path).map do |path|
-      i = File.basename(path)
-      "/#{url_thumbs_path}/#{i}"
-    end
-  end
-
-  def generate_thumbnails(regenerate: false)
-    Dir.children(fs_path).each do |path|
-      i = File.basename(path)
-      next if !regenerate && File.exists?("#{fs_thumbs_path}/#{i}")
-      system "convert \"#{fs_path}/#{i}\" -thumbnail 200x200^ -gravity center -crop 200x200+0+0 \"#{fs_thumbs_path}/#{i}\""
-    end
-  end
-
   def url_path
     "#{self.class.gallery_folder}/#{folder_name}"
   end
