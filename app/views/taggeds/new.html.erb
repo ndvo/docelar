@@ -1,0 +1,11 @@
+<% content_for :title, "New tagged" %>
+
+<h1>New tagged</h1>
+
+<%= render "form", tagged: @tagged %>
+
+<br>
+
+<div>
+  <%= link_to "Back to taggeds", taggeds_path %>
+</div>
