@@ -1,7 +1,11 @@
 class Photo < ActiveRecord::Base
   belongs_to :gallery
 
-  def fs_path = File.join(gallery.class.path, gallery.folder_name, file_name)
+  has_one_attached :file do |attachable|
+    attachable.variant :thumb, resize_to_limit: [100, 100], preprocessed: true
+  end
+
+  def fs_path = Rails.root.join('app', 'assets', Gallery.path, gallery.folder_name, file_name)
 
   def rotate_left
     system "mogrify -rotate -90 \"#{fs_path}\""
@@ -9,5 +13,20 @@ class Photo < ActiveRecord::Base
 
   def rotate_right
     system "mogrify -rotate 90 \"#{fs_path}\""
+  end
+
+  validates :gallery, presence: true
+  validates :original_path, uniqueness: true
+
+  def url_path
+    "#{Gallery.gallery_folder}/#{gallery.folder_name}/#{original_path}"
+  end
+
+  def url_thumb_path
+    "#{Gallery.thumbs_folder}/#{gallery.folder_name}/#{original_path}"
+  end
+
+  def self.thumbs_folder
+    "galleries_thumbs"
   end
 end
