@@ -6,12 +6,14 @@ class GalleriesController < ApplicationController
 
   def show
     @gallery = Gallery.find(params[:id])
-    @gallery.generate_thumbnails
-
-    @pictures = @gallery.thumbnails
+    @photos = @gallery.photos.limit(10)
   end
 
   def generate_thumbnails
+  end
+
+  def generate_photos
+    Gallery.find(params[:id]).generate_photos
   end
 
   def find_new_galleries
@@ -30,6 +32,6 @@ class GalleriesController < ApplicationController
   end
 
   def images_folder
-    "#{Rails.root}/public"
+    "#{Rails.root}/galleries"
   end
 end
