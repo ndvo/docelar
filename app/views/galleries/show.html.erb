@@ -2,7 +2,10 @@
   <%= button_to "Gerar photos", action: "generate_photos" %>
 </div>
 
+<section class="photos">
 <% @photos.map do |photo| %>
-  <%= photo.original_path %>
-  <%= image_tag photo.file.representation(:thumb) %>
+  <%= link_to photo, class: "photo in-list", style: "background-image: url('#{url_for(photo.file.representation(:thumb))}')" do %>
+        <h1><%= photo.title %></h1>
+    <% end %>
 <% end %>
+</section>

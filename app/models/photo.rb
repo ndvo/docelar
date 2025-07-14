@@ -2,7 +2,7 @@ class Photo < ActiveRecord::Base
   belongs_to :gallery
 
   has_one_attached :file do |attachable|
-    attachable.variant :thumb, resize_to_limit: [100, 100], preprocessed: true
+    attachable.variant :thumb, resize_to_fill: [100, 100], preprocessed: true
   end
 
   def fs_path = Rails.root.join('app', 'assets', Gallery.path, gallery.folder_name, file_name)
