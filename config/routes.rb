@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  resources :taggeds
+  resources :notes
+  resources :tags
   resource :session
   resources :passwords, param: :token
   resources :patients
@@ -38,9 +41,12 @@ Rails.application.routes.draw do
 
   resources :galleries do
     post :find_new_galleries, on: :collection
+    post :generate_photos, on: :member
   end
 
   resources :articles do
     resources :comments
   end
+
+  resources :photos
 end
