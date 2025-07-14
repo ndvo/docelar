@@ -5,7 +5,7 @@ class Nationality < ApplicationRecord
   validates_presence_of :person
   validates_presence_of :country
 
-  enum how: {
+  enum :how, {
     jusSanguini: 'jus sanguini',
     jusSoli: 'jus soli',
     naturalization: 'naturalization'
