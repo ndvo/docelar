@@ -437,3 +437,24 @@ form {
     width: 100%;
   }
 }
+
+section.photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--margin-normal);
+}
+
+.photo.in-list {
+  display: block;
+  width: var(--width-short);
+  height: var(--width-short);
+  border: solid thin silver;
+  border-radius: 5px;
+  padding: var(--margin-tiny);
+  background-size: cover;
+}
+
+a.photo.in-list:hover {
+ box-shadow: 5px 5px 5px silver;
+}
+
