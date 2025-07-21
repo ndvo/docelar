@@ -322,8 +322,17 @@ header nav {
 header nav [type="checkbox"][name="toggle-menu"] {
   display: none;
 }
-header nav label.menu.toggle {
+header nav>label.menu.toggle {
   cursor: pointer;
+  position: absolute;
+  margin: -50px;
+}
+
+header nav ul>label.menu.toggle {
+  cursor: pointer;
+  position: absolute;
+  left: -80px;
+  top: 10px;
 }
 
 div.menu {
@@ -334,7 +343,7 @@ div.menu {
   width: calc(100vw - 30px);
   height: 100%;
   transform: translate3d(-450px, 0, 0);
-  transition: transform 0.35s;
+  transition: transform 0.35s, background-color 0.5s;
   z-index: 1;
   overflow: hidden;
 }
@@ -465,6 +474,7 @@ article.photo {
 
 picture img {
   max-width: 100%;
+  max-height: 100vh;
 }
 
 nav.previous-next {
