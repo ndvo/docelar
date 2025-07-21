@@ -458,3 +458,16 @@ a.photo.in-list:hover {
  box-shadow: 5px 5px 5px silver;
 }
 
+article.photo {
+  max-width: 100%;
+  text-align: center;
+}
+
+picture img {
+  max-width: 100%;
+}
+
+nav.previous-next {
+  display: flex;
+  justify-content: space-between;
+}

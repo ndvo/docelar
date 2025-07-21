@@ -3,6 +3,7 @@ class Photo < ActiveRecord::Base
 
   has_one_attached :file do |attachable|
     attachable.variant :thumb, resize_to_fill: [100, 100], preprocessed: true
+    attachable.variant :full, resize_to_limit: [1280, 1280]
   end
 
   def fs_path = Rails.root.join('app', 'assets', Gallery.path, gallery.folder_name, file_name)
@@ -29,4 +30,8 @@ class Photo < ActiveRecord::Base
   def self.thumbs_folder
     "galleries_thumbs"
   end
+
+  def next = Photo.where("id > #{id}").order(id: :asc).first
+
+  def previous = Photo.where("id < #{id - 1}").order(id: :desc).first
 end

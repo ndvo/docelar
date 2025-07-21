@@ -1,0 +1,14 @@
+<nav class="previous-next">
+  <div>
+    <%= link_to(@photo.previous) { 'anterior' } %>
+  </div>
+
+  <div>
+    <%= link_to(@photo.next) { 'próxima' } %>
+  </div>
+
+</nav>
+<article class="photo">
+        <h1><%= @photo.title %></h1>
+        <%= picture_tag @photo.file.representation(:full) %>
+</article>
