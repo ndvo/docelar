@@ -1,10 +1,10 @@
 <nav class="previous-next">
   <div>
-    <%= link_to(@photo.previous) { 'anterior' } %>
+    <%= link_to(@photo.previous) { 'anterior' } if @photo.previous %>
   </div>
 
   <div>
-    <%= link_to(@photo.next) { 'próxima' } %>
+    <%= link_to(@photo.next) { 'próxima' } if @photo.next %>
   </div>
 
 </nav>
