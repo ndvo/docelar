@@ -429,13 +429,15 @@ header nav .menu .menu label.toggle {
 /* Cards */
 div#cards {
   width: 100%;
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
   gap: var(--margin-normal);
-  grid-auto-columns: var(--width-regular);
 }
 
 .card {
   display: block;
+  width: var(--width-regular);
   padding: var(--margin-normal);
   box-shadow: var(--margin-tiny) var(--margin-tiny) var(--margin-normal) silver;
   border-radius: var(--margin-tiny);
