@@ -18,7 +18,7 @@ class GalleriesController < ApplicationController
 
   def find_new_galleries
     new_galleries = Gallery.find_new_galleries()
-    if new_galleries.empty?
+    if new_galleries.blank?
       flash.alert = "No new galleries found"
     else
       flash.notice = "Found new galleries: #{new_galleries.to_sentence}"
