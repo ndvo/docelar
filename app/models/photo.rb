@@ -31,7 +31,7 @@ class Photo < ActiveRecord::Base
     'galleries_thumbs'
   end
 
-  def next = Photo.where("id > #{id}").order(id: :asc).first
+  def next = Photo.where(gallery:).where("id > #{id}").order(id: :asc).first
 
-  def previous = Photo.where("id < #{id}").order(id: :desc).first
+  def previous = Photo.where(gallery:).where("id < #{id}").order(id: :desc).first
 end
