@@ -10,6 +10,14 @@ class Gallery < ActiveRecord::Base
     Dir.glob("#{fs_path}/*.{png,jpeg,jpg}")
   end
 
+  def generate_photos
+    available_image_files.each do |path|
+      photo = Photo.new({ original_path: path, gallery: self })
+      photo.file.attach(io: File.open(File.join(fs_path, path)), filename: File.basename(path))
+      photo.save
+    end
+  end
+
   def url_path
     "#{self.class.gallery_folder}/#{folder_name}"
   end
