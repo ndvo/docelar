@@ -36,13 +36,13 @@
   --phthalo-green: hsla(89, 67%, 12%, 1);
 
   /* color usage */
-  --primary: var(--phthalo-green);
-  --secondary: var(--army-green);
+  --color-primary: var(--phthalo-green);
+  --color-secondary: var(--army-green);
   --background: white;
   --alert: var(--blush);
   --warning: var(--prussian-blue);
-  --highlight: var(--sage);
-  --highlight-background: var(--army-green);
+  --color-highlight: var(--sage);
+  --color-highlight-background: var(--army-green);
   --link: var(--prussian-blue);
 
   /** widths */
@@ -52,7 +52,7 @@
 }
 
 body {
-  color: var(--primary);
+  color: var(--color-primary);
   background: var(--background);
   margin: 0;
 }
@@ -69,14 +69,14 @@ h1, h2, h3, h4, h5, h6 {
 header {
   max-width: var(--page-width);
   margin: 0 auto;
-  background: var(--highlight-background);
+  background: var(--color-highlight-background);
   padding: var(--margin-normal);
-  box-shadow: var(--page-width) 0 0 var(--highlight-background),
-              calc( -1 * var(--page-width)) 0 0 var(--highlight-background)
+  box-shadow: var(--page-width) 0 0 var(--color-highlight-background),
+              calc( -1 * var(--page-width)) 0 0 var(--color-highlight-background)
   ;
 }
 header a {
-  color: var(--highlight);
+  color: var(--color-highlight);
 }
 main {
   max-width: var(--page-width);
@@ -86,7 +86,7 @@ main {
 
 .actions {
   margin: var(--margin-normal) 0;
-  background: var(--highlight);
+  background: var(--color-highlight);
   padding: var(--margin-normal);
   text-align: right;
   display: flex;
@@ -265,14 +265,14 @@ header nav ul {
 
 header nav ul li {
   width: 120px;
-  background: var(--secondary);
-  color: var(--highlight);
+  background: var(--color-secondary);
+  color: var(--color-highlight);
   padding: var(--margin-normal);
   position: relative;
 }
 
 header nav ul li a {
-  color: var(--highlight);
+  color: var(--color-highlight);
 }
 
 header nav ul li li {
@@ -290,14 +290,14 @@ header nav ul li li {
     display: inline-block;
     width: 120px;
     text-align: center;
-    background: var(--secondary);
-    color: var(--highlight);
+    background: var(--color-secondary);
+    color: var(--color-highlight);
     padding: var(--margin-normal);
     border-radius: var(--margin-small);
     position: relative;
   }
   header nav ul li a {
-    color: var(--highlight);
+    color: var(--color-highlight);
   }
   header nav ul li li {
     border-radius: 0;
