@@ -476,10 +476,26 @@ article.photo {
 
 picture img {
   max-width: 100%;
-  max-height: 100vh;
+  max-height: calc( 100vh - 250px);
 }
 
 nav.previous-next {
   display: flex;
   justify-content: space-between;
+}
+
+.tag {
+  border: solid thin var(--color-highlight);
+  border-radius: var(--margin-large);
+  width: fit-content;
+  padding:  var(--margin-small);
+  color: var(--color-highlight);
+  background-color: var(--color-highlight-background);
+}
+input[name="tag_name"][type="text"] {
+  border: solid thin var(--color-highlight);
+  border-radius: var(--margin-large);
+  padding:  var(--margin-small);
+  color: var(--color-highlight);
+  background-color: var(--color-highlight-background);
 }
