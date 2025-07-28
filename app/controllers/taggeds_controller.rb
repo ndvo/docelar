@@ -21,7 +21,7 @@ class TaggedsController < ApplicationController
 
   # POST /taggeds or /taggeds.json
   def create
-    @tagged = Tagged.new(tagged_params)
+    @tagged = Tagged.new(create_tagged_params)
 
     respond_to do |format|
       if @tagged.save
@@ -58,9 +58,14 @@ class TaggedsController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_tagged
       @tagged = Tagged.find(params.expect(:id))
+    end
+
+    def create_tagged_params
+      params.permit(:tag_id, :tag_name, tagged: [:tagged_id, :tagged_type])
     end
 
     # Only allow a list of trusted parameters through.

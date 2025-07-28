@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_13_181142) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_26_194420) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -190,7 +190,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_13_181142) do
     t.integer "gallery_id"
     t.string "title"
     t.text "description"
+    t.integer "taggleable_id"
     t.index ["gallery_id"], name: "index_photos_on_gallery_id"
+    t.index ["taggleable_id"], name: "index_photos_on_taggleable_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -237,15 +239,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_13_181142) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
-  create_table "taggeds", force: :cascade do |t|
-    t.integer "tag_id"
-    t.string "tagged_type"
-    t.integer "tagged_id"
-    t.text "comment"
+  create_table "tagged", force: :cascade do |t|
+    t.integer "taggleable_id", null: false
+    t.integer "tag_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tag_id"], name: "index_taggeds_on_tag_id"
-    t.index ["tagged_type", "tagged_id"], name: "index_taggeds_on_tagged"
+    t.index ["tag_id"], name: "index_tagged_on_tag_id"
+    t.index ["taggleable_id"], name: "index_tagged_on_taggleable_id"
+  end
+
+  create_table "tagged_photos", force: :cascade do |t|
+    t.integer "photo_id", null: false
+    t.integer "tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["photo_id"], name: "index_tagged_photos_on_photo_id"
+    t.index ["tag_id"], name: "index_tagged_photos_on_tag_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -253,6 +262,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_13_181142) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_tags_on_name"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -292,10 +302,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_13_181142) do
   add_foreign_key "payments", "purchases"
   add_foreign_key "pharmacotherapies", "medications"
   add_foreign_key "pharmacotherapies", "treatments"
+  add_foreign_key "photos", "taggleables"
   add_foreign_key "purchases", "cards"
   add_foreign_key "purchases", "products"
   add_foreign_key "responsibles", "people"
   add_foreign_key "sessions", "users"
+  add_foreign_key "tagged", "taggleables"
+  add_foreign_key "tagged", "tags"
+  add_foreign_key "tagged_photos", "photos"
+  add_foreign_key "tagged_photos", "tags"
   add_foreign_key "tasks", "responsibles"
   add_foreign_key "tasks", "tasks"
 end

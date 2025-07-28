@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources :taggeds
   resources :notes
   resources :tags
   resource :session
@@ -47,6 +46,8 @@ Rails.application.routes.draw do
   resources :articles do
     resources :comments
   end
+
+  resources :tagged_photos
 
   resources :photos
 end

@@ -3,10 +3,26 @@
     <%= link_to(@photo.previous) { 'anterior' } if @photo.previous %>
   </div>
 
+  <%= turbo_frame_tag "taggeds", style: 'display: flex; gap: 10px' do %>
+    <%= render @photo.tags %>
+    <%= form_with model: [TaggedPhoto.new], data: { turbo_frame: "tags" } do |form| %>
+      <div style="display: flex">
+      <%= text_field_tag :tag_name, nil, list: 'tags_names' %>
+      <%= form.hidden_field :photo_id, value: @photo.id %>
+      <%= form.submit '+ Tag' %>
+      </div>
+    <% end %>
+
+    <%= content_tag(:datalist, nil, id: 'tags_names') do %>
+      <% @existing_tags.each do |tag| %>
+        <%= content_tag(:option, nil, value: tag, data: { name: tag, id: tag }) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
   <div>
     <%= link_to(@photo.next) { 'próxima' } if @photo.next %>
   </div>
-
 </nav>
 <article class="photo">
         <h1><%= @photo.title %></h1>

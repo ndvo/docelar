@@ -1,6 +1,9 @@
 class Photo < ActiveRecord::Base
   belongs_to :gallery
 
+  has_many :tagged_photos
+  has_many :tags, through: :tagged_photos
+
   has_one_attached :file do |attachable|
     attachable.variant :thumb, resize_to_fill: [100, 100], preprocessed: true
     attachable.variant :full, resize_to_limit: [1280, 1280]
