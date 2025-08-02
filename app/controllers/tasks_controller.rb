@@ -25,8 +25,10 @@ class TasksController < ApplicationController
 
   # GET /tasks/1/edit
   def edit
+    @task = Task.find(params[:id])
+    @parent = @task.task
     @responsibles = Responsible.all
-    @tasks = Task.all
+    @tasks = Task.pending.where(task_id: @task.task_id).where.not(id: @task.id)
   end
 
   # POST /tasks or /tasks.json
