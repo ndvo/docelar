@@ -18,6 +18,8 @@ Rails.application.routes.draw do
     post :bulk_update, on: :collection
     get :summary, on: :collection
   end
+  resources :responsibles, only: [:create]
+
   root 'home#index'
 
   get 'sign_up' => 'users#new', as: 'sign_up'
