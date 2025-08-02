@@ -28,7 +28,7 @@
       content_tag(:option, '-- nenhum --', value: '') +
       options_from_collection_for_select(
         @tasks, 'id', 'name',
-        @task.task_id
+        @parent&.id
       )
     %>
   </div>
@@ -49,7 +49,7 @@
   </div>
 
   <div>
-    <%= button_to "Salvar e criar nova tarefa", action: "create", params: { redirect_to: new_task_path } %>
+    <%= button_to "Salvar", action: "create" %>
     <%= form.submit %>
   </div>
 <% end %>
