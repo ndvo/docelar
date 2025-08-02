@@ -107,10 +107,18 @@ class TasksController < ApplicationController
     end
 
     def tasks
+      if action_name == 'index'
+        task_id = nil
+      else
+        task_id = params[:id]
+      end
       filter_is_completed = index_params[:completed] || 'false'
       responsible_id = index_params[:responsible_id]
 
-      query = Task.where(responsible_id:)
+      query = Task.all
+
+      query = query.where(responsible_id:) if responsible_id.present?
+      query = query.where(task_id:)
       case filter_is_completed
       when 'true'
         query.completed
