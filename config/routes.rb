@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   resources :dogs
   resources :tasks do
     post :bulk_update, on: :collection
+    get :summary, on: :collection
   end
   root 'home#index'
 

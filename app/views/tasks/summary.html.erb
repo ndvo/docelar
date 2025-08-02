@@ -1,0 +1,11 @@
+<turbo-frame id="my-tasks">
+  <article>
+    <header>
+      My tasks
+    </header>
+    <section id="summary">
+      <div class="pill">completed: <%= @summary[true] %></div>
+      <div class="pill">pending: <%= @summary[false] + @summary[nil] %></div>
+    </section>
+  </article>
+</turbo-frame>

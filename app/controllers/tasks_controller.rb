@@ -78,6 +78,14 @@ class TasksController < ApplicationController
     end
   end
 
+  def summary
+    responsible_id = params[responsible_id]
+
+    query = Task.all
+    query = query.where(responsible_id:) if responsible_id
+    @summary = query.group(:is_completed).count
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_task
