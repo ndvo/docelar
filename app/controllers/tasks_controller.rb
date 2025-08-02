@@ -17,7 +17,7 @@ class TasksController < ApplicationController
 
   # GET /tasks/new
   def new
-    @parent = Task.find(params[:parent_id])
+    @parent = Task.where(id: params[:parent_id].to_i).first
     @task = Task.new(task: @parent, responsible: @parent&.responsible)
     @responsibles = Responsible.all
     @tasks = Task.all
