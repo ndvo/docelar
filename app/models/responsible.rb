@@ -7,4 +7,14 @@ class Responsible < ApplicationRecord
   def fill_name
     self.name = name.presence || person.name
   end
+
+  validates :person, uniqueness: true
+
+  def open_tasks_count
+    Task.where(responsible: self).pending.count
+  end
+
+  def closed_tasks_count
+    Task.where(responsible: self).completed.count
+  end
 end

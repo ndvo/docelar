@@ -1,0 +1,36 @@
+
+<article class="card">
+  <header>
+    <h1>Tasks</h3>
+  </header>
+  <% if person.responsible.nil? %>
+    <div class="alert alert-warning">
+      Not ready to take tasks
+      <%= turbo_frame_tag "create_responsible" do %>
+        <%= button_to(
+          responsibles_path(person_id: person.id),
+          method: :post,
+          class: "btn btn-primary",
+          data: { turbo_frame: "create_responsible" }
+        ) do %>
+        Make this person responsible
+      <% end %>
+    <% end %>
+    </div>
+  <% else %>
+    <div class="task-summary">
+      <turbo-frame id="my-tasks" src="/tasks/summary/?responsible_id=<%= person.responsible.id %>">
+        This is should have been replaced
+      </turbo-frame>
+
+      <%= turbo_frame_tag "task_summary" do %>
+        <%= link_to(
+          "View tasks",
+          tasks_path(responsible_id: person.responsible.id),
+          class: "btn btn-secondary mt-2",
+          data: { turbo_frame: "_top" }
+        ) %>
+    <% end %>
+    </div>
+  <% end %>
+</article>

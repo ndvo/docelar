@@ -4,4 +4,6 @@ class Person < ApplicationRecord
 
   accepts_nested_attributes_for :nationalities,
                                 reject_if: :all_blank
+
+  has_one :responsible
 end

@@ -35,7 +35,7 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
-        destination = navigation_params[:redirect_to]&.presence || task_url(@task)
+        destination = params[:data][:redirect_to] ? 'new_task_path' : task_url(@task)
         format.html { redirect_to destination, notice: "Task was successfully created." and return}
         format.json { render :show, status: :created, location: @task }
       else
@@ -94,18 +94,21 @@ class TasksController < ApplicationController
     end
 
     def index_params
-      params.permit(:completed)
+      params.permit(:completed, :responsible_id)
     end
 
     def tasks
-      @filter_is_completed = index_params[:completed] || 'false'
-      case @filter_is_completed
+      filter_is_completed = index_params[:completed] || 'false'
+      responsible_id = index_params[:responsible_id]
+
+      query = Task.where(responsible_id:)
+      case filter_is_completed
       when 'true'
-        Task.completed
+        query.completed
       when 'false'
-        Task.pending
+        query.pending
       else
-        Task.all
+        query.all
       end
     end
 end
