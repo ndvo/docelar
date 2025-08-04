@@ -66,7 +66,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
 }
 
-header {
+body>header {
   max-width: var(--page-width);
   margin: 0 auto;
   background: var(--color-highlight-background);
@@ -75,9 +75,10 @@ header {
               calc( -1 * var(--page-width)) 0 0 var(--color-highlight-background)
   ;
 }
-header a {
+body>header a {
   color: var(--color-highlight);
 }
+
 main {
   max-width: var(--page-width);
   margin: var(--margin-enourmous) auto;
