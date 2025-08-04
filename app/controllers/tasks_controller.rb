@@ -28,7 +28,7 @@ class TasksController < ApplicationController
     @task = Task.find(params[:id])
     @parent = @task.task
     @responsibles = Responsible.all
-    @tasks = Task.pending.where(task_id: @task.task_id).where.not(id: @task.id)
+    @tasks = [@parent].concat(Task.pending.where(task: @parent).order(:name)).compact
   end
 
   # POST /tasks or /tasks.json

@@ -13,24 +13,13 @@
 
   <div class="field">
     <%= form.label :responsible_id %>
-    <%= form.select :responsible_id,
-      content_tag(:option, '-- nenhum --', value: '') +
-      options_from_collection_for_select(
-        @responsibles, 'id', 'name',
-        @task.responsible_id
-      )
+    <%= form.collection_select(:responsible_id, @responsibles, :id, :name, { prompt: "Selecione o responsável", include_blank: true })
     %>
   </div>
 
   <div class="field">
-    <%= form.label :task_id %>
-    <%= form.select :task_id,
-      content_tag(:option, '-- nenhum --', value: '') +
-      options_from_collection_for_select(
-        @tasks, 'id', 'name',
-        @parent&.id
-      )
-    %>
+    <%= form.label :task_id, 'Pertence a' %>
+    <%= form.collection_select(:task_id, @tasks, :id, :name, { include_blank: true }) %>
   </div>
 
   <div>
@@ -48,8 +37,7 @@
     <%= form.label :is_completed %>
   </div>
 
-  <div>
-    <%= button_to "Salvar", action: "create" %>
+  <div class="actions">
     <%= form.submit %>
   </div>
 <% end %>
