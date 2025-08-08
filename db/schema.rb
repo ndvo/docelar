@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_26_194420) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_04_172140) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -45,6 +45,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_26_194420) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "status"
+  end
+
+  create_table "authors", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "person_id"
+    t.index ["person_id"], name: "index_authors_on_person_id"
+  end
+
+  create_table "books", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "title"
+    t.text "description"
+    t.string "isbn"
+    t.integer "written_on_id"
+    t.integer "author_id"
+    t.index ["author_id"], name: "index_books_on_author_id"
+    t.index ["written_on_id"], name: "index_books_on_written_on_id"
   end
 
   create_table "cards", force: :cascade do |t|
@@ -293,8 +312,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_26_194420) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  create_table "whens", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "millennium"
+    t.integer "century"
+    t.integer "year"
+    t.integer "month"
+    t.integer "day"
+    t.integer "hour"
+    t.integer "minute"
+    t.integer "second"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "books", "whens", column: "written_on_id"
   add_foreign_key "comments", "articles"
   add_foreign_key "medication_products", "medications"
   add_foreign_key "nationalities", "countries"

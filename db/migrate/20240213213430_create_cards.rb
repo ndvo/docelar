@@ -8,7 +8,7 @@ class CreateCards < ActiveRecord::Migration[7.0]
       t.integer :expiry_month
       t.integer :due_day
       t.integer :invoice_day
-      t.decimal :limit, precision:  10, scale:  2
+      t.decimal :limit, precision: 10, scale: 2
 
       t.timestamps
     end
