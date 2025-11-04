@@ -1,3 +1,5 @@
+# FROZEN_string_literal: true
+
 module Paginatable
   extend ActiveSupport::Concern
 
