@@ -10,11 +10,8 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
-
-
  */
-/*
-*/
+
 :root {
   /* layout definition */
   --page-width: 120ch;
@@ -118,11 +115,10 @@ th {
 }
 
 td {
-  padding: 0.5em 0;
+  padding: 0.2em;
 }
 @media only screen and (min-width: 600px) {
   td, th {
-    paddig-left: 0.5em;
   }
 }
 
@@ -468,6 +464,9 @@ section.photos {
 
 a.photo.in-list:hover {
  box-shadow: 5px 5px 5px silver;
+}
+
+article>header {
 }
 
 article.photo {
