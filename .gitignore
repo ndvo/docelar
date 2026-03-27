@@ -39,3 +39,6 @@
 
 # ctags
 tags
+
+vendor/bundle
+vendor/cache
