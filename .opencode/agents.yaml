@@ -1,10 +1,27 @@
-hotwire: Hotwire Specialist Agent
-developer-experience: Developer Experience Specialist Agent
-rails-performance: Rails Performance Specialist Agent
+# Product Team
+project-owner: Project Owner Agent
+health-product: Health Product Owner Agent
+manager: Project Manager Agent
+
+# UX/Design Team
 design: Design Specialist Agent
 ux: UX Specialist Agent
-project-owner: Project Owner Agent
-health-product: Health Sub-Product Owner Agent
-manager: Manager Agent
+accessibility: Accessibility Expert Agent
+
+# Engineering Team
+rails: Rails Expert Agent
+developer-experience: Developer Experience Agent
 devops: DevOps Engineer Agent
+hotwire: Hotwire Specialist Agent
+rails-performance: Rails Performance Specialist Agent
+code-quality: Code Quality Expert Agent
+
+# Security Team
+security-backend: Security Backend Expert Agent
+security-frontend: Security Frontend Expert Agent
+
+# Quality Team
 qa: QA Engineer Agent
+qa-backend: QA Backend Agent
+qa-frontend: QA Frontend Agent
+qa-test-performance: Test Performance Specialist Agent

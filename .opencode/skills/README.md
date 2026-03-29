@@ -6,23 +6,54 @@ Load a skill when working on specialized tasks:
 /skill <skill-name>
 ```
 
-## Skills
+## Teams
 
+### 🏗️ Product Team
 | Skill | Use When |
 |-------|-----------|
-| `hotwire` | Working with Turbo, Stimulus, or Action Cable |
-| `developer-experience` | Writing tests, improving tooling, code quality |
-| `rails-performance` | Optimizing queries, caching, or performance issues |
-| `design` | CSS styling, layouts, accessibility, responsive design |
+| `project-owner` | Planning features, prioritization, roadmap |
+| `health-product` | Health module features, pet/family tracking |
+| `manager` | Project status, blockers, coordination |
+
+### 🎨 UX/Design Team
+| Skill | Use When |
+|-------|-----------|
 | `ux` | User flows, wireframes, interaction design |
-| `project-owner` | Planning features, understanding needs, prioritization |
-| `health-product` | Health module roadmap, pet/family health features |
-| `manager` | Project status, blockers, reporting, coordination |
-| `devops` | CI/CD, deployment, automation, developer tools |
-| `qa` | Test quality, code quality, accessibility, user flows |
+| `design` | CSS styling, layouts, responsive design |
+| `accessibility` | WCAG compliance, ARIA, screen readers |
+
+### ⚙️ Engineering Team
+| Skill | Use When |
+|-------|-----------|
+| `rails` | Rails framework, conventions, troubleshooting |
+| `hotwire` | Turbo streams, Stimulus, real-time features |
+| `rails-performance` | Query optimization, caching, profiling |
+| `developer-experience` | Tests, tooling, code quality |
+| `code-quality` | Refactoring, DRY, SOLID, Rails conventions |
+| `devops` | CI/CD, deployment, automation |
+
+### 🔒 Security Team
+| Skill | Use When |
+|-------|-----------|
+| `security-backend` | Authentication, authorization, SQL injection |
+| `security-frontend` | CSP, XSS, HTTPS, cookies |
+
+### ✅ Quality Team
+| Skill | Use When |
+|-------|-----------|
+| `qa` | Test quality, code quality |
+| `qa-backend` | API testing, database tests, performance |
+| `qa-frontend` | E2E tests, accessibility, visual regression |
+| `qa-test-performance` | Test suite speed, parallel testing |
+
+---
 
 ## Quick Reference
 
-- **Hotwire**: Turbo streams, Stimulus controllers, real-time features
-- **Developer Experience**: Tests, linting, CI/CD, code review
-- **Rails Performance**: N+1 queries, indexing, caching, profiling
+| Team | Key Commands |
+|------|-------------|
+| **Product** | `rake plans:status`, `rake plans:roadmap` |
+| **Engineering** | `bundle exec rspec`, `bundle exec rake logs:analyze` |
+| **QA** | Feature tests, accessibility checks |
+
+See [TEAMS.md](./TEAMS.md) for team workflows.
