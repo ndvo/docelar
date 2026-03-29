@@ -1,30 +1,51 @@
-<nav class="previous-next">
-  <div>
-    <%= link_to(@photo.previous) { 'anterior' } if @photo.previous %>
-  </div>
+<nav class="breadcrumb">
+  <%= link_to '← Galeria', galleries_path %>
+</nav>
 
-  <%= turbo_frame_tag "taggeds", style: 'display: flex; gap: 10px' do %>
-    <%= render @photo.tags %>
-    <%= form_with model: [TaggedPhoto.new], data: { turbo_frame: "tags" } do |form| %>
-      <div style="display: flex">
-      <%= text_field_tag :tag_name, nil, list: 'tags_names' %>
-      <%= form.hidden_field :photo_id, value: @photo.id %>
-      <%= form.submit '+ Tag' %>
+<div class="photo-detail">
+  <article class="photo">
+    <h1><%= @photo.title %></h1>
+    <% if @photo.file.attached? %>
+      <div class="photo-full">
+        <%= image_tag @photo.file, alt: @photo.title %>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <p>Imagem não disponível</p>
       </div>
     <% end %>
+  </article>
 
-    <%= content_tag(:datalist, nil, id: 'tags_names') do %>
-      <% @existing_tags.each do |tag| %>
-        <%= content_tag(:option, nil, value: tag, data: { name: tag, id: tag }) %>
+  <nav class="photo-nav">
+    <div>
+      <% if @photo.previous %>
+        <%= link_to '← Anterior', @photo.previous, class: 'btn btn-secondary' %>
       <% end %>
-    <% end %>
-  <% end %>
+    </div>
 
-  <div>
-    <%= link_to(@photo.next) { 'próxima' } if @photo.next %>
-  </div>
-</nav>
-<article class="photo">
-        <h1><%= @photo.title %></h1>
-        <%= picture_tag @photo.file.representation(:full) %>
-</article>
+    <div class="photo-tags">
+      <%= turbo_frame_tag "taggeds" do %>
+        <%= render @photo.tags %>
+        <%= form_with model: [TaggedPhoto.new], data: { turbo_frame: "tags" } do |form| %>
+          <div class="tag-input">
+            <%= text_field_tag :tag_name, nil, list: 'tags_names', placeholder: 'Adicionar tag' %>
+            <%= form.hidden_field :photo_id, value: @photo.id %>
+            <%= form.submit '+', class: 'btn-tag' %>
+          </div>
+        <% end %>
+
+        <%= content_tag(:datalist, nil, id: 'tags_names') do %>
+          <% @existing_tags.each do |tag| %>
+            <%= content_tag(:option, nil, value: tag) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div>
+      <% if @photo.next %>
+        <%= link_to 'Próxima →', @photo.next, class: 'btn btn-secondary' %>
+      <% end %>
+    </div>
+  </nav>
+</div>
