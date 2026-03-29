@@ -69,7 +69,7 @@ RSpec.describe Payment, type: :model do
       it 'returns pending payments past their due date' do
         product = Product.create!(name: 'Test')
         purchase = Purchase.create!(product: product, price: 100, quantity: 1)
-        described_class.create!(purchase: purchase, due_at: 1.month.ago)
+        described_class.create!(purchase: purchase, due_at: Date.new(2020, 1, 15))
         described_class.create!(purchase: purchase, due_at: 1.month.from_now)
 
         result = described_class.late
