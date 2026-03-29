@@ -1,0 +1,52 @@
+# .rubocop.yml
+# RuboCop configuration for Doce Lar
+
+require:
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-performance
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.3
+  DisabledByDefault: false
+
+  Exclude:
+    - '**/vendor/**/*'
+    - '**/node_modules/**/*'
+    - 'tmp/**/*'
+    - 'log/**/*'
+    - 'db/migrate/**/*'
+
+Rails:
+  Enabled: true
+
+RSpec:
+  Enabled: true
+  Include:
+    - 'spec/**/*'
+  Exclude:
+    - 'spec/support/**/*.rb'
+
+Performance:
+  Enabled: true
+
+Layout:
+  Enabled: true
+
+Lint:
+  Enabled: true
+
+Metrics:
+  Enabled: true
+  ClassLength:
+    Max: 150
+  MethodLength:
+    Max: 20
+  BlockLength:
+    Max: 30
+
+Style:
+  Enabled: true
+  Documentation:
+    Enabled: false

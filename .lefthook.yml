@@ -1,0 +1,22 @@
+# lefthook.yml
+# Git hooks configuration
+
+repo_version: 1
+
+pre-commit:
+  parallel: true
+  commands:
+    rubocop:
+      run: bundle exec rubocop --parallel
+    bundler-audit:
+      run: bundle exec bundle-audit check --update
+    brakeman:
+      run: bundle exec brakeman --no-pager -w1
+
+pre-push:
+  parallel: true
+  commands:
+    rspec:
+      run: bundle exec rspec --fail-fast --format progress
+    security:
+      run: bundle exec brakeman --no-pager -w2
