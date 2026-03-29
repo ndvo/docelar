@@ -1,9 +1,44 @@
-<%= image_tag 'icons/anotacoes.svg', alt: 'Example Image', width: 100 %>
-<%= image_tag 'icons/bookLib.svg', alt: 'Example Image', width: 100 %>
-<%= link_to '/tasks' do %>
-  <%= image_tag 'icons/checklist.svg', alt: 'Tarefas', width: 100 %>
-<% end %>
-<%= link_to '/payments' do %>
-  <%= image_tag 'icons/despesas.svg', alt: 'Relatório de gastos', width: 100 %>
-<% end %>
-<%= image_tag 'icons/videoLib.svg', alt: 'Example Image', width: 100 %>
+<section class="hero">
+  <div class="hero-content">
+    <h1>Bem-vindo ao Docelar!</h1>
+    <p class="hero-date"><%= l(Date.today, format: :long) %></p>
+    <p class="hero-tagline">Gerencie suas tarefas, pagamentos e turmas de forma simples</p>
+  </div>
+</section>
+
+<section class="quick-access">
+  <h2>Acesso Rápido</h2>
+  <div class="quick-access-grid">
+    <%= link_to '/tasks', class: 'quick-card' do %>
+      <div class="card-icon">
+        <%= image_tag 'icons/checklist.svg', alt: 'Tarefas', width: 48 %>
+      </div>
+      <h3>Tarefas</h3>
+      <p>Gerencie suas atividades</p>
+    <% end %>
+
+    <%= link_to '/payments', class: 'quick-card' do %>
+      <div class="card-icon">
+        <%= image_tag 'icons/despesas.svg', alt: 'Pagamentos', width: 48 %>
+      </div>
+      <h3>Pagamentos</h3>
+      <p>Controle de receitas e despesas</p>
+    <% end %>
+
+    <%= link_to dogs_path, class: 'quick-card' do %>
+      <div class="card-icon">
+        <%= image_tag 'icons/paw.svg', alt: 'Pets', width: 48 %>
+      </div>
+      <h3>Pets</h3>
+      <p>Gerencie seus animais</p>
+    <% end %>
+
+    <%= link_to '/photos', class: 'quick-card' do %>
+      <div class="card-icon">
+        <%= image_tag 'icons/bookLib.svg', alt: 'Galeria', width: 48 %>
+      </div>
+      <h3>Galeria</h3>
+      <p>Compartilhe fotos</p>
+    <% end %>
+  </div>
+</section>
