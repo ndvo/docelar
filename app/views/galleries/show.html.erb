@@ -1,11 +1,51 @@
-<div>
-  <%= button_to "Gerar photos", action: "generate_photos" %>
+<nav class="breadcrumb">
+  <%= link_to '← Galerias', galleries_path %>
+</nav>
+
+<section class="gallery-header">
+  <h1><%= @gallery.name %></h1>
+  <p class="subtitle"><%= @photos.count %> fotos</p>
+</section>
+
+<div class="gallery-actions">
+  <%= button_to "Gerar fotos", action: "generate_photos", class: 'btn btn-secondary' %>
+  <%= link_to 'Editar', '#', class: 'btn btn-secondary' if false %>
 </div>
 
-<section class="photos">
-<% @photos.map do |photo| %>
-  <%= link_to photo, class: "photo in-list", style: "background-image: url('#{url_for(photo.file.representation(:thumb))}')" do %>
-        <h1><%= photo.title %></h1>
+<% if @photos.any? %>
+  <div class="photos-grid" data-controller="lightbox">
+    <% @photos.each_with_index do |photo, index| %>
+      <div class="photo-card" data-action="click->lightbox#open" data-photo-id="<%= photo.id %>" data-photo-index="<%= index %>">
+        <%= image_tag photo.file.representation(:medium), loading: 'lazy' %>
+        <div class="photo-card-overlay">
+          <p class="photo-card-title"><%= photo.title %></p>
+        </div>
+      </div>
     <% end %>
+  </div>
+
+  <% if @photos.count >= 10 %>
+    <div class="load-more">
+      <%= link_to 'Carregar mais fotos', '#', class: 'btn btn-secondary' %>
+    </div>
+  <% end %>
+<% else %>
+  <div class="empty-state">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64">
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <circle cx="8.5" cy="8.5" r="1.5"/>
+      <path d="M21 15l-5-5L5 21"/>
+    </svg>
+    <p>Nenhuma foto nesta galeria</p>
+    <p class="hint">Clique em "Gerar fotos" para importar as fotos</p>
+  </div>
 <% end %>
-</section
+
+<div class="lightbox" data-lightbox-target="lightbox">
+  <button class="lightbox-close" data-action="click->lightbox#close">&times;</button>
+  <button class="lightbox-nav prev" data-action="click->lightbox#prev">&#8249;</button>
+  <div class="lightbox-content">
+    <img src="" alt="" data-lightbox-target="image">
+  </div>
+  <button class="lightbox-nav next" data-action="click->lightbox#next">&#8250;</button>
+</div>
