@@ -1,0 +1,98 @@
+<turbo-frame id="logs-content">
+  <div class="log-inspector">
+    <h2>Log Inspector</h2>
+
+    <div class="log-summary">
+      <div class="stat">
+        <span class="label">Entries</span>
+        <span class="value"><%= @results[:summary][:total_entries] %></span>
+      </div>
+      <div class="stat error">
+        <span class="label">Errors</span>
+        <span class="value"><%= @results[:summary][:error_count] %></span>
+      </div>
+      <div class="stat warning">
+        <span class="label">Slow Queries</span>
+        <span class="value"><%= @results[:summary][:slow_query_count] %></span>
+      </div>
+      <div class="stat">
+        <span class="label">Avg Response</span>
+        <span class="value"><%= @results[:summary][:avg_response_time].round(1) %>ms</span>
+      </div>
+      <div class="stat">
+        <span class="label">P95</span>
+        <span class="value"><%= @results[:summary][:p95_response_time].round(1) %>ms</span>
+      </div>
+    </div>
+
+    <% if @results[:errors].any? %>
+      <section class="log-section">
+        <h3>Errors (<%= @results[:errors].size %>)</h3>
+        <ul class="error-list">
+          <% @results[:errors].each do |error| %>
+            <li class="error-item">
+              <span class="error-level"><%= error[:level] %></span>
+              <span class="error-message"><%= error[:message] %></span>
+              <span class="error-time"><%= error[:timestamp] %></span>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+    <% end %>
+
+    <% if @results[:query_stats].any? %>
+      <section class="log-section">
+        <h3>Slow Queries</h3>
+        <table class="log-table">
+          <thead>
+            <tr>
+              <th>Table</th>
+              <th>Count</th>
+              <th>Avg (ms)</th>
+              <th>Max (ms)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @results[:query_stats].sort_by { |_, v| -v[:max_duration] }.each do |table, data| %>
+              <tr>
+                <td><%= table %></td>
+                <td><%= data[:count] %></td>
+                <td><%= (data[:total_duration] / data[:count]).round(1) %></td>
+                <td><%= data[:max_duration].round(1) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </section>
+    <% end %>
+
+    <% if @results[:slow_requests].any? %>
+      <section class="log-section">
+        <h3>Slow Requests</h3>
+        <table class="log-table">
+          <thead>
+            <tr>
+              <th>Path</th>
+              <th>Duration</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @results[:slow_requests].first(10).each do |req| %>
+              <tr>
+                <td><%= req[:path] || "unknown" %></td>
+                <td><%= req[:duration_ms]&.round %>ms</td>
+                <td><%= req[:timestamp] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </section>
+    <% end %>
+
+    <div class="log-actions">
+      <%= link_to "Refresh", dev_logs_path, class: "btn btn-secondary", data: { turbo_action: "replace" } %>
+      <%= link_to "View Full Log", "/log/#{Rails.env}.log", target: "_blank", class: "btn btn-secondary" %>
+    </div>
+  </div>
+</turbo-frame>
