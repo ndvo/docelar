@@ -1,18 +1,5 @@
 require 'rails_helper'
 
-module LoginHelper
-  def login_as(user)
-    visit new_session_path
-    fill_in 'email_address', with: user.email_address
-    fill_in 'password', with: 'password'
-    click_button 'Sign in'
-  end
-end
-
-RSpec.configure do |config|
-  config.include LoginHelper, type: :feature
-end
-
 RSpec.describe 'Cards', type: :feature do
   let(:user) { User.create!(email_address: 'test@example.com', password: 'password') }
 
