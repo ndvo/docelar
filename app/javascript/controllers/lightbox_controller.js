@@ -10,12 +10,24 @@ export default class extends Controller {
 
   connect() {
     this.collectPhotos()
+    this.setupImageLoading()
     this.setupKeyboard()
   }
 
   collectPhotos() {
     const cards = this.element.querySelectorAll('.photo-card')
     this.photos = Array.from(cards).map(card => card.dataset.photoSrc || '')
+  }
+
+  setupImageLoading() {
+    const images = this.element.querySelectorAll('.photo-img')
+    images.forEach(img => {
+      if (img.complete) {
+        img.classList.add('loaded')
+      } else {
+        img.addEventListener('load', () => img.classList.add('loaded'))
+      }
+    })
   }
 
   setupKeyboard() {
@@ -55,7 +67,7 @@ export default class extends Controller {
   }
 
   showPhoto(index) {
-    const img = this.lightboxTarget.querySelector('img')
+    const img = this.lightboxTarget.querySelector('.lightbox-img')
     img.src = this.photos[index] || ''
     img.alt = `Photo ${index + 1}`
   }

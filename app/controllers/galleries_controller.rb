@@ -1,7 +1,7 @@
 class GalleriesController < ApplicationController
   def index
     @folders = Gallery.all.pluck(:name)
-    @galleries = Gallery.all
+    @galleries = Gallery.all.includes(:photos)
   end
 
   def show

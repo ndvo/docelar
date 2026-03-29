@@ -247,6 +247,38 @@ details[open] summary::before {
   content: "" !important;
 }
 
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: var(--margin-small);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--background);
+}
+
+.btn-primary:hover {
+  background: var(--color-secondary);
+  text-decoration: none;
+}
+
+.btn-secondary {
+  background: var(--color-highlight);
+  color: var(--color-highlight-background);
+}
+
+.btn-secondary:hover {
+  opacity: 0.9;
+  text-decoration: none;
+}
+
 /* Cancel link */
 .cancel-link {
   padding: 0.5em 1em;

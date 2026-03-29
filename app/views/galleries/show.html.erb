@@ -12,15 +12,13 @@
 </div>
 
 <% if @photos.any? %>
-  <div class="photos-grid" data-controller="lightbox">
+  <div class="photos-grid">
     <% @photos.each_with_index do |photo, index| %>
-      <div class="photo-card" 
-           data-action="click->lightbox#open" 
-           data-photo-id="<%= photo.id %>" 
-           data-photo-index="<%= index %>"
-           data-photo-src="<%= url_for(photo.file) if photo.file.attached? %>">
+      <%= link_to photo_path(photo), class: 'photo-card' do %>
         <% if photo.file.attached? %>
-          <%= image_tag photo.file, loading: 'lazy', class: 'photo-img' %>
+          <div class="photo-skeleton">
+            <%= image_tag photo.file, loading: 'lazy', class: 'photo-img' %>
+          </div>
         <% else %>
           <div class="photo-placeholder">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -33,7 +31,7 @@
         <div class="photo-card-overlay">
           <p class="photo-card-title"><%= photo.title %></p>
         </div>
-      </div>
+      <% end %>
     <% end %>
   </div>
 
@@ -41,8 +39,7 @@
     <div class="load-more">
       <%= link_to "Carregar mais fotos (#{@gallery.photos.count - @photos.count} restantes)", 
           gallery_path(@gallery, page: @page + 1), 
-          class: 'btn btn-secondary',
-          data: { turbo_frame: 'photos_grid' } %>
+          class: 'btn btn-secondary' %>
     </div>
   <% elsif @gallery.photos.any? %>
     <div class="load-more">
@@ -60,12 +57,3 @@
     <p class="hint">Clique em "Gerar fotos" para importar as fotos</p>
   </div>
 <% end %>
-
-<div class="lightbox" data-lightbox-target="lightbox">
-  <button class="lightbox-close" data-action="click->lightbox#close">&times;</button>
-  <button class="lightbox-nav prev" data-action="click->lightbox#prev">&#8249;</button>
-  <div class="lightbox-content">
-    <img src="" alt="" data-lightbox-target="image">
-  </div>
-  <button class="lightbox-nav next" data-action="click->lightbox#next">&#8250;</button>
-</div>

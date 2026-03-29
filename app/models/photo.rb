@@ -6,8 +6,9 @@ class Photo < ActiveRecord::Base
 
   has_one_attached :file do |attachable|
     attachable.variant :thumb, resize_to_fill: [200, 200], preprocessed: true
+    attachable.variant :grid, resize_to_limit: [400, 400], preprocessed: true
     attachable.variant :medium, resize_to_limit: [800, 800]
-    attachable.variant :full, resize_to_limit: [1280, 1280]
+    attachable.variant :full, resize_to_limit: [1920, 1920]
   end
 
   def fs_path = Rails.root.join('app', 'assets', Gallery.path, gallery.folder_name, file_name)

@@ -14,7 +14,7 @@
         <div class="gallery-card-cover">
           <% first_photo = gallery.photos.first %>
           <% if first_photo&.file&.attached? %>
-            <%= image_tag first_photo.file.representation(:thumb) %>
+            <%= image_tag first_photo.file, loading: 'lazy', class: 'gallery-cover-img' %>
           <% else %>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <rect x="3" y="3" width="18" height="18" rx="2"/>

@@ -178,14 +178,18 @@ header nav,
 }
 
 /* Mobile: hide desktop nav, show hamburger */
-@media (max-width: 599px) {
+@media (max-width: 899px) {
   .nav-toggle-label {
     display: flex;
+  }
+
+  .desktop-nav {
+    display: none;
   }
 }
 
 /* Desktop: show horizontal nav, hide hamburger */
-@media (min-width: 600px) {
+@media (min-width: 900px) {
   .nav-toggle-label,
   .nav-overlay,
   .nav-menu {
