@@ -1,8 +1,7 @@
-<%= form_with model: purchase do |f| %>
+<%= form_with model: purchase, class: 'purchase-form', data: { controller: 'purchase-form form' } do |f| %>
   <% if purchase.errors.any? %>
-    <div style="color: red">
+    <div id="error_explanation">
       <h2><%= pluralize(purchase.errors.count, "error") %> prohibited this purchase from being saved:</h2>
-
       <ul>
         <% purchase.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -12,111 +11,127 @@
   <% end %>
 
   <fieldset>
+    <legend>Informações</legend>
     <div class="field">
-        <%= f.label :purchase_at, 'Data da compra' %>
-        <%= f.date_field :purchase_at %>
+      <%= f.label :purchase_at, 'Data' %>
+      <%= f.date_field :purchase_at %>
     </div>
   </fieldset>
 
-  <fieldset data-controller="form purchase-form">
+  <fieldset>
     <legend>Produto</legend>
     <div class="field">
       <%= f.label :product_id, 'Produto' %>
-      <%= f.select :product_id,
-          content_tag(:option, '-- nenhum --', value: '') +
-          options_from_collection_for_select(
-            @products, 'id', 'name',
-            @purchase.product_id
-          )
-        %>
+      <div class="select-with-action">
+        <%= f.select :product_id,
+            content_tag(:option, '-- nenhum --', value: '') +
+            options_from_collection_for_select(
+              @products, 'id', 'name',
+              @purchase.product_id
+            )
+          %>
+        <button type="button" class="secondary-btn" onclick="document.getElementById('new-product').style.display='block'">
+          + Novo
+        </button>
+      </div>
     </div>
-      <% if @purchase.new_record? %>
-        <details>
-          <summary>Novo Produto</summary>
-          <%= f.fields_for :product do |ff| %>
 
-            <div>
-              <%= ff.label :name %>
-              <%= ff.text_field :name %>
-            </div>
-
-            <div>
-              <%= ff.label :description %>
-              <%= ff.text_area :description %>
-            </div>
-
-            <div>
-              </div>
-              <%= ff.text_field :brand %>
-            </div>
-
-            <div>
-              <%= ff.label :kind %>
-              <%= ff.text_field :kind %>
-            </div>
-
-          <% end %>
-        </details>
+    <details id="new-product" style="display: none">
+      <summary>Novo Produto</summary>
+      <%= f.fields_for :product do |ff| %>
+        <div class="field">
+          <%= ff.label :name, 'Nome' %>
+          <%= ff.text_field :name %>
+        </div>
+        <div class="field">
+          <%= ff.label :brand, 'Marca' %>
+          <%= ff.text_field :brand %>
+        </div>
+        <div class="field">
+          <%= ff.label :kind, 'Tipo' %>
+          <%= ff.text_field :kind %>
+        </div>
+        <div class="field">
+          <%= ff.label :description, 'Descrição' %>
+          <%= ff.text_area :description %>
+        </div>
       <% end %>
+    </details>
 
-      <div class="field">
-        <%= f.label :price, 'Preço' %>
-        <%= f.number_field :price, step: 0.01, 'data-action' => 'purchase-form#onPriceChange', 'data-purchase-form-target' => 'price' %>
+    <div class="field">
+      <%= f.label :price, 'Preço' %>
+      <div class="input-with-prefix">
+        <span class="prefix">R$</span>
+        <%= f.number_field :price, step: 0.01, 
+            'data-action' => 'purchase-form#onPriceChange', 
+            'data-purchase-form-target' => 'price' %>
       </div>
-
-      <div class="field total-display">
-        <span>Total:</span>
-        <span data-purchase-form-target="total" class="total-amount">R$ 0,00</span>
-      </div>
-
-      <details>
-        <summary>Parcelamento</summary>
-        <div class="field">
-          <%= f.label :card, 'Cartão' %>
-          <%= f.hidden_field :card_id, 'data-card-picker-target': 'input' %>
-          <div class="card-picker" data-controller="card-picker">
-            <div class="card-picker-grid">
-              <% Card.all.each do |card| %>
-                <button type="button" 
-                        class="card-picker-option <%= 'selected' if @purchase.card_id == card.id %>"
-                        data-card-id="<%= card.id %>"
-                        data-action="click->card-picker#select">
-                  <span class="card-brand"><%= card.brand %></span>
-                  <span class="card-name"><%= card.name %></span>
-                  <span class="card-number"><%= card.masked_number %></span>
-                </button>
-              <% end %>
-            </div>
-          </div>
-        </div>
-
-        <div class="field">
-          <%= f.label :installments, 'Parcelas' %>
-          <%= f.number_field :number_of_installments, min: 1, value: @purchase.number_of_installments, 'data-purchase-form-target' => 'installments', 'data-action' => 'purchase-form#onPriceChange' %>
-        </div>
-
-        <div class="field">
-          <%= f.label :installment_price, 'Parcela' %>
-          <%= f.number_field :installment_price, step: 0.01, 'data-action' => 'change->purchase-form#onInstallmentPriceChange', 'data-purchase-form-target' => 'installmentPrice' %>
-        </div>
-      </details>
-
-      <details>
-        <summary>Detalhes</summary>
-        <div class="field">
-          <%= f.label :quantity, 'Quantidade' %>
-          <%= f.number_field :quantity, step: 1, 'data-action' => 'purchase-form#onQuantityChange', 'data-purchase-form-target' => 'quantity' %>
-        </div>
-
-        <div class="field">
-          <%= f.label :paid, 'Pago' %>
-          <%= f.check_box :paid %>
-        </div>
-      </details>
-
+    </div>
   </fieldset>
 
+  <fieldset>
+    <legend>Pagamento</legend>
+    <div class="field">
+      <%= f.label :card_id, 'Cartão' %>
+      <%= f.hidden_field :card_id, 'data-card-picker-target': 'input' %>
+      <div class="card-picker" data-controller="card-picker">
+        <div class="card-picker-grid">
+          <% Card.all.each do |card| %>
+            <button type="button" 
+                    class="card-picker-option <%= 'selected' if @purchase.card_id == card.id %>"
+                    data-card-id="<%= card.id %>"
+                    data-action="click->card-picker#select">
+              <span class="card-brand"><%= card.brand %></span>
+              <span class="card-name"><%= card.name %></span>
+              <span class="card-number"><%= card.masked_number %></span>
+            </button>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="installments-grid">
+      <div class="field">
+        <%= f.label :number_of_installments, 'Parcelas' %>
+        <%= f.number_field :number_of_installments, min: 1, value: @purchase.number_of_installments, 
+            'data-purchase-form-target' => 'installments', 
+            'data-action' => 'purchase-form#onPriceChange' %>
+      </div>
+
+      <div class="field">
+        <%= f.label :installment_price, 'Valor da Parcela' %>
+        <div class="input-with-prefix">
+          <span class="prefix">R$</span>
+          <%= f.number_field :installment_price, step: 0.01, 
+              'data-action' => 'change->purchase-form#onInstallmentPriceChange', 
+              'data-purchase-form-target' => 'installmentPrice' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="total-display">
+      <span>Total:</span>
+      <span data-purchase-form-target="total" class="total-amount">R$ 0,00</span>
+    </div>
+  </fieldset>
+
+  <details>
+    <summary>Mais detalhes</summary>
+    <div class="field">
+      <%= f.label :quantity, 'Quantidade' %>
+      <%= f.number_field :quantity, step: 1, value: @purchase.quantity || 1,
+          'data-action' => 'purchase-form#onQuantityChange', 
+          'data-purchase-form-target' => 'quantity' %>
+    </div>
+
+    <div class="field checkbox-field">
+      <%= f.check_box :paid %>
+      <%= f.label :paid, 'Pago' %>
+    </div>
+  </details>
+
   <div class="actions">
+    <%= link_to 'Cancelar', purchases_path, class: 'cancel-link' %>
     <%= f.submit %>
   </div>
 <% end %>

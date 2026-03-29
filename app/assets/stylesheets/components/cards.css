@@ -1,0 +1,96 @@
+/* Card Picker */
+.card-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--margin-normal);
+  margin-top: var(--margin-normal);
+}
+
+.card-picker-option {
+  display: flex;
+  flex-direction: column;
+  padding: var(--margin-normal);
+  border: 2px solid var(--color-highlight);
+  border-radius: var(--margin-small);
+  background: var(--background);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  font-family: inherit;
+  color: inherit;
+}
+
+.card-picker-option:hover {
+  background: var(--color-highlight-background);
+  color: var(--background);
+  border-color: var(--color-highlight-background);
+}
+
+.card-picker-option:hover .card-brand,
+.card-picker-option:hover .card-name,
+.card-picker-option:hover .card-number {
+  color: var(--background);
+}
+
+.card-picker-option.selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--background);
+}
+
+.card-picker-option .card-brand {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: var(--color-primary);
+}
+
+.card-picker-option .card-name {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  color: var(--link);
+}
+
+.card-picker-option .card-number {
+  font-size: 0.75rem;
+  font-family: monospace;
+  margin-top: var(--margin-tiny);
+  color: var(--link);
+}
+
+/* Total Display */
+.total-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--margin-normal);
+  background: var(--color-highlight-background);
+  color: var(--background);
+  border-radius: var(--margin-small);
+  margin: var(--margin-normal) 0;
+}
+
+.total-amount {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* Cards List */
+div#cards {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: var(--margin-normal);
+}
+
+.card {
+  display: block;
+  width: var(--width-regular);
+  padding: var(--margin-normal);
+  box-shadow: var(--margin-tiny) var(--margin-tiny) var(--margin-normal) silver;
+  border-radius: var(--margin-tiny);
+}
+
+.card:hover {
+  box-shadow: var(--margin-small) var(--margin-small) var(--margin-large) silver;
+}

@@ -1,0 +1,111 @@
+/* Tags */
+.tag {
+  border: solid thin var(--color-highlight);
+  border-radius: var(--margin-large);
+  width: fit-content;
+  padding: var(--margin-small);
+  color: var(--color-highlight);
+  background-color: var(--color-highlight-background);
+  display: inline-block;
+  font-size: 0.875rem;
+}
+
+input[name="tag_name"][type="text"] {
+  border: solid thin var(--color-highlight);
+  border-radius: var(--margin-large);
+  padding: var(--margin-small);
+  color: var(--color-highlight);
+  background-color: var(--color-highlight-background);
+}
+
+/* Photos */
+section.photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--margin-normal);
+}
+
+.photo.in-list {
+  display: block;
+  width: var(--width-short);
+  height: var(--width-short);
+  border: solid thin silver;
+  border-radius: 5px;
+  padding: var(--margin-tiny);
+  background-size: cover;
+}
+
+a.photo.in-list:hover {
+  box-shadow: 5px 5px 5px silver;
+}
+
+article.photo {
+  max-width: 100%;
+  text-align: center;
+}
+
+picture img {
+  max-width: 100%;
+  max-height: calc(100vh - 250px);
+}
+
+/* Calendar */
+.calendar.month.picker {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--margin-large);
+  box-shadow: var(--margin-tiny) var(--margin-tiny) var(--margin-normal) silver;
+  border-radius: var(--margin-small);
+}
+
+/* Flash Messages */
+#flash-messages {
+  margin-left: calc(-0.5 * var(--page-width));
+  padding: 1ch;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  left: 50%;
+  width: var(--page-width);
+  background: var(--alert);
+  display: grid;
+  grid-template-columns: 1fr 20px;
+  border-radius: 0 0 var(--margin-small) var(--margin-small);
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.flash-notice {
+  background: var(--color-highlight-background);
+  color: var(--background);
+}
+
+.flash-alert {
+  background: var(--alert);
+  color: white;
+}
+
+/* Entity */
+.entity {
+  margin: var(--margin-large) 0;
+}
+
+/* Key value pairs */
+dl {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: var(--margin-small);
+}
+
+dt {
+  font-weight: bold;
+}
+
+/* List */
+ul {
+  padding-left: var(--margin-large);
+}
+
+li {
+  margin: var(--margin-tiny) 0;
+}
