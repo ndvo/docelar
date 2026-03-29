@@ -17,6 +17,7 @@ Load a skill when working on specialized tasks:
 | `ux` | User flows, wireframes, interaction design |
 | `project-owner` | Planning features, understanding needs, prioritization |
 | `health-product` | Health module roadmap, pet/family health features |
+| `manager` | Project status, blockers, reporting, coordination |
 | `devops` | CI/CD, deployment, automation, developer tools |
 | `qa` | Test quality, code quality, accessibility, user flows |
 

@@ -2,14 +2,23 @@
 
 ## Commits
 
-Use [Conventional Commits](https://www.conventionalcommits.org/) pattern:
+### Atomic, Hunk-Based Commits
+
+**Always prefer small, focused commits.** Each commit should represent one logical change.
+
+1. **One logical change per commit** - Don't mix features with fixes
+2. **Ask before committing** - Always ask the user if they want to commit
+3. **Review the diff** - Show `git diff` before committing
+4. **Meaningful messages** - Explain WHY, not just WHAT
+
+### Conventional Commits Format
 
 ```
 <type>(<scope>): <description>
 
-[optional body]
+[optional body - explain WHY]
 
-[optional footer]
+[optional footer - breaking changes, issues]
 ```
 
 ### Types
@@ -30,6 +39,12 @@ fix(payment): correct late scope test date
 test(purchases): add feature specs for CRUD operations
 ci(github): add parallel test workflow
 ```
+
+### Commit Checklist
+- [ ] Is this one logical change?
+- [ ] Does it have a clear message?
+- [ ] Did tests pass?
+- [ ] Did you show the user the diff?
 
 ## Dependencies
 
