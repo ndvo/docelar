@@ -45,4 +45,26 @@
       </li>
     </ul>
   </div>
+
+  <!-- Desktop horizontal nav -->
+  <ul class="desktop-nav">
+    <li><%= link_to 'Galeria', :galleries %></li>
+    <li><%= link_to 'Tarefas', :tasks %></li>
+    <li><%= link_to 'Pets', :dogs %></li>
+    <li class="has-dropdown">
+      <span>Pessoas</span>
+      <ul class="dropdown">
+        <li><%= link_to 'Pessoas', :people %></li>
+      </ul>
+    </li>
+    <li class="has-dropdown">
+      <span>Finanças</span>
+      <ul class="dropdown">
+        <li><%= link_to 'Produtos', :products %></li>
+        <li><%= link_to 'Compras', :purchases %></li>
+        <li><%= link_to 'Pagamentos', :payments %></li>
+        <li><%= link_to 'Cartões', :cards %></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
