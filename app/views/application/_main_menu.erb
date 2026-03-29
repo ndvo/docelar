@@ -1,33 +1,45 @@
-<nav>
-  <input type="checkbox" id="toggle-menu" name="toggle-menu" />
-  <label class="menu toggle" for="toggle-menu">
-    <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+<nav class="main-nav">
+  <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+
+  <label class="nav-toggle-label" for="nav-toggle" aria-label="Menu">
+    <span class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
   </label>
-  <label class="menu overlay" for="toggle-menu"></label>
-  <div class="menu">
-    <h1>Menu</h1>
-    <ul>
-      <label class="menu toggle" for="toggle-menu">
-        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+
+  <div class="nav-overlay"></div>
+
+  <div class="nav-menu">
+    <div class="nav-header">
+      <span class="nav-title">Menu</span>
+      <label class="nav-close" for="nav-toggle" aria-label="Fechar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </label>
+    </div>
+
+    <ul class="nav-list">
       <li><%= link_to 'Galeria', :galleries %></li>
       <li><%= link_to 'Tarefas', :tasks %></li>
-      <li><%= link_to 'Turminha', :dogs %></li>
-      <li>
-        <h2>Pessoas</h2>
+      <li><%= link_to 'Pets', :dogs %></li>
+
+      <li class="nav-group">
+        <span class="nav-group-title">Pessoas</span>
         <ul>
           <li><%= link_to 'Pessoas', :people %></li>
         </ul>
       </li>
-      <li>
-        <h2>Finanças</h2>
+
+      <li class="nav-group">
+        <span class="nav-group-title">Finanças</span>
         <ul>
           <li><%= link_to 'Produtos', :products %></li>
           <li><%= link_to 'Compras', :purchases %></li>
-          <li><%= link_to 'Relatório de Gastos', :payments %></li>
+          <li><%= link_to 'Pagamentos', :payments %></li>
           <li><%= link_to 'Cartões', :cards %></li>
         </ul>
       </li>
