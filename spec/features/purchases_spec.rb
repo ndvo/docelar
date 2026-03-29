@@ -27,7 +27,7 @@ RSpec.describe 'Purchases', type: :feature do
 
     visit new_purchase_path
 
-    expect(page).to have_content('Product')
+    expect(page).to have_content('Produto')
   end
 
   it 'shows edit purchase form' do
@@ -37,5 +37,27 @@ RSpec.describe 'Purchases', type: :feature do
     visit edit_purchase_path(purchase)
 
     expect(page).to have_field('purchase[price]', with: '100.0')
+  end
+
+  it 'creates a new purchase' do
+    Product.create!(name: 'Test Product')
+
+    visit new_purchase_path
+    select 'Test Product', from: 'purchase[product_id]'
+    fill_in 'purchase[price]', with: '50.0'
+    click_button 'Criar Compra'
+
+    expect(page).to have_content('50.0')
+  end
+
+  it 'updates a purchase' do
+    product = Product.create!(name: 'Test Product')
+    purchase = Purchase.create!(product: product, price: 100, quantity: 1)
+
+    visit edit_purchase_path(purchase)
+    fill_in 'purchase[price]', with: '150.0'
+    click_button 'Atualizar Compra'
+
+    expect(page).to have_content('150.0')
   end
 end

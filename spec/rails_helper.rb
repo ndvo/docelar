@@ -10,6 +10,15 @@ require 'rspec/rails'
 require 'shoulda/matchers'
 # Add additional requires below this line. Rails is not loaded until this point!
 
+module LoginHelper
+  def login_as(user)
+    visit new_session_path
+    fill_in 'email_address', with: user.email_address
+    fill_in 'password', with: 'password'
+    click_button 'Sign in'
+  end
+end
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
@@ -36,6 +45,8 @@ end
 RSpec.configure do |config|
   Capybara.default_driver = :rack_test
   Capybara.javascript_driver = :rack_test
+
+  config.include LoginHelper, type: :feature
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = ["#{::Rails.root}/spec/fixtures"]
