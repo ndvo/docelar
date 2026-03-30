@@ -77,7 +77,8 @@ Before adding any gem, npm package, or library:
 | `hotwire` | Turbo, Stimulus, real-time features |
 | `developer-experience` | Tests, tooling, developer productivity |
 | `rails-performance` | Query optimization, caching |
-| `design` | CSS, layouts, accessibility |
+| `design` | CSS, layouts |
+| `accessibility` | WCAG compliance, screen readers, ARIA, a11y testing |
 | `project-owner` | Planning, prioritization |
 | `devops` | CI/CD, deployment, automation |
 | `qa` | Test quality, code quality, accessibility |
