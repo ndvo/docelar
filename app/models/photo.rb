@@ -11,7 +11,7 @@ class Photo < ActiveRecord::Base
     attachable.variant :full, resize_to_limit: [1920, 1920]
   end
 
-  def fs_path = Rails.root.join('app', 'assets', Gallery.path, gallery.folder_name, file_name)
+  def fs_path = Rails.root.join('galleries', gallery.folder_name, original_path)
 
   def rotate_left
     system "mogrify -rotate -90 \"#{fs_path}\""
@@ -39,4 +39,29 @@ class Photo < ActiveRecord::Base
   def next = Photo.where(gallery:).where("id > #{id}").order(id: :asc).first
 
   def previous = Photo.where(gallery:).where("id < #{id}").order(id: :desc).first
+
+  def medium_path
+    "galleries_medium/#{gallery.folder_name}/#{original_path}"
+  end
+
+  def fs_medium_path
+    "#{Rails.public_path}/#{medium_path}"
+  end
+
+  def ensure_medium_variant
+    return if File.exist?(fs_medium_path)
+
+    src = fs_path
+    return unless File.exist?(src)
+
+    dst_dir = File.dirname(fs_medium_path)
+    FileUtils.mkdir_p(dst_dir)
+
+    system("convert -resize 1200x1200\\> -quality 85 '#{src}' '#{fs_medium_path}'")
+  end
+
+  def medium_url
+    ensure_medium_variant if !File.exist?(fs_medium_path)
+    medium_path
+  end
 end

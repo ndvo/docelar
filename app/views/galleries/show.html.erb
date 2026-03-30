@@ -17,7 +17,9 @@
       <%= link_to photo_path(photo), class: 'photo-card' do %>
         <% if photo.file.attached? %>
           <div class="photo-skeleton">
-            <%= image_tag photo.file, loading: 'lazy', class: 'photo-img' %>
+            <div class="photo-img-wrapper">
+              <%= image_tag photo.file, loading: 'lazy', class: 'photo-img', alt: photo.title %>
+            </div>
           </div>
         <% else %>
           <div class="photo-placeholder">

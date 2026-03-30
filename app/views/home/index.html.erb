@@ -2,9 +2,14 @@
   <div class="hero-content">
     <h1>Bem-vindo ao Docelar!</h1>
     <p class="hero-date"><%= l(Date.today, format: :long) %></p>
-    <p class="hero-tagline">Gerencie suas tarefas, pagamentos e turmas de forma simples</p>
+    <p class="hero-tagline">Sua gestão financeira e cuidados em um só lugar</p>
   </div>
 </section>
+
+<% tasks_today = @tasks_today_count || 0 %>
+<% payments_due = @payments_due_count || 0 %>
+<% pets_count = @pets_count || 0 %>
+<% recent_photos = @recent_photos_count || 0 %>
 
 <section class="quick-access">
   <h2>Acesso Rápido</h2>
@@ -14,7 +19,11 @@
         <%= image_tag 'icons/checklist.svg', alt: 'Tarefas', width: 48 %>
       </div>
       <h3>Tarefas</h3>
-      <p>Gerencie suas atividades</p>
+      <% if tasks_today > 0 %>
+        <p class="card-badge"><%= tasks_today %> para hoje</p>
+      <% else %>
+        <p>Nenhuma pendente</p>
+      <% end %>
     <% end %>
 
     <%= link_to '/payments', class: 'quick-card' do %>
@@ -22,7 +31,11 @@
         <%= image_tag 'icons/despesas.svg', alt: 'Pagamentos', width: 48 %>
       </div>
       <h3>Pagamentos</h3>
-      <p>Controle de receitas e despesas</p>
+      <% if payments_due > 0 %>
+        <p class="card-badge"><%= payments_due %> a vencer</p>
+      <% else %>
+        <p>Em dia</p>
+      <% end %>
     <% end %>
 
     <%= link_to dogs_path, class: 'quick-card' do %>
@@ -30,7 +43,7 @@
         <%= image_tag 'icons/paw.svg', alt: 'Pets', width: 48 %>
       </div>
       <h3>Pets</h3>
-      <p>Gerencie seus animais</p>
+      <p class="card-count"><%= pets_count %> <%= pets_count == 1 ? 'pet' : 'pets' %></p>
     <% end %>
 
     <%= link_to galleries_path, class: 'quick-card' do %>
@@ -38,7 +51,21 @@
         <%= image_tag 'icons/bookLib.svg', alt: 'Galeria', width: 48 %>
       </div>
       <h3>Galeria</h3>
-      <p>Compartilhe fotos</p>
+      <p class="card-count"><%= recent_photos %> <%= recent_photos == 1 ? 'fotos' : 'fotos' %></p>
     <% end %>
   </div>
 </section>
+
+<% unless @upcoming_tasks.empty? %>
+<section class="dashboard-widget">
+  <h2>Tarefas de Hoje</h2>
+  <ul class="task-list">
+    <% @upcoming_tasks.take(3).each do |task| %>
+      <li class="task-item">
+        <span class="task-title"><%= task.name %></span>
+      </li>
+    <% end %>
+  </ul>
+  <%= link_to 'Ver todas →', '/tasks', class: 'widget-link' %>
+</section>
+<% end %>
