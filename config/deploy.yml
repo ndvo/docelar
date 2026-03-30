@@ -1,0 +1,54 @@
+# Doce Lar - Kamal Deployment Configuration
+
+service: docelar
+
+image: username/docelar
+
+servers:
+  web:
+    - <%= ENV['DEPLOY_HOST'] || '192.168.0.1' %>
+
+proxy:
+  ssl: true
+  host: <%= ENV['DEPLOY_HOSTNAME'] || 'docelar.example.com' %>
+
+registry:
+  username: <%= ENV['KAMAL_REGISTRY_USERNAME'] || 'dockerhub' %>
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+builder:
+  multiarch: true
+  args:
+    BUNDLE_WITHOUT: "development:test"
+
+env:
+  clear:
+    RAILS_SERVE_STATIC_FILES: "true"
+    RAILS_ENV: "production"
+  secret:
+    - RAILS_MASTER_KEY
+
+healthcheck:
+  path: /up
+  interval: 10s
+  timeout: 2s
+  retries: 3
+
+volumes:
+  - "app_storage:/app/storage"
+  - "app_public:/app/public"
+
+accessories:
+  # PostgreSQL: Uncomment if you need multi-server scaling
+  # db:
+  #   image: postgres:16-alpine
+  #   host: <%= ENV['DEPLOY_HOST'] || '192.168.0.1' %>
+  #   port: 5432
+  #   env:
+  #     clear:
+  #       POSTGRES_DB: docelar_production
+  #     secret:
+  #       - POSTGRES_PASSWORD
+  #   directories:
+  #     - data:/var/lib/postgresql/data
