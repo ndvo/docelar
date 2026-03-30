@@ -20,6 +20,7 @@ Load a skill when working on specialized tasks:
 |-------|-----------|
 | `ux` | User flows, wireframes, interaction design |
 | `design` | CSS styling, layouts, responsive design |
+| `html5` | Semantic HTML, modern elements, picture/media |
 | `accessibility` | WCAG compliance, ARIA, screen readers |
 
 ### ⚙️ Engineering Team

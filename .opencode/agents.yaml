@@ -6,6 +6,7 @@ manager: Project Manager Agent
 # UX/Design Team
 design: Design Specialist Agent
 ux: UX Specialist Agent
+html5: HTML5 Specialist Agent
 accessibility: Accessibility Expert Agent
 
 # Engineering Team
