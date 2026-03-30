@@ -15,7 +15,11 @@
           <% first_photo = gallery.photos.first %>
           <% if first_photo&.file&.attached? %>
             <div class="gallery-cover-img-wrapper">
-              <%= image_tag first_photo.file, loading: 'lazy', class: 'gallery-cover-img', alt: gallery.name %>
+              <picture>
+                <source media="(min-width: 600px)" srcset="<%= first_photo.grid_url %>">
+                <source srcset="<%= first_photo.thumb_url %>">
+                <img src="<%= first_photo.thumb_url %>" loading="lazy" class="gallery-cover-img" alt="<%= gallery.name %>">
+              </picture>
             </div>
           <% else %>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">

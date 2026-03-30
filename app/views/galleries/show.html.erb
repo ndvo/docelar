@@ -16,11 +16,11 @@
     <% @photos.each_with_index do |photo, index| %>
       <%= link_to photo_path(photo), class: 'photo-card' do %>
         <% if photo.file.attached? %>
-          <div class="photo-skeleton">
-            <div class="photo-img-wrapper">
-              <%= image_tag photo.file, loading: 'lazy', class: 'photo-img', alt: photo.title %>
-            </div>
-          </div>
+          <picture>
+            <source media="(min-width: 800px)" srcset="<%= photo.grid_url %>">
+            <source srcset="<%= photo.thumb_url %>">
+            <img src="<%= photo.thumb_url %>" loading="lazy" class="photo-img" alt="<%= photo.title %>">
+          </picture>
         <% else %>
           <div class="photo-placeholder">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
