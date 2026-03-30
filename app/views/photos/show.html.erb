@@ -8,9 +8,9 @@
     <% if @photo.file.attached? %>
       <div class="photo-full">
         <picture>
-          <source media="(min-width: 1200px)" srcset="<%= @photo.file %>">
+          <source media="(min-width: 1200px)" srcset="<%= url_for(@photo.file) %>">
           <source media="(min-width: 800px)" srcset="<%= @photo.medium_url %>">
-          <img src="<%= @photo.medium_url %>" alt="<%= @photo.title %>" loading="lazy">
+          <img src="<%= @photo.medium_url %>" alt="<%= @photo.title %>" loading="eager">
         </picture>
       </div>
     <% else %>
