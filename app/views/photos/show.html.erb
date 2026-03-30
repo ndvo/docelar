@@ -7,7 +7,11 @@
     <h1><%= @photo.title %></h1>
     <% if @photo.file.attached? %>
       <div class="photo-full">
-        <%= image_tag @photo.medium_url, alt: @photo.title, loading: 'lazy' %>
+        <picture>
+          <source media="(min-width: 1200px)" srcset="<%= @photo.file %>">
+          <source media="(min-width: 800px)" srcset="<%= @photo.medium_url %>">
+          <img src="<%= @photo.medium_url %>" alt="<%= @photo.title %>" loading="lazy">
+        </picture>
       </div>
     <% else %>
       <div class="empty-state">
