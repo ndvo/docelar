@@ -2,7 +2,7 @@
 
 module Oauth
   class GooglePhotosController < ApplicationController
-    skip_before_action :require_authentication, only: [:callback]
+    skip_before_action :require_authentication, only: [:connect, :callback, :disconnect]
 
     SCOPES = %w[
       https://www.googleapis.com/auth/photoslibrary.readonly
@@ -47,7 +47,7 @@ module Oauth
 
     def google_auth_url
       client_id = ENV.fetch("GOOGLE_CLIENT_ID")
-      redirect_uri = google_photos_callback_url
+      redirect_uri = oauth_google_photos_callback_url
 
       params = {
         client_id: client_id,
@@ -64,7 +64,7 @@ module Oauth
     def exchange_code_for_tokens(code)
       client_id = ENV.fetch("GOOGLE_CLIENT_ID")
       client_secret = ENV.fetch("GOOGLE_CLIENT_SECRET")
-      redirect_uri = google_photos_callback_url
+      redirect_uri = oauth_google_photos_callback_url
 
       response = HTTP.post("https://oauth2.googleapis.com/token", form: {
         code: code,
