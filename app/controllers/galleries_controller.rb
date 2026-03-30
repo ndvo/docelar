@@ -1,4 +1,6 @@
 class GalleriesController < ApplicationController
+  PER_PAGE = 20
+
   def index
     @folders = Gallery.all.pluck(:name)
     @galleries = Gallery.all.includes(:photos)
@@ -6,9 +8,16 @@ class GalleriesController < ApplicationController
 
   def show
     @gallery = Gallery.find(params[:id])
-    @page = params[:page].to_i || 1
-    per_page = 20
-    @photos = @gallery.photos.offset((@page - 1) * per_page).limit(per_page)
+    @page = (params[:page] || 1).to_i
+    @per_page = PER_PAGE
+
+    @photos = @gallery.photos
+                      .order(created_at: :desc)
+                      .offset((@page - 1) * @per_page)
+                      .limit(@per_page)
+
+    @total_count = @gallery.photos.count
+    @total_pages = (@total_count.to_f / @per_page).ceil
   end
 
   def generate_thumbnails; end

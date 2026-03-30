@@ -4,7 +4,7 @@
 
 <section class="gallery-header">
   <h1><%= @gallery.name %></h1>
-  <p class="subtitle"><%= @photos.count %> fotos</p>
+  <p class="subtitle"><%= @gallery.photos.count %> fotos</p>
 </section>
 
 <div class="gallery-actions">
@@ -18,7 +18,7 @@
 
 <% if @photos.any? %>
   <div class="photos-grid">
-    <% @photos.each_with_index do |photo, index| %>
+    <% @photos.each do |photo| %>
       <%= link_to photo_path(photo), class: 'photo-card' do %>
         <% if photo.file.attached? %>
           <picture>
@@ -42,17 +42,12 @@
     <% end %>
   </div>
 
-  <% if @gallery.photos.count > @photos.count %>
-    <div class="load-more">
-      <%= link_to "Carregar mais fotos (#{@gallery.photos.count - @photos.count} restantes)", 
-          gallery_path(@gallery, page: @page + 1), 
-          class: 'btn btn-secondary' %>
-    </div>
-  <% elsif @gallery.photos.any? %>
-    <div class="load-more">
-      <p class="hint">Todas as <%= @gallery.photos.count %> fotos carregadas</p>
-    </div>
-  <% end %>
+  <%= paginate(
+        current_page: @page,
+        total_pages: @total_pages,
+        total_count: @total_count,
+        per_page: @per_page
+      ) %>
 <% else %>
   <div class="empty-state">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64">
