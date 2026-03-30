@@ -15,7 +15,8 @@ namespace :plans do
       'docs/log-inspector-plan.md' => { purpose: 'Log inspection tool', update: 'Per development', next: 'Add QA tests for error detection patterns' },
       'docs/frontpage-plan.md' => { purpose: 'Homepage improvement', update: 'Ongoing', next: 'Implement dashboard widget for tasks' },
       'docs/gallery-ux-test-plan.md' => { purpose: 'Gallery UX tests', update: 'As needed', next: 'Implement high-priority OAuth flow tests' },
-      'docs/gallery-qa-test-plan.md' => { purpose: 'Gallery QA tests', update: 'As needed', next: 'Implement model and service specs' }
+      'docs/gallery-qa-test-plan.md' => { purpose: 'Gallery QA tests', update: 'As needed', next: 'Implement model and service specs' },
+      'docs/accessibility-plan.md' => { purpose: 'Accessibility strategy', update: 'Per sprint', next: 'Implement skip links and focus styles' }
     }
 
     documents.each do |doc, info|

@@ -54,6 +54,12 @@
 - [ ] Shared access
 - [ ] Role-based permissions
 
+### Phase 5: Accessibility & Quality
+- [ ] WCAG 2.1 AA compliance
+- [ ] PWA support (mobile, TV)
+- [ ] Comprehensive test coverage
+- [ ] Progressive enhancement
+
 ---
 
 ## Feature Status
@@ -80,7 +86,10 @@
 
 ### Media Module
 - [x] Galleries - Photo organization
+- [x] Google Photos - Import integration
 - [x] Articles - Content management
+- [ ] Video support
+- [ ] Photo editing
 
 ---
 
@@ -97,9 +106,23 @@
 
 ## Design Improvements Needed
 
+### UI/UX
 1. **Card & Payment Dashboard** - Visual overview of finances
 2. **Patient Records UI** - Health module dashboard
 3. **Mobile Responsive** - All pages need mobile optimization
 4. **Navigation** - Better menu structure
 5. **Forms** - Consistent form styling
 6. **Tables** - Modern table styling
+
+### Accessibility (Priority)
+1. **Skip Links** - Allow keyboard users to bypass navigation
+2. **Focus Management** - Proper focus indicators and restoration
+3. **Screen Reader** - ARIA labels and landmarks
+4. **Color Contrast** - WCAG AA compliance
+5. **Touch Targets** - 44x44px minimum on mobile
+
+### PWA & Multi-Platform
+1. **Service Workers** - Offline support
+2. **App Manifest** - Installability
+3. **TV Interface** - Large targets, voice control
+4. **Background Sync** - Offline data sync
