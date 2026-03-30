@@ -1,0 +1,103 @@
+<%#
+  Pagination partial
+  Variables:
+  - pagy: Pagy object
+  - page_param: symbol for page parameter (default: :page)
+  - max_pages: maximum page numbers to show (default: 7)
+  - current_page: current page number
+  - total_pages: total number of pages
+  - total_count: total number of items
+  - per_page: items per page
+  - base_url: base URL for links
+  - query_params: additional query parameters
+%>
+
+<% window = (max_pages - 1) / 2 %>
+<% start_page = [current_page - window, 1].max %>
+<% end_page = [start_page + max_pages - 1, total_pages].min %>
+<% start_page = [end_page - max_pages + 1, 1].max %>
+
+<% page_numbers = (start_page..end_page).to_a %>
+<% show_first_ellipsis = start_page > 2 %>
+<% show_last_ellipsis = end_page < total_pages - 1 %>
+
+<nav aria-label="Pagination" class="pagination">
+  <%# Previous button %>
+  <% if current_page > 1 %>
+    <%= link_to "Previous",
+        build_pagination_url(base_url, query_params.merge(page_param => current_page - 1)),
+        class: "pagination__item pagination__prev",
+        aria_label: "Go to previous page" %>
+  <% else %>
+    <span class="pagination__item pagination__prev pagination__item--disabled"
+          aria-disabled="true">
+      Previous
+    </span>
+  <% end %>
+
+  <%# First page (always show if not at start) %>
+  <% if start_page > 1 %>
+    <%= link_to "1",
+        build_pagination_url(base_url, query_params.merge(page_param => 1)),
+        class: "pagination__item pagination__item--number",
+        aria_label: "Go to page 1" %>
+  <% end %>
+
+  <%# First ellipsis %>
+  <% if show_first_ellipsis %>
+    <span class="pagination__ellipsis" aria-hidden="true">&hellip;</span>
+  <% end %>
+
+  <%# Page numbers %>
+  <% page_numbers.each do |page| %>
+    <% if page == current_page %>
+      <span class="pagination__item pagination__item--active"
+            aria-current="page">
+        <%= page %>
+      </span>
+    <% else %>
+      <%= link_to page.to_s,
+          build_pagination_url(base_url, query_params.merge(page_param => page)),
+          class: "pagination__item pagination__item--number",
+          aria_label: "Go to page #{page}" %>
+    <% end %>
+  <% end %>
+
+  <%# Last ellipsis %>
+  <% if show_last_ellipsis %>
+    <span class="pagination__ellipsis" aria-hidden="true">&hellip;</span>
+  <% end %>
+
+  <%# Last page (always show if not at end) %>
+  <% if end_page < total_pages %>
+    <%= link_to total_pages.to_s,
+        build_pagination_url(base_url, query_params.merge(page_param => total_pages)),
+        class: "pagination__item pagination__item--number",
+        aria_label: "Go to page #{total_pages}" %>
+  <% end %>
+
+  <%# Next button %>
+  <% if current_page < total_pages %>
+    <%= link_to "Next",
+        build_pagination_url(base_url, query_params.merge(page_param => current_page + 1)),
+        class: "pagination__item pagination__next",
+        aria_label: "Go to next page" %>
+  <% else %>
+    <span class="pagination__item pagination__next pagination__item--disabled"
+          aria-disabled="true">
+      Next
+    </span>
+  <% end %>
+
+  <%# Info text %>
+  <span class="pagination__info">
+    <%= current_page %> / <%= total_pages %>
+  </span>
+</nav>
+
+<%# Screen reader only text %>
+<span class="sr-only">
+  Page <%= current_page %> of <%= total_pages %>.
+  Showing <%= ((current_page - 1) * per_page) + 1 %> to
+  <%= [current_page * per_page, total_count].min %> of <%= total_count %> items.
+</span>
