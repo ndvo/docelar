@@ -37,6 +37,42 @@
 
 ---
 
+## 1.1 TV Remote & D-Pad Navigation (2026)
+
+### Critical Issues Found
+
+| Priority | Issue | Impact |
+|----------|-------|--------|
+| 1 | No skip link | Users must tab through nav on every load |
+| 2 | Missing focus-visible styles | No visible focus indicators |
+| 3 | Lightbox focus trap missing | Focus escapes when lightbox open |
+| 4 | No focus management in lightbox | Orientation lost when opened/closed |
+| 5 | TV Remote: No Enter key support | Can't activate items with remote |
+| 6 | Missing landmarks | No role="banner", role="main" |
+| 7 | Mobile nav keyboard issues | Checkbox hack may not work with keyboard |
+
+### TV Remote Specific Requirements
+
+- Minimum 60x60px touch targets for D-pad navigation
+- Arrow keys should navigate between focusable elements
+- Enter key should activate focused element
+- Escape key should close modals/dialogs
+- Clear visual focus indicator (high contrast)
+- Generous spacing between interactive elements
+
+### Files to Modify
+
+| File | Changes |
+|------|---------|
+| `app/views/layouts/application.html.erb` | Add skip link, landmark roles |
+| `app/javascript/controllers/lightbox_controller.js` | Focus trap, Enter key, ARIA |
+| `app/assets/stylesheets/components/gallery.css` | Focus-visible styles |
+| `app/assets/stylesheets/base.css` | Focus-visible styles |
+| `app/views/application/_main_menu.erb` | ARIA, keyboard nav |
+| `app/views/galleries/show.html.erb` | Button roles, tabindex |
+
+---
+
 ## 2. WCAG 2.1 AA Compliance Plan
 
 ### 2.1 Perceivable
