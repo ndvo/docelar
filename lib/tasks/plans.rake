@@ -8,16 +8,28 @@ namespace :plans do
     documents = {
       'README.md' => { purpose: 'Landing page & overview', update: 'Monthly', next: 'Review and update if features changed' },
       'ROADMAP.md' => { purpose: 'Vision, phases, features', update: 'Weekly', next: 'Update phase progress after completed features' },
-      'FEATURES.md' => { purpose: 'Feature status tracking', update: 'Weekly', next: 'Mark completed features as done' },
-      'docs/deployment-plan.md' => { purpose: 'Kamal deployment strategy', update: 'Per deploy', next: 'Test deployment on staging before production' },
-      'docs/google-photos-integration.md' => { purpose: 'Google Photos integration', update: 'Per sprint', next: 'Setup OAuth credentials and test import flow' },
-      'docs/google-photos-ux.md' => { purpose: 'Photos UX design', update: 'Per sprint', next: 'Implement responsive image loading UX' },
-      'docs/log-inspector-plan.md' => { purpose: 'Log inspection tool', update: 'Per development', next: 'Add QA tests for error detection patterns' },
-      'docs/frontpage-plan.md' => { purpose: 'Homepage improvement', update: 'Ongoing', next: 'Implement dashboard widget for tasks' },
-      'docs/gallery-ux-test-plan.md' => { purpose: 'Gallery UX tests', update: 'As needed', next: 'Implement high-priority OAuth flow tests' },
-      'docs/gallery-qa-test-plan.md' => { purpose: 'Gallery QA tests', update: 'As needed', next: 'Implement model and service specs' },
-      'docs/accessibility-plan.md' => { purpose: 'Accessibility strategy', update: 'Per sprint', next: 'Implement skip links and focus styles' }
+      'FEATURES.md' => { purpose: 'Feature status tracking', update: 'Weekly', next: 'Mark completed features as done' }
     }
+
+    docs_dir = 'docs'
+    if Dir.exist?(docs_dir)
+      plan_patterns = [
+        "#{docs_dir}/*-plan*.md",
+        "#{docs_dir}/*-photos*.md",
+        "#{docs_dir}/*-implementation*.md"
+      ]
+      plan_files = plan_patterns.flat_map { |p| Dir.glob(p) }.uniq.sort
+
+      plan_files.each do |plan_file|
+        basename = File.basename(plan_file, '.md')
+        purpose = extract_purpose_from_plan(plan_file)
+        documents[plan_file] = {
+          purpose: purpose,
+          update: 'Per sprint',
+          next: 'Review and implement'
+        }
+      end
+    end
 
     documents.each do |doc, info|
       exists = File.exist?(doc)
@@ -157,5 +169,17 @@ namespace :plans do
     puts "  3. [NEW] Front Page: UX research + hero redesign"
     puts "  4. [NEW] Log Inspector: Add QA tests for error detection"
     puts "  5. [NEW] Phase 2 UX: Complete forms + mobile optimization\n\n"
+  end
+
+  private
+
+  def self.extract_purpose_from_plan(plan_file)
+    content = File.read(plan_file)
+    first_heading = content.match(/^#\s+(.+)$/)
+    if first_heading
+      first_heading[1].strip
+    else
+      File.basename(plan_file, '.md').humanize
+    end
   end
 end
