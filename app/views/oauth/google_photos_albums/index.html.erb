@@ -1,0 +1,40 @@
+<nav class="breadcrumb">
+  <%= link_to '← Galerias', galleries_path %>
+</nav>
+
+<section class="google-photos-albums">
+  <h1>Selecionar Álbum do Google Photos</h1>
+
+  <% if @albums.any? %>
+    <div class="albums-grid">
+      <% @albums.each do |album| %>
+        <div class="album-card">
+          <div class="album-cover">
+            <% if album["coverPhotoBaseUrl"] %>
+              <img src="<%= album["coverPhotoBaseUrl"] %>=w400-h300-c" alt="<%= album["title"] %>">
+            <% else %>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <path d="M21 15l-5-5L5 21"/>
+              </svg>
+            <% end %>
+          </div>
+          <div class="album-info">
+            <h2><%= album["title"] %></h2>
+            <p><%= album["mediaItemsCount"] || "0" %> fotos</p>
+          </div>
+          <div class="album-actions">
+            <%= button_to "Importar",
+                oauth_google_photos_albums_import_path(album_id: album["id"], gallery_id: @gallery_id),
+                class: "btn btn-primary" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <p>Nenhum álbum encontrado no Google Photos</p>
+    </div>
+  <% end %>
+</section>

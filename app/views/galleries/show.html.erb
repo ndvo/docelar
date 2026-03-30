@@ -8,6 +8,11 @@
 </section>
 
 <div class="gallery-actions">
+  <% if session[:google_photos_access_token].present? %>
+    <%= link_to "Importar do Google Photos",
+        oauth_google_photos_albums_path(gallery_id: @gallery.id),
+        class: 'btn btn-primary' %>
+  <% end %>
   <%= button_to "Gerar fotos", action: "generate_photos", class: 'btn btn-secondary' %>
 </div>
 
