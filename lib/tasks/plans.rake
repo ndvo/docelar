@@ -90,7 +90,8 @@ namespace :plans do
         'Phase 1: Foundation' => { status: '[OK]', next: 'Production deployment', items: [] },
         'Phase 2: User Experience' => { status: '[..]', next: 'Gallery UX, mobile optimization', items: ['Better forms UX', 'Mobile optimization'] },
         'Phase 3: Insights' => { status: '[-]', next: 'Budget reports, spending analysis', items: ['Dashboard overview', 'Budget reports'] },
-        'Phase 4: Family' => { status: '[-]', next: 'Multi-user support, shared access', items: ['User roles', 'Shared galleries'] }
+        'Phase 4: Family' => { status: '[-]', next: 'Multi-user support, shared access', items: ['User roles', 'Shared galleries'] },
+        'Phase 5: Accessibility & Quality' => { status: '[-]', next: 'WCAG compliance, PWA support', items: ['Skip links', 'Focus management'] }
       }
 
       phases.each do |phase, info|
