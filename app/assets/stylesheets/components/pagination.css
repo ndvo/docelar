@@ -1,0 +1,125 @@
+/* Pagination Component */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--margin-tiny);
+  margin: var(--margin-large) 0;
+  flex-wrap: wrap;
+}
+
+.pagination__item {
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--margin-small);
+  border: 1px solid var(--color-highlight);
+  border-radius: var(--margin-small);
+  background: var(--background);
+  color: var(--link);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.pagination__item:hover:not(.pagination__item--disabled):not(.pagination__item--active) {
+  background: var(--baby-pink);
+  border-color: var(--baby-pink);
+}
+
+.pagination__item:focus-visible {
+  outline: 2px solid var(--color-highlight);
+  outline-offset: 2px;
+}
+
+.pagination__item--active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--background);
+  cursor: default;
+}
+
+.pagination__item--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.pagination__prev,
+.pagination__next {
+  min-width: 80px;
+}
+
+.pagination__prev::before {
+  content: "← ";
+}
+
+.pagination__next::after {
+  content: " →";
+}
+
+.pagination__ellipsis {
+  padding: 0 var(--margin-tiny);
+  color: var(--link);
+  opacity: 0.5;
+}
+
+.pagination__info {
+  margin-left: var(--margin-normal);
+  color: var(--link);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 599px) {
+  .pagination {
+    gap: var(--margin-tiny);
+  }
+
+  .pagination__item {
+    min-width: 36px;
+    height: 36px;
+    font-size: 0.875rem;
+  }
+
+  .pagination__prev,
+  .pagination__next {
+    min-width: auto;
+    padding: 0 var(--margin-normal);
+  }
+
+  .pagination__prev::before,
+  .pagination__next::after {
+    content: "";
+  }
+
+  .pagination__info {
+    display: none;
+  }
+}
+
+/* Loading state for Turbo */
+.pagination--loading .pagination__item {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.pagination__spinner {
+  display: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-highlight);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.pagination--loading .pagination__spinner {
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
