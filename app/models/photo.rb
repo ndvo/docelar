@@ -62,6 +62,18 @@ class Photo < ActiveRecord::Base
 
   def medium_url
     ensure_medium_variant if !File.exist?(fs_medium_path)
-    medium_path
+    "/#{medium_path}"
+  end
+
+  def thumb_url
+    "/#{url_thumb_path}"
+  end
+
+  def grid_url
+    "/galleries_medium/#{gallery.folder_name}/#{original_path}"
+  end
+
+  def ensure_grid_variant
+    ensure_medium_variant
   end
 end
