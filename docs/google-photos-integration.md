@@ -4,6 +4,81 @@
 
 Integrate Google Photos to allow users to import photos from their Google Photos library into Doce Lar galleries.
 
+## Obtaining Google API Credentials
+
+### Step 1: Create a Google Cloud Project
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Click "Select a project" → "New Project"
+3. Enter project name (e.g., "Doce Lar")
+4. Click "Create"
+
+### Step 2: Enable the Photos Library API
+
+1. In the sidebar, go to "APIs & Services" → "Library"
+2. Search for "Google Photos Library API"
+3. Click on it and click "Enable"
+
+### Step 3: Configure OAuth Consent Screen
+
+1. Go to "APIs & Services" → "OAuth consent screen"
+2. Choose "External" user type
+3. Fill in required fields:
+   - App name: Doce Lar
+   - User support email: your email
+   - Developer contact: your email
+4. Click "Save and Continue"
+5. On Scopes page, add:
+   - `https://www.googleapis.com/auth/photoslibrary.readonly`
+   - `https://www.googleapis.com/auth/photoslibrary.sharing`
+6. Click "Save and Continue"
+7. Add test users (your email for testing)
+8. Click "Save and Continue"
+
+### Step 4: Create OAuth 2.0 Credentials
+
+1. Go to "APIs & Services" → "Credentials"
+2. Click "Create Credentials" → "OAuth client ID"
+3. Application type: "Web application"
+4. Name: "Doce Lar Web Client"
+5. Authorized redirect URIs:
+   - Development: `http://localhost:3000/oauth/google_photos_callback`
+   - Production: `https://yourdomain.com/oauth/google_photos_callback`
+6. Click "Create"
+
+### Step 5: Copy Credentials
+
+You will see a dialog with:
+- **Client ID**: `xxxxx.apps.googleusercontent.com`
+- **Client Secret**: `GOCSPX-xxxxx`
+
+### Environment Variables Setup
+
+```bash
+# .env or environment
+export GOOGLE_CLIENT_ID="your_client_id.apps.googleusercontent.com"
+export GOOGLE_CLIENT_SECRET="your_client_secret"
+```
+
+Or add to `config/credentials.yml.enc`:
+
+```bash
+rails credentials:edit
+```
+
+Add:
+```yaml
+google_photos:
+  client_id: your_client_id.apps.googleusercontent.com
+  client_secret: your_client_secret
+```
+
+### Important Notes
+
+- **Test Mode**: Until your app is verified by Google, users will see "This app isn't verified" warning
+- **Verification**: Required for production - submit for Google verification with privacy policy and terms of service
+- **Quotas**: Free tier allows 10,000 requests/day for the Photos Library API
+
 ## Google Photos APIs Options
 
 ### 1. Picker API (Recommended for Import)
@@ -139,10 +214,13 @@ config/
 
 ## Environment Variables Needed
 
-```
-GOOGLE_CLIENT_ID=your_client_id
+```bash
+GOOGLE_CLIENT_ID=your_client_id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your_client_secret
+GOOGLE_REDIRECT_URI=http://localhost:3000/oauth/google_photos_callback
 ```
+
+For production, update `GOOGLE_REDIRECT_URI` to your production domain.
 
 ## Testing
 
