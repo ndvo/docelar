@@ -34,6 +34,12 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
+# Gallery images (user content)
+galleries/
+public/galleries_thumbs/
+public/galleries_medium/
+app/assets/galleries_thumbs/
+
 # vim
 *.sw?
 
