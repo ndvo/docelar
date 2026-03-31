@@ -1,11 +1,9 @@
 <%= render @card %>
 
-<div class="actions">
-  <%= link_to "Ver todos os cartões", cards_path %>
-  <%= link_to "Editar cartão", edit_card_path(id: @card.id) %>
-
-  <%= button_to "Pagar fatura", [:pay, @card] %>
-  <%= button_to "Apagar cartão", @card, method: :delete %>
+<div class="card-show-actions">
+  <%= button_to "Pagar fatura", [:pay, @card], class: 'btn btn-primary' %>
+  <%= link_to "Editar", edit_card_path(id: @card.id), class: 'btn btn-secondary' %>
+  <%= button_to "Apagar cartão", @card, method: :delete, class: 'btn btn-danger', data: { confirm: 'Tem certeza?' } %>
 </div>
 
 <h1>Lançamentos do mês</h1>

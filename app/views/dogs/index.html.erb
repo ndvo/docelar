@@ -1,11 +1,18 @@
 <h1>Turminha</h1>
 
-<div class="actions">
-  <%= link_to "New dog", new_dog_path %>
-</div>
-
-<div id="dogs">
+<div class="dogs-grid" id="dogs">
   <% @dogs.each do |dog| %>
     <%= render dog %>
   <% end %>
 </div>
+
+<% if @dogs.empty? %>
+  <div class="empty-state">
+    <p>Nenhum dog cadastrado ainda.</p>
+    <%= link_to "Cadastrar primeiro dog", new_dog_path, class: 'btn btn-primary' %>
+  </div>
+<% else %>
+  <div class="actions">
+    <%= link_to "Novo dog", new_dog_path, class: 'btn btn-primary' %>
+  </div>
+<% end %>

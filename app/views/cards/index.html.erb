@@ -1,9 +1,16 @@
-<h1>Cards</h1>
+<h1>Cartões</h1>
 
-<div class="actions">
-  <%= link_to "Cadastrar Cartão Novo", new_card_path %>
+<div class="cards-grid" id="cards">
+  <%= render partial: 'card', collection: @cards %>
 </div>
 
-<div id="cards">
-  <%= render partial: 'card', collection: @cards%>
-</div>
+<% if @cards.empty? %>
+  <div class="empty-state">
+    <p>Nenhum cartão cadastrado ainda.</p>
+    <%= link_to "Cadastrar cartão", new_card_path, class: 'btn btn-primary' %>
+  </div>
+<% else %>
+  <div class="actions">
+    <%= link_to "Cadastrar Cartão Novo", new_card_path, class: 'btn btn-primary' %>
+  </div>
+<% end %>

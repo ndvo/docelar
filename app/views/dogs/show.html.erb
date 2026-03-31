@@ -1,8 +1,42 @@
-<%= render @dog %>
+<div class="dog-show">
+  <div class="dog-profile">
+    <% if @dog.image.attached? %>
+      <div class="dog-profile-image">
+        <%= image_tag @dog.image, alt: @dog.name %>
+      </div>
+    <% end %>
 
-<div>
-  <%= link_to "Edit this dog", edit_dog_path(@dog) %> |
-  <%= link_to "Back to dogs", dogs_path %>
+    <div class="dog-profile-header">
+      <h1><%= @dog.name %></h1>
+      <span class="dog-sex-badge <%= @dog.sex == 0 ? 'male' : 'female' %>">
+        <%= @dog.sex == 0 ? 'Macho' : 'Fêmea' %>
+      </span>
+    </div>
 
-  <%= button_to "Destroy this dog", @dog, method: :delete %>
+    <dl class="dog-details">
+      <% if @dog.race.present? %>
+        <div class="detail-item">
+          <dt>Raça</dt>
+          <dd><%= @dog.race %></dd>
+        </div>
+      <% end %>
+      
+      <% if @dog.birth.present? %>
+        <div class="detail-item">
+          <dt>Nascimento</dt>
+          <dd><%= l @dog.birth %></dd>
+        </div>
+        <div class="detail-item">
+          <dt>Idade</dt>
+          <dd><%= @dog.age ? "#{@dog.age} anos" : 'Filhote' %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+
+  <div class="dog-actions">
+    <%= link_to 'Editar', edit_dog_path(@dog), class: 'btn btn-secondary' %>
+    <%= link_to 'Voltar', dogs_path, class: 'cancel-link' %>
+    <%= button_to "Excluir", @dog, method: :delete, class: 'btn btn-danger', data: { confirm: 'Tem certeza que deseja excluir?' } %>
+  </div>
 </div>
