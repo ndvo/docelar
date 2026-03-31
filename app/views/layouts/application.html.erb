@@ -28,9 +28,7 @@
     <main id="main-content" role="main">
       <%= yield %>
     </main>
-    <footer role="contentinfo">
-      <%= render partial: "footer" if renderpartial?("footer") %>
-    </footer>
+    </main>
     <%= render partial: "flash_message" %>
     <% if Rails.env.development? %>
     <%=  console %>
