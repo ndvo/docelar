@@ -1,17 +1,33 @@
-<div id="<%= dom_id dog %>" class="card dog">
-  <p>
-    <strong>Name:</strong>
-    <%= link_to dog.name, dog %>
-  </p>
-
-  <p>
-    <strong>Race:</strong>
-    <%= dog.race %>
-    | <strong><%= dog.sex %></strong>
-  </p>
-
-  <p>
-    <strong>☆</strong> <%= dog.birth %> 
-  </p>
-
+<div id="<%= dom_id dog %>" class="dog-card">
+  <% if dog.image.attached? %>
+    <div class="dog-card-image">
+      <%= image_tag dog.image, alt: dog.name %>
+    </div>
+  <% else %>
+    <div class="dog-card-image dog-card-image-placeholder">
+      <span><%= dog.name.first.upcase %></span>
+    </div>
+  <% end %>
+  
+  <div class="dog-card-header">
+    <h3 class="dog-name">
+      <%= link_to dog.name, dog %>
+    </h3>
+    <span class="dog-sex <%= dog.sex == 0 ? 'male' : 'female' %>" aria-label="<%= dog.sex == 0 ? 'Macho' : 'Fêmea' %>">
+      <%= dog.sex == 0 ? '♂' : '♀' %>
+    </span>
+  </div>
+  
+  <div class="dog-card-body">
+    <p class="dog-race">
+      <%= dog.race || 'Sem raça definida' %>
+    </p>
+    <% if dog.birth %>
+      <p class="dog-birth">
+        <span class="dog-age" title="<%= l dog.birth %>">
+          <%= dog.age ? "#{dog.age} anos" : 'Filhote' %>
+        </span>
+      </p>
+    <% end %>
+  </div>
 </div>
