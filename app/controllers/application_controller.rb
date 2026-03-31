@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include Authentication
+
   private
   helper_method :current_user
 

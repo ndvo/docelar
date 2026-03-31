@@ -48,3 +48,11 @@ tags
 
 vendor/bundle
 vendor/cache
+
+# Backups
+db/*.bkp
+*.xls
+
+# Dev tools
+.mise/
+mise.toml
