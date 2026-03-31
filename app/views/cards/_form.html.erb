@@ -1,8 +1,7 @@
-<%= form_with(model: card) do |f| %>
+<%= form_with(model: card, class: 'card-form') do |f| %>
   <% if card.errors.any? %>
-    <div style="color: red">
+    <div id="error_explanation" role="alert">
       <h2><%= pluralize(card.errors.count, "error") %> prohibited this card from being saved:</h2>
-
       <ul>
         <% card.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -12,43 +11,63 @@
   <% end %>
 
   <fieldset>
+    <legend>Informações do Cartão</legend>
+
     <div class="field">
-        <%= f.label :brand, 'Banndeira' %>
-        <%= f.text_field :brand  %>
+      <%= f.label :brand, 'Bandeira' %>
+      <%= f.select :brand, options_for_select([
+        ['Visa', 'Visa'],
+        ['Mastercard', 'Mastercard'],
+        ['American Express', 'American Express'],
+        ['Hipercard', 'Hipercard'],
+        ['Elo', 'Elo'],
+        ['Outro', 'Outro']
+      ], card.brand), { include_blank: '-- selecione --' } %>
     </div>
 
     <div class="field">
-        <%= f.label :number, 'Número' %>
-        <%= f.text_field :number  %>
+      <%= f.label :name, 'Nome (apelido)' %>
+      <%= f.text_field :name, placeholder: 'ex: Nubank, Itaú Gold' %>
     </div>
 
     <div class="field">
-        <%= f.label :name, 'Nome' %>
-        <%= f.text_field :name  %>
+      <%= f.label :number, 'Número' %>
+      <%= f.text_field :number, placeholder: '**** **** **** ****', maxlength: 19 %>
     </div>
+  </fieldset>
 
-    <div class="field">
-        <%= f.label :expiry_year, 'Validade (ano)' %>
-        <%= f.text_field :expiry_year  %>
+  <fieldset>
+    <legend>Validade</legend>
+    <div class="expiry-fields">
+      <div class="field">
+        <%= f.label :expiry_month, 'Mês' %>
+        <%= f.select :expiry_month, options_for_select((1..12).map { |m| [format('%02d', m), m] }, card.expiry_month), { include_blank: '--' } %>
+      </div>
+
+      <div class="field">
+        <%= f.label :expiry_year, 'Ano' %>
+        <%= f.select :expiry_year, options_for_select((Date.today.year..Date.today.year + 10).to_a, card.expiry_year), { include_blank: '--' } %>
+      </div>
     </div>
+  </fieldset>
 
-    <div class="field">
-        <%= f.label :expiry_month, 'Validade (mês)' %>
-        <%= f.text_field :expiry_month  %>
-    </div>
+  <fieldset>
+    <legend>Ciclo de Fatura</legend>
+    <div class="cycle-fields">
+      <div class="field">
+        <%= f.label :invoice_day, 'Dia do fechamento' %>
+        <%= f.number_field :invoice_day, min: 1, max: 31, placeholder: 'ex: 15' %>
+      </div>
 
-    <div class="field">
-        <%= f.label :due_day, 'Dia de vencimento' %>
-        <%= f.text_field :due_day  %>
-    </div>
-
-    <div class="field">
-        <%= f.label :invoice_day, 'Dia de fechamento da fatura' %>
-        <%= f.text_field :invoice_day  %>
+      <div class="field">
+        <%= f.label :due_day, 'Dia do vencimento' %>
+        <%= f.number_field :due_day, min: 1, max: 31, placeholder: 'ex: 25' %>
+      </div>
     </div>
   </fieldset>
 
   <div class="actions">
-    <%= f.submit "Salvar" %>
+    <%= link_to 'Cancelar', cards_path, class: 'cancel-link' %>
+    <%= f.submit 'Salvar' %>
   </div>
 <% end %>

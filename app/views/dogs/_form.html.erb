@@ -1,8 +1,7 @@
-<%= form_with(model: dog) do |form| %>
+<%= form_with(model: dog, class: 'dog-form', multipart: true) do |form| %>
   <% if dog.errors.any? %>
-    <div style="color: red">
+    <div id="error_explanation" role="alert">
       <h2><%= pluralize(dog.errors.count, "error") %> prohibited this dog from being saved:</h2>
-
       <ul>
         <% dog.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,27 +10,40 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :race, style: "display: block" %>
-    <%= form.text_field :race %>
+  <div class="field image-field">
+    <%= form.label :image, 'Foto' %>
+    <% if dog.image.attached? %>
+      <div class="current-image">
+        <%= image_tag dog.image, alt: "Foto de #{dog.name}" %>
+        <span class="image-filename"><%= dog.image.filename %></span>
+      </div>
+    <% end %>
+    <%= form.file_field :image, accept: 'image/*' %>
+    <span class="help-text">Selecione uma imagem (JPG, PNG, GIF)</span>
   </div>
 
-  <div>
-    <%= form.label :sex, style: "display: block" %>
-    <%= form.number_field :sex %>
-  </div>
-
-  <div>
-    <%= form.label :birth, style: "display: block" %>
-    <%= form.date_field :birth %>
-  </div>
-
-  <div>
-    <%= form.label :name, style: "display: block" %>
+  <div class="field">
+    <%= form.label :name, 'Nome' %>
     <%= form.text_field :name %>
   </div>
 
-  <div>
+  <div class="field">
+    <%= form.label :race, 'Raça' %>
+    <%= form.text_field :race %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sex, 'Sexo' %>
+    <%= form.select :sex, options_for_select([['Macho', 0], ['Fêmea', 1]], dog.sex), { include_blank: '-- selecione --' } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :birth, 'Data de Nascimento' %>
+    <%= form.date_field :birth %>
+  </div>
+
+  <div class="actions">
+    <%= link_to 'Cancelar', dogs_path, class: 'cancel-link' %>
     <%= form.submit %>
   </div>
 <% end %>
