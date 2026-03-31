@@ -23,10 +23,11 @@ A Rails 8 log inspection tool providing:
 
 ### Core Features
 1. **Error Detection** - Highlight exceptions, 5xx errors, uncaught errors
-2. **Slow Query Detection** - Flag queries exceeding configurable threshold (default: 100ms)
-3. **Request Correlation** - Link errors to corresponding requests by request ID
-4. **Time-based Filtering** - Filter by date/time ranges
-5. **Pattern Matching** - Search with regex support
+2. **Routing Error Detection** - Detect and flag route matching failures (e.g., "No route matches [GET] /path")
+3. **Slow Query Detection** - Flag queries exceeding configurable threshold (default: 100ms)
+4. **Request Correlation** - Link errors to corresponding requests by request ID
+5. **Time-based Filtering** - Filter by date/time ranges
+6. **Pattern Matching** - Search with regex support
 
 ### Performance Metrics
 6. **Query Aggregation** - Group and count repeated queries
