@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
   <head>
     <title>Docelar</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Doce Lar - Sua gestão financeira e cuidados em um só lugar">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -11,7 +12,8 @@
   </head>
 
   <body>
-    <header>
+    <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
+    <header role="banner">
       <h1><a href="/">Doce Lar</a></h1>
       <%= render 'main_menu' %>
       <div id="user-status">
@@ -23,9 +25,12 @@
         <% end %>
       </div>
     </header>
-    <main>
+    <main id="main-content" role="main">
       <%= yield %>
     </main>
+    <footer role="contentinfo">
+      <%= render partial: "footer" if renderpartial?("footer") %>
+    </footer>
     <%= render partial: "flash_message" %>
     <% if Rails.env.development? %>
     <%=  console %>
