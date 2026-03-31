@@ -38,12 +38,14 @@
                   class="btn btn-secondary product-toggle-btn"
                   data-product-toggle-target="toggle"
                   data-action="product-toggle#toggle"
-                  aria-label="Criar novo produto">
+                  aria-label="Criar novo produto"
+                  aria-controls="product-form-fields">
             <span class="toggle-label">+ Novo</span>
             <span class="toggle-icon" aria-hidden="true">+</span>
           </button>
         </div>
         <div class="product-form-fields" 
+             id="product-form-fields"
              data-product-toggle-target="form"
              hidden>
           <%= f.fields_for :product do |ff| %>
