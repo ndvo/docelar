@@ -22,49 +22,70 @@
     <legend>Produto</legend>
     <div class="field">
       <%= f.label :product_id, 'Produto' %>
-      <div class="select-with-action">
-        <%= f.select :product_id,
-            content_tag(:option, '-- nenhum --', value: '') +
-            options_from_collection_for_select(
-              @products, 'id', 'name',
-              @purchase.product_id
-            )
-          %>
-        <button type="button" class="secondary-btn" onclick="document.getElementById('new-product').style.display='block'">
-          + Novo
-        </button>
+      <div class="product-select" data-controller="product-toggle">
+        <div class="product-select-row">
+          <%= f.select :product_id,
+              content_tag(:option, '-- nenhum --', value: '') +
+              options_from_collection_for_select(
+                @products, 'id', 'name',
+                @purchase.product_id
+              ),
+              { id: 'product-select' },
+              'data-product-toggle-target' => 'select',
+              'data-action' => 'product-toggle#onProductChange'
+            %>
+          <button type="button" 
+                  class="btn btn-secondary product-toggle-btn"
+                  data-product-toggle-target="toggle"
+                  data-action="product-toggle#toggle"
+                  aria-label="Criar novo produto">
+            <span class="toggle-label">+ Novo</span>
+            <span class="toggle-icon" aria-hidden="true">+</span>
+          </button>
+        </div>
+        <div class="product-form-fields" 
+             data-product-toggle-target="form"
+             hidden>
+          <%= f.fields_for :product do |ff| %>
+            <div class="product-form-grid">
+              <div class="field">
+                <%= ff.label :name, 'Nome' %>
+                <%= ff.text_field :name %>
+              </div>
+              <div class="field">
+                <%= ff.label :brand, 'Marca' %>
+                <%= ff.text_field :brand %>
+              </div>
+              <div class="field">
+                <%= ff.label :kind, 'Tipo' %>
+                <%= ff.text_field :kind %>
+              </div>
+              <div class="field">
+                <%= ff.label :description, 'Descrição' %>
+                <%= ff.text_area :description %>
+              </div>
+            </div>
+          <% end %>
+        </div>
       </div>
     </div>
 
-    <details id="new-product" style="display: none">
-      <summary>Novo Produto</summary>
-      <%= f.fields_for :product do |ff| %>
-        <div class="field">
-          <%= ff.label :name, 'Nome' %>
-          <%= ff.text_field :name %>
+    <div class="price-quantity-row">
+      <div class="field">
+        <%= f.label :price, 'Preço Unitário' %>
+        <div class="input-with-prefix">
+          <span class="prefix">R$</span>
+          <%= f.number_field :price, step: 0.01, 
+              'data-action' => 'purchase-form#onPriceChange', 
+              'data-purchase-form-target' => 'price' %>
         </div>
-        <div class="field">
-          <%= ff.label :brand, 'Marca' %>
-          <%= ff.text_field :brand %>
-        </div>
-        <div class="field">
-          <%= ff.label :kind, 'Tipo' %>
-          <%= ff.text_field :kind %>
-        </div>
-        <div class="field">
-          <%= ff.label :description, 'Descrição' %>
-          <%= ff.text_area :description %>
-        </div>
-      <% end %>
-    </details>
+      </div>
 
-    <div class="field">
-      <%= f.label :price, 'Preço' %>
-      <div class="input-with-prefix">
-        <span class="prefix">R$</span>
-        <%= f.number_field :price, step: 0.01, 
-            'data-action' => 'purchase-form#onPriceChange', 
-            'data-purchase-form-target' => 'price' %>
+      <div class="field quantity-field">
+        <%= f.label :quantity, 'Quantidade' %>
+        <%= f.number_field :quantity, step: 1, value: @purchase.quantity || 1,
+            'data-action' => 'purchase-form#onQuantityChange', 
+            'data-purchase-form-target' => 'quantity' %>
       </div>
     </div>
   </fieldset>
@@ -109,26 +130,18 @@
       </div>
     </div>
 
-    <div class="total-display">
-      <span>Total:</span>
-      <span data-purchase-form-target="total" class="total-amount">R$ 0,00</span>
+    <div class="payment-footer">
+      <div class="total-display">
+        <span class="total-label">Total:</span>
+        <span data-purchase-form-target="total" class="total-amount">R$ 0,00</span>
+      </div>
+
+      <div class="field checkbox-field paid-field">
+        <%= f.check_box :paid, id: 'purchase_paid' %>
+        <%= f.label :paid, 'Pago', for: 'purchase_paid' %>
+      </div>
     </div>
   </fieldset>
-
-  <details>
-    <summary>Mais detalhes</summary>
-    <div class="field">
-      <%= f.label :quantity, 'Quantidade' %>
-      <%= f.number_field :quantity, step: 1, value: @purchase.quantity || 1,
-          'data-action' => 'purchase-form#onQuantityChange', 
-          'data-purchase-form-target' => 'quantity' %>
-    </div>
-
-    <div class="field checkbox-field">
-      <%= f.check_box :paid %>
-      <%= f.label :paid, 'Pago' %>
-    </div>
-  </details>
 
   <div class="actions">
     <%= link_to 'Cancelar', purchases_path, class: 'cancel-link' %>

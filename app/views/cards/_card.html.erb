@@ -1,20 +1,57 @@
 <%
   card_class = action_name == 'index' ? 'card' : ''
 %>
-<div id="<%= dom_id card %>" class="<%= 'card' %>">
-  <dl>
-    <dt>Bandeira</dt><dd><%= card.brand %></dd>
-    <dt>Número</dt><dd><%= card.number %></dd>
-    <dt>Nome</dt><dd><%= card.name %></dd>
-    <dt>Validade</dt><dd><%= card.expiry_year %>-<%= card.expiry_month %></dd>
-    <dt>Vencimento</dt><dd><%= card.due_day %></dd>
-    <dt>Melhor dia de compras</dt><dd><%= card.invoice_day ? card.invoice_day + 1 : 'não informado' %></dd>
-  </dl>
-
+<div id="<%= dom_id card %>" class="credit-card <%= card_class %>">
+  <div class="credit-card-header">
+    <span class="card-brand-icon <%= card.brand&.downcase %>" aria-label="<%= card.brand || 'Cartão' %>">
+      <%= card_brand_icon(card.brand) %>
+    </span>
+    <span class="card-brand-name"><%= card.brand || 'Cartão' %></span>
+  </div>
+  
+  <div class="credit-card-number">
+    <%= card.masked_number %>
+  </div>
+  
+  <div class="credit-card-footer">
+    <div class="card-holder">
+      <span class="label">Titular</span>
+      <span class="value"><%= card.name %></span>
+    </div>
+    <div class="card-expiry">
+      <span class="label">Validade</span>
+      <span class="value"><%= card.expiry_month ? format('%02d', card.expiry_month) : '--' %>/<%= card.expiry_year || '--' %></span>
+    </div>
+  </div>
+  
   <% if action_name == 'index' %>
-    <div class="actions">
-      <%= link_to "Ver detalhes", card_path(id: card.id) %>
-      <%= button_to "Pagar", action: "pay", id: card.id, remote: true %>
+    <div class="credit-card-details">
+      <div class="detail-row">
+        <span class="detail-label">Fechamento</span>
+        <span class="detail-value"><%= card.invoice_day ? "#{card.invoice_day}º" : '--' %></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Vencimento</span>
+        <span class="detail-value"><%= card.due_day ? "#{card.due_day}º" : '--' %></span>
+      </div>
+      <div class="detail-row highlight">
+        <span class="detail-label">Melhor dia</span>
+        <span class="detail-value"><%= card.invoice_day ? (card.invoice_day + 1) : '--' %>º</span>
+      </div>
+    </div>
+    
+    <div class="credit-card-actions">
+      <%= link_to "Detalhes", card_path(id: card.id), class: 'btn btn-small' %>
+      <%= button_to "Pagar", action: "pay", id: card.id, remote: true, class: 'btn btn-small btn-primary' %>
     </div>
   <% end %>
 </div>
+
+<% if action_name != 'index' %>
+  <div class="card-actions">
+    <div class="actions">
+      <%= link_to "Ver todos os cartões", cards_path, class: 'cancel-link' %>
+      <%= link_to "Editar", edit_card_path(id: card.id), class: 'btn btn-secondary' %>
+    </div>
+  </div>
+<% end %>
