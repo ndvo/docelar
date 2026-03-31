@@ -123,32 +123,7 @@ fieldset legend {
   padding: 0 var(--margin-small);
 }
 
-details {
-  border: dashed thin transparent;
-  padding: var(--margin-normal);
-  margin: var(--margin-normal);
-  border-radius: var(--margin-small);
-  background: #f5f5f5;
-}
-
-details[open] {
-  border-color: #888;
-  background: #eee;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 500;
-}
-
-details summary::before {
-  content: "▶ ";
-  font-size: 0.8em;
-}
-
-details[open] summary::before {
-  content: "▼ ";
-}
+/* details styling removed - using custom toggle patterns now */
 
 .field_with_errors {
   display: inline;
@@ -298,7 +273,500 @@ details[open] summary::before {
   padding-top: var(--margin-large);
 }
 
-.purchase-form details {
-  margin-left: 0;
-  margin-right: 0;
+/* Product select with toggle */
+.product-select-row {
+  display: flex;
+  gap: var(--margin-small);
+  width: 100%;
+}
+
+.product-select-row select {
+  flex: 1;
+}
+
+.product-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  min-width: 5em;
+  transition: all 0.2s ease;
+}
+
+.product-toggle-btn .toggle-icon {
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.product-toggle-btn.active {
+  background: var(--color-highlight);
+  color: var(--color-highlight-background);
+}
+
+.product-toggle-btn.active .toggle-label {
+  display: none;
+}
+
+.product-toggle-btn:not(.active) .toggle-icon {
+  display: none;
+}
+
+.product-form-fields {
+  margin-top: var(--margin-normal);
+  padding: var(--margin-normal);
+  background: white;
+  border: 1px solid var(--color-highlight);
+  border-radius: var(--margin-small);
+}
+
+.product-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--margin-normal);
+}
+
+@media only screen and (max-width: 599px) {
+  .product-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.product-form-grid .field {
+  padding: var(--margin-tiny) 0;
+}
+
+.product-form-grid .field:last-child {
+  grid-column: 1 / -1;
+}
+
+.product-form-grid textarea {
+  min-height: 4em;
+}
+
+/* Price and quantity row */
+.price-quantity-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--margin-normal);
+  margin-top: var(--margin-normal);
+}
+
+.price-quantity-row .field {
+  padding: var(--margin-tiny);
+}
+
+.quantity-field input {
+  text-align: center;
+}
+
+/* Payment footer with total and paid */
+.payment-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--margin-normal);
+  margin-top: var(--margin-normal);
+  padding-top: var(--margin-normal);
+  border-top: 1px solid #ddd;
+}
+
+.total-display {
+  display: flex;
+  align-items: center;
+  gap: var(--margin-small);
+}
+
+.total-label {
+  font-weight: 600;
+  color: var(--link);
+}
+
+.total-amount {
+  font-size: 1.25em;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.paid-field {
+  margin-bottom: 0;
+}
+
+/* Dogs page styles */
+.dogs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--margin-normal);
+  margin: var(--margin-normal) 0;
+}
+
+.dog-card {
+  background: var(--background);
+  border: 1px solid #ddd;
+  border-radius: var(--margin-small);
+  padding: var(--margin-normal);
+  transition: all 0.2s ease;
+}
+
+.dog-card:hover {
+  box-shadow: var(--margin-small) var(--margin-small) var(--margin-normal) silver;
+  border-color: var(--color-highlight);
+}
+
+.dog-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--margin-small);
+}
+
+.dog-name {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.dog-name a {
+  text-decoration: none;
+  color: var(--link);
+}
+
+.dog-name a:hover {
+  color: var(--color-primary);
+}
+
+.dog-sex {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.dog-sex.male {
+  color: #4a90d9;
+}
+
+.dog-sex.female {
+  color: #d4a5a5;
+}
+
+.dog-card-body {
+  color: #666;
+}
+
+.dog-race {
+  margin: 0 0 var(--margin-tiny) 0;
+  font-size: 0.9rem;
+}
+
+.dog-birth {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+/* Dog show page */
+.dog-show {
+  max-width: 600px;
+}
+
+.dog-profile {
+  background: #fafafa;
+  border-radius: var(--margin-small);
+  padding: var(--margin-large);
+  margin-bottom: var(--margin-normal);
+}
+
+.dog-profile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--margin-normal);
+  margin-bottom: var(--margin-large);
+}
+
+.dog-profile-header h1 {
+  margin: 0;
+  color: var(--link);
+}
+
+.dog-sex-badge {
+  padding: var(--margin-tiny) var(--margin-small);
+  border-radius: var(--margin-tiny);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.dog-sex-badge.male {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.dog-sex-badge.female {
+  background: #fce4ec;
+  color: #c2185b;
+}
+
+.dog-details {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--margin-small) var(--margin-normal);
+}
+
+.dog-details dt {
+  font-weight: 500;
+  color: #666;
+}
+
+.dog-details dd {
+  margin: 0;
+  color: var(--link);
+}
+
+.detail-item {
+  display: contents;
+}
+
+.dog-actions {
+  display: flex;
+  gap: var(--margin-small);
+  flex-wrap: wrap;
+}
+
+.btn-danger {
+  background: var(--alert);
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: var(--margin-small);
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: var(--margin-enourmous);
+  color: #666;
+}
+
+.empty-state p {
+  margin-bottom: var(--margin-normal);
+}
+
+/* Dog card image */
+.dog-card-image {
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  border-radius: var(--margin-small) var(--margin-small) 0 0;
+  background: #f0f0f0;
+}
+
+.dog-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dog-card-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-highlight);
+}
+
+.dog-card-image-placeholder span {
+  font-size: 3rem;
+  font-weight: bold;
+  color: var(--color-highlight-background);
+}
+
+/* Dog profile image (show page) */
+.dog-profile-image {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto var(--margin-normal);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--color-highlight);
+}
+
+.dog-profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Image field in form */
+.image-field .current-image {
+  display: flex;
+  align-items: center;
+  gap: var(--margin-small);
+  margin-bottom: var(--margin-small);
+}
+
+.image-field .current-image img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--margin-tiny);
+  border: 1px solid #ddd;
+}
+
+.image-field .image-filename {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.image-field input[type="file"] {
+  padding: var(--margin-small) 0;
+}
+
+.image-field .help-text {
+  display: block;
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: var(--margin-tiny);
+}
+
+/* Credit Card Styles */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--margin-normal);
+  margin: var(--margin-normal) 0;
+}
+
+.credit-card {
+  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+  border-radius: var(--margin-small);
+  padding: var(--margin-normal);
+  color: white;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.credit-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-brand-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.credit-card-number {
+  font-family: monospace;
+  font-size: 1.4rem;
+  letter-spacing: 2px;
+  text-align: center;
+  margin: var(--margin-normal) 0;
+}
+
+.credit-card-footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-holder,
+.card-expiry {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-holder .label,
+.card-expiry .label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.card-holder .value,
+.card-expiry .value {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Card form styles */
+.card-form .expiry-fields,
+.card-form .cycle-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--margin-normal);
+}
+
+.card-form fieldset {
+  margin-bottom: var(--margin-normal);
+}
+
+/* Card details inside the credit card */
+.credit-card-details {
+  display: flex;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--margin-tiny);
+  padding: var(--margin-small);
+  margin-top: var(--margin-small);
+}
+
+.detail-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.detail-row.highlight .detail-value {
+  color: #ffd700;
+}
+
+.detail-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.detail-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Card actions inside the credit card */
+.credit-card-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--margin-small);
+  margin-top: var(--margin-small);
+}
+
+.credit-card-actions .btn {
+  flex: 1;
+  text-align: center;
+  padding: 0.4em 0.5em;
+  font-size: 0.85rem;
+}
+
+.btn-small {
+  padding: 0.4em 0.8em;
+  font-size: 0.85rem;
+}
+
+.credit-card-actions .btn-primary {
+  background: white;
+  color: var(--color-primary);
+}
+
+.credit-card-actions .btn-primary:hover {
+  background: var(--color-highlight-background);
+}
+
+/* Card show page actions */
+.card-show-actions {
+  display: flex;
+  gap: var(--margin-small);
+  margin: var(--margin-normal) 0;
+  flex-wrap: wrap;
 }
