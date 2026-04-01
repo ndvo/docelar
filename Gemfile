@@ -57,6 +57,7 @@ group :development, :test do
   gem "shoulda-matchers"
   gem "guard-rspec"
   gem "ostruct"
+  gem "factory_bot_rails"
 end
 
 group :development do

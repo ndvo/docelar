@@ -103,6 +103,11 @@ GEM
     drb (2.2.3)
     erb (6.0.2)
     erubi (1.13.1)
+    factory_bot (6.5.6)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.5.1)
+      factory_bot (~> 6.5)
+      railties (>= 6.1.0)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
     ffi (1.17.2)
@@ -208,8 +213,6 @@ GEM
       json
       uri
       yaml
-    pagy-extras (0.3.0)
-      pagy (>= 0.8.0)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -354,6 +357,7 @@ DEPENDENCIES
   bootsnap
   capybara
   debug
+  factory_bot_rails
   faker
   guard-rspec
   image_processing (~> 1.2)
@@ -361,7 +365,6 @@ DEPENDENCIES
   jbuilder
   ostruct
   pagy
-  pagy-extras
   puma (~> 6.4)
   rails (~> 8.0.0)
   rspec-rails (~> 6.0)
