@@ -363,10 +363,10 @@ end
 - [x] Create Medication model spec (enhanced validations)
 - [x] Create Treatment model spec (status, dates, scopes)
 - [x] Create Pharmacotherapy model spec (frequency, associations)
-- [ ] Implement Medication model enhancements
-- [ ] Implement Treatment model enhancements  
-- [ ] Implement Pharmacotherapy model enhancements
-- [ ] Run specs: `bundle exec rspec spec/models/medication_spec.rb spec/models/treatment_spec.rb spec/models/pharmacotherapy_spec.rb`
+- [x] Implement Medication model enhancements
+- [x] Implement Treatment model enhancements  
+- [x] Implement Pharmacotherapy model enhancements
+- [x] Run specs: `bundle exec rspec spec/models/medication_spec.rb spec/models/treatment_spec.rb spec/models/pharmacotherapy_spec.rb`
 - [ ] Refactor models based on test feedback
 - [ ] Create MedicationSchedule model
 - [ ] Create MedicationAdministration model
