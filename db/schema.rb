@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_01_153134) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_01_214357) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -117,6 +117,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_01_153134) do
     t.index ["gallery_id"], name: "index_galleries_on_gallery_id"
   end
 
+  create_table "medication_administrations", force: :cascade do |t|
+    t.integer "pharmacotherapy_id", null: false
+    t.datetime "scheduled_at"
+    t.string "status"
+    t.datetime "given_at"
+    t.text "skip_reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pharmacotherapy_id"], name: "index_medication_administrations_on_pharmacotherapy_id"
+  end
+
   create_table "medication_products", force: :cascade do |t|
     t.string "name"
     t.string "brand"
@@ -128,6 +139,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_01_153134) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["medication_id"], name: "index_medication_products_on_medication_id"
+  end
+
+  create_table "medication_schedules", force: :cascade do |t|
+    t.integer "pharmacotherapy_id", null: false
+    t.string "schedule_type"
+    t.json "times"
+    t.date "start_date"
+    t.date "end_date"
+    t.boolean "enabled"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pharmacotherapy_id"], name: "index_medication_schedules_on_pharmacotherapy_id"
   end
 
   create_table "medications", force: :cascade do |t|
@@ -339,7 +362,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_01_153134) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "books", "whens", column: "written_on_id"
   add_foreign_key "comments", "articles"
+  add_foreign_key "medication_administrations", "pharmacotherapies"
   add_foreign_key "medication_products", "medications"
+  add_foreign_key "medication_schedules", "pharmacotherapies"
   add_foreign_key "nationalities", "countries"
   add_foreign_key "nationalities", "people"
   add_foreign_key "payments", "purchases"
