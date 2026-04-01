@@ -371,8 +371,8 @@ end
 - [ ] Create MedicationSchedule model
 - [ ] Create MedicationAdministration model
 - [ ] Create MedicationReminder model
-- [ ] Build treatments/pharmacotherapies controllers with nested routes
-- [ ] Create migrations for new tables
+- [x] Build treatments/pharmacotherapies controllers with nested routes
+- [x] Create migrations for new tables
 - [ ] Add basic API endpoints for CRUD operations
 - [ ] Write model specs for new associations
 
