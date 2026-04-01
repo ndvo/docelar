@@ -358,7 +358,7 @@ end
 - `app/models/pharmacotherapy.rb` - Add frequency enum, validations
 - `app/models/patient.rb` - Already exists, verify polymorphic association
 
-**Status**: in_progress
+**Status**: completed
 
 - [x] Create Medication model spec (enhanced validations)
 - [x] Create Treatment model spec (status, dates, scopes)
@@ -367,14 +367,10 @@ end
 - [x] Implement Treatment model enhancements  
 - [x] Implement Pharmacotherapy model enhancements
 - [x] Run specs: `bundle exec rspec spec/models/medication_spec.rb spec/models/treatment_spec.rb spec/models/pharmacotherapy_spec.rb`
-- [ ] Refactor models based on test feedback
-- [ ] Create MedicationSchedule model
-- [ ] Create MedicationAdministration model
-- [ ] Create MedicationReminder model
 - [x] Build treatments/pharmacotherapies controllers with nested routes
 - [x] Create migrations for new tables
-- [ ] Add basic API endpoints for CRUD operations
-- [ ] Write model specs for new associations
+- [x] Add basic API endpoints for CRUD operations
+- [x] Write model specs for new associations
 
 ---
 
@@ -573,6 +569,174 @@ end
 - [ ] Create skip/undo functionality
 - [ ] Implement calendar view query
 - [ ] Add "today's medications" endpoint
+- [ ] Write controller specs for API endpoints
+
+---
+
+## Phase 2: TDD Implementation Plan (Detailed)
+
+### Overview
+Phase 2 adds scheduling and administration tracking. We need 3 new models:
+- `MedicationSchedule` - Defines when/how often to give medication
+- `MedicationAdministration` - Records each time medication is given
+
+### Data Model
+```
+Treatment (1) ----< Pharmacotherapy (1) ----< Medication
+                          |
+                          +----< MedicationSchedule
+                          |
+                          +----< MedicationAdministration
+```
+
+### Step 1: Create Model Specs First (Write Failing Tests)
+
+#### MedicationSchedule Spec
+File: `spec/models/medication_schedule_spec.rb`
+```ruby
+RSpec.describe MedicationSchedule, type: :model do
+  describe 'associations' do
+    it { should belong_to(:pharmacotherapy) }
+  end
+
+  describe 'validations' do
+    it { should validate_presence_of(:schedule_type) }
+    it { should validate_presence_of(:times) }
+  end
+
+  describe 'schedule_type enum' do
+    it 'defines daily, interval, weekly types' do
+      expect(MedicationSchedule.schedule_types).to include('daily', 'interval', 'weekly')
+    end
+  end
+end
+```
+
+#### MedicationAdministration Spec
+File: `spec/models/medication_administration_spec.rb`
+```ruby
+RSpec.describe MedicationAdministration, type: :model do
+  describe 'associations' do
+    it { should belong_to(:pharmacotherapy) }
+  end
+
+  describe 'status enum' do
+    it 'defines pending, given, skipped, missed statuses' do
+      expect(MedicationAdministration.statuses).to include('pending', 'given', 'skipped', 'missed')
+    end
+  end
+
+  describe 'validations' do
+    it 'requires scheduled_at datetime' do
+      expect(build(:medication_administration, scheduled_at: nil)).not_to be_valid
+    end
+  end
+end
+```
+
+**Run:** `bundle exec rspec spec/models/medication_schedule_spec.rb spec/models/medication_administration_spec.rb`
+**Expected:** Failures (undefined constant/table)
+
+### Step 2: Create Factories
+
+Create `spec/factories/medication_schedules.rb`:
+```ruby
+FactoryBot.define do
+  factory :medication_schedule do
+    association :pharmacotherapy
+    schedule_type { :daily }
+    times { ['08:00', '20:00'] }
+    start_date { Date.today }
+  end
+end
+```
+
+Create `spec/factories/medication_administrations.rb`:
+```ruby
+FactoryBot.define do
+  factory :medication_administration do
+    association :pharmacotherapy
+    scheduled_at { 1.hour.from_now }
+    status { :pending }
+  end
+end
+```
+
+### Step 3: Generate Migrations
+```bash
+rails generate migration CreateMedicationSchedules pharmacotherapy:references schedule_type:string times:json start_date:date end_date:date enabled:boolean
+rails generate migration CreateMedicationAdministrations pharmacotherapy:references scheduled_at:datetime status:string given_at:datetime skip_reason:text
+```
+
+### Step 4: Implement Models
+
+#### MedicationSchedule Model
+```ruby
+class MedicationSchedule < ApplicationRecord
+  belongs_to :pharmacotherapy
+
+  enum :schedule_type, { daily: 'daily', interval: 'interval', weekly: 'weekly' }, default: :daily
+
+  validates :schedule_type, presence: true
+  validates :times, presence: true
+
+  validate :valid_times_format
+
+  private
+
+  def valid_times_format
+    return unless times.is_a?(Array)
+    times.each do |time|
+      errors.add(:times, 'must be in HH:MM format') unless time.match?(/^\d{2}:\d{2}$/)
+    end
+  end
+end
+```
+
+#### MedicationAdministration Model
+```ruby
+class MedicationAdministration < ApplicationRecord
+  belongs_to :pharmacotherapy
+
+  enum :status, { pending: 'pending', given: 'given', skipped: 'skipped', missed: 'missed' }, default: :pending
+
+  validates :scheduled_at, presence: true
+
+  scope :for_today, -> { where(scheduled_at: Date.today.all_day) }
+  scope :pending, -> { where(status: :pending) }
+  scope :given, -> { where(status: :given) }
+end
+```
+
+### Step 5: Run Specs
+```bash
+bundle exec rspec spec/models/medication_schedule_spec.rb spec/models/medication_administration_spec.rb --format documentation
+```
+
+### Step 6: Implement Business Logic
+
+#### Schedule Generation
+- Generate administrations for a date range
+- Handle daily/interval/weekly schedule types
+- Respect start_date and end_date boundaries
+
+#### Administration Logging
+- `mark_as_given` method
+- `skip_dose(reason)` method  
+- `undo_within(minutes)` scope
+
+### Phase 2 Status: pending
+
+- [ ] Write MedicationSchedule model spec
+- [ ] Write MedicationAdministration model spec
+- [ ] Create factories
+- [ ] Create migrations
+- [ ] Implement MedicationSchedule model
+- [ ] Implement MedicationAdministration model
+- [ ] Run specs
+- [ ] Implement schedule generation logic
+- [ ] Implement administration logging methods
+- [ ] Add skip/undo functionality
 - [ ] Write controller specs for API endpoints
 
 ### Phase 3: Reminders (Week 5-6)
