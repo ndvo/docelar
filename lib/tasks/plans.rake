@@ -38,6 +38,10 @@ namespace :plans do
       puts "      #{info[:update]} | Next: #{info[:next]}"
     end
 
+    puts "\nTo view detailed progress of a specific plan, run:"
+    puts "  rake plans:show[plan-name]"
+    puts "  Example: rake plans:show[medication-feature-plan]"
+
     puts "\nFEATURE STATUS (from FEATURES.md):\n\n"
 
     if File.exist?('FEATURES.md')
@@ -88,6 +92,75 @@ namespace :plans do
     commits = `git log --oneline -5 2>/dev/null`.strip
     commits.split("\n").each { |c| puts "  #{c}" }
 
+    puts "\n"
+  end
+
+  desc 'Show detailed progress for a specific plan'
+  task :show, [:plan_name] do |t, args|
+    plan_name = args[:plan_name]
+    
+    unless plan_name
+      puts "Usage: rake plans:show[plan-name]"
+      puts "Available plans:"
+      Dir.glob('docs/*-plan*.md').each do |f|
+        puts "  - #{File.basename(f, '.md')}"
+      end
+      exit 1
+    end
+    
+    plan_file = "docs/#{plan_name}.md"
+    unless File.exist?(plan_file)
+      puts "Plan not found: #{plan_file}"
+      puts "Available plans:"
+      Dir.glob('docs/*-plan*.md').each do |f|
+        puts "  - #{File.basename(f, '.md')}"
+      end
+      exit 1
+    end
+    
+    content = File.read(plan_file)
+    title = content.match(/^#\s+(.+)$/)[1] rescue plan_name
+    
+    puts "\n=== #{title.upcase} ===\n\n"
+    
+    status_match = content.match(/\*\*Status\*\*:\s*(\w+)/i)
+    puts "Status: #{status_match ? status_match[1].upcase : 'Not specified'}\n\n"
+    
+    completed = content.scan(/^- \[x\]/).count
+    pending = content.scan(/^- \[ \]/).count
+    total = completed + pending
+    
+    if total > 0
+      percentage = ((completed.to_f / total) * 100).round
+      puts "Progress: #{completed}/#{total} tasks (#{percentage}%)\n\n"
+      
+      puts "Completed tasks:"
+      content.scan(/^- \[x\] (.+)$/).each do |task|
+        puts "  ✓ #{task[0].strip}"
+      end
+      
+      puts "\nPending tasks:"
+      content.scan(/^- \[ \] (.+)$/).each do |task|
+        puts "  ○ #{task[0].strip}"
+      end
+    else
+      puts "No checkbox tasks found in this plan.\n"
+    end
+    
+    phases = content.scan(/^##\s+Phase\s+(\d+):\s+(.+)$/i)
+    if phases.any?
+      puts "\nPhases:"
+      phases.each do |num, name|
+        phase_section = content[/##\s+Phase\s+#{num}:.*?(?=##|\z)/mi]
+        next unless phase_section
+        
+        phase_completed = phase_section.scan(/^- \[x\]/).count
+        phase_total = phase_section.scan(/^- \[/).count
+        phase_pct = phase_total > 0 ? ((phase_completed.to_f / phase_total) * 100).round : 0
+        puts "  Phase #{num}: #{name.strip} - #{phase_completed}/#{phase_total} (#{phase_pct}%)"
+      end
+    end
+    
     puts "\n"
   end
 
