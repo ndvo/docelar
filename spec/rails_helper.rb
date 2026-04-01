@@ -8,6 +8,7 @@ require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 require 'shoulda/matchers'
+require 'factory_bot_rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 module LoginHelper
@@ -43,6 +44,7 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 RSpec.configure do |config|
+  config.include FactoryBot::Syntax::Methods, type: :model
   Capybara.default_driver = :rack_test
   Capybara.javascript_driver = :rack_test
 
