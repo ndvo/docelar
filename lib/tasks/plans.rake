@@ -136,12 +136,12 @@ namespace :plans do
       
       puts "Completed tasks:"
       content.scan(/^- \[x\] (.+)$/).each do |task|
-        puts "  ✓ #{task[0].strip}"
+        puts "  [x] #{task[0].strip}"
       end
       
       puts "\nPending tasks:"
       content.scan(/^- \[ \] (.+)$/).each do |task|
-        puts "  ○ #{task[0].strip}"
+        puts "  [ ] #{task[0].strip}"
       end
     else
       puts "No checkbox tasks found in this plan.\n"
