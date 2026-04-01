@@ -755,6 +755,8 @@ bundle exec rspec spec/models/medication_schedule_spec.rb spec/models/medication
 **Goal**: Frontend interfaces
 
 - [ ] Build patient medication dashboard
+- [ ] Implement patient type distinction in treatment form (Person vs Dog selection UI)
+- [ ] Create person/dog show pages as medication hub (treatments, administrations, history)
 - [ ] Create treatment/medication entry forms
 - [ ] Implement administration logging UI
 - [ ] Build calendar view component
