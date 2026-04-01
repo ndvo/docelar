@@ -62,6 +62,10 @@ Before adding any gem, npm package, or library:
 - Use model specs for business logic
 - Use controller specs for API endpoints
 - Run specs before committing: `bundle exec rspec`
+- Avoid unnecessary mocks
+- Avoid testing internal state
+- Focus on testing observable behavior and outcomes
+- Use parameterized tests
 
 ## Code Style
 
