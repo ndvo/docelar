@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_01_134029) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_01_153134) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -194,7 +194,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_01_134029) do
     t.integer "medication_id", null: false
     t.float "frequency_value"
     t.string "frequency_unit"
-    t.float "dosage_value"
+    t.float "dosage"
     t.string "dosage_unit"
     t.integer "duration"
     t.date "end_date"
