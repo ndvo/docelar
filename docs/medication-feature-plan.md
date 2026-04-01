@@ -274,8 +274,100 @@ Patient (1) ----< Treatment (1) ----< Pharmacotherapy (1) ----< Medication
 
 ### Phase 1: Foundation (Week 1-2)
 
-**Goal**: Core data model and basic CRUD
+**Goal**: Core data model and basic CRUD (MVP - TDD Approach)
 
+**TDD Workflow**: Write failing test → Implement → Pass → Refactor
+
+#### Step 1: Write Model Specs First (Write Failing Tests)
+
+**Files to create:**
+- `spec/models/medication_spec.rb` - Enhanced with validations
+- `spec/models/treatment_spec.rb` - Enhanced with status/date validations
+- `spec/models/pharmacotherapy_spec.rb` - Enhanced with frequency/dosage validations
+
+**Test cases to write:**
+```ruby
+# medication_spec.rb
+RSpec.describe Medication, type: :model do
+  # Existing tests + add:
+  describe 'validations' do
+    it 'validates presence of name' do
+      expect(build(:medication, name: nil)).not_to be_valid
+    end
+    
+    it 'validates name uniqueness is case insensitive' do
+      Medication.create!(name: 'Aspirin')
+      expect(build(:medication, name: 'aspirin')).not_to be_valid
+    end
+  end
+end
+
+# treatment_spec.rb
+RSpec.describe Treatment, type: :model do
+  # Existing tests + add:
+  describe 'validations' do
+    it 'validates presence of name' do
+      expect(build(:treatment, name: nil)).not_to be_valid
+    end
+    
+    it 'validates status is in allowed list' do
+      expect(build(:treatment, status: 'invalid')).not_to be_valid
+      expect(build(:treatment, status: 'active')).to be_valid
+    end
+    
+    it 'validates end_date is after start_date' do
+      expect(build(:treatment, start_date: Date.today, end_date: Date.yesterday)).not_to be_valid
+    end
+  end
+  
+  describe 'scopes' do
+    it 'returns active treatments' do
+      active = create(:treatment, status: 'active')
+      create(:treatment, status: 'completed')
+      expect(Treatment.active).to include(active)
+    end
+  end
+end
+
+# pharmacotherapy_spec.rb
+RSpec.describe Pharmacotherapy, type: :model do
+  # Create new spec
+  describe 'associations' do
+    it { should belong_to(:treatment) }
+    it { should belong_to(:medication) }
+  end
+  
+  describe 'validations' do
+    it 'validates presence of medication_id' do
+      expect(build(:pharmacotherapy, medication_id: nil)).not_to be_valid
+    end
+    
+    it 'validates frequency is in allowed list' do
+      expect(build(:pharmacotherapy, frequency: 'invalid')).not_to be_valid
+      expect(build(:pharmacotherapy, frequency: 'daily')).to be_valid
+    end
+  end
+end
+```
+
+#### Step 2: Implement Models (Make Tests Pass)
+
+**Modify:**
+- `app/models/medication.rb` - Add presence validation
+- `app/models/treatment.rb` - Add status enum, date validations, scopes
+- `app/models/pharmacotherapy.rb` - Add frequency enum, validations
+- `app/models/patient.rb` - Already exists, verify polymorphic association
+
+**Status**: in_progress
+
+- [x] Create Medication model spec (enhanced validations)
+- [x] Create Treatment model spec (status, dates, scopes)
+- [x] Create Pharmacotherapy model spec (frequency, associations)
+- [ ] Implement Medication model enhancements
+- [ ] Implement Treatment model enhancements  
+- [ ] Implement Pharmacotherapy model enhancements
+- [ ] Run specs: `bundle exec rspec spec/models/medication_spec.rb spec/models/treatment_spec.rb spec/models/pharmacotherapy_spec.rb`
+- [ ] Refactor models based on test feedback
 - [ ] Create MedicationSchedule model
 - [ ] Create MedicationAdministration model
 - [ ] Create MedicationReminder model
@@ -283,6 +375,194 @@ Patient (1) ----< Treatment (1) ----< Pharmacotherapy (1) ----< Medication
 - [ ] Create migrations for new tables
 - [ ] Add basic API endpoints for CRUD operations
 - [ ] Write model specs for new associations
+
+---
+
+## Phase 1: TDD Implementation Plan
+
+### Prerequisites
+- Factories required for build() and create() methods (FactoryBot)
+- Current specs use `build()` which is undefined → need factories
+
+### Step 1: Create Factories (First - Required for TDD)
+Create `spec/factories/` with:
+- `spec/factories/medications.rb`
+- `spec/factories/treatments.rb`
+- `spec/factories/pharmacotherapies.rb`
+- `spec/factories/patients.rb`
+- `spec/factories/people.rb`
+
+### Step 2: TDD Workflow - Medication Model
+
+#### 2.1 Write Failing Tests First
+File: `spec/models/medication_spec.rb`
+```ruby
+it 'validates presence of name' do
+  expect(build(:medication, name: nil)).not_to be_valid
+end
+it 'validates name uniqueness is case insensitive' do
+  Medication.create!(name: 'Aspirin')
+  expect(build(:medication, name: 'aspirin')).not_to be_valid
+end
+```
+
+**Run:** `bundle exec rspec spec/models/medication_spec.rb:12 --format documentation`
+**Expected:** 2 failures (NoMethodError: undefined method 'build')
+
+#### 2.2 Create Medication Factory
+Create `spec/factories/medications.rb`
+
+#### 2.3 Run Tests Again
+**Run:** `bundle exec rspec spec/models/medication_spec.rb --format documentation`
+**Expected:** 2 failures (Validation errors)
+
+#### 2.4 Implement Medication Model
+File: `app/models/medication.rb`
+```ruby
+class Medication < ApplicationRecord
+  has_many :medication_products
+  has_many :pharmacotherapies
+  validates :name, presence: true, uniqueness: { case_sensitive: false }
+end
+```
+
+#### 2.5 Run Tests - Should Pass
+**Run:** `bundle exec rspec spec/models/medication_spec.rb --format documentation`
+**Expected:** All pass
+
+### Step 3: TDD Workflow - Treatment Model
+
+#### 3.1 Write Failing Tests First
+File: `spec/models/treatment_spec.rb`
+Add:
+```ruby
+describe 'validations' do
+  it 'validates presence of name' do
+    expect(build(:treatment, name: nil)).not_to be_valid
+  end
+  it 'validates status is in allowed list' do
+    expect(build(:treatment, status: 'invalid')).not_to be_valid
+    expect(build(:treatment, status: 'active')).to be_valid
+  end
+  it 'validates end_date is after start_date' do
+    expect(build(:treatment, start_date: Date.today, end_date: Date.yesterday)).not_to be_valid
+  end
+end
+
+describe 'scopes' do
+  it 'returns active treatments' do
+    active = create(:treatment, status: 'active')
+    create(:treatment, status: 'completed')
+    expect(Treatment.active).to include(active)
+  end
+end
+```
+
+#### 3.2 Create Treatment Factory
+Create `spec/factories/treatments.rb`
+
+#### 3.3 Run Tests - Should Fail (Validation Errors)
+**Run:** `bundle exec rspec spec/models/treatment_spec.rb --format documentation`
+**Expected:** Failures for missing validations and scope
+
+#### 3.4 Implement Treatment Model
+File: `app/models/treatment.rb`
+```ruby
+class Treatment < ApplicationRecord
+  belongs_to :patient
+  has_many :pharmacotherapies
+  accepts_nested_attributes_for :pharmacotherapies, allow_destroy: true, reject_if: :all_blank
+
+  enum :status, { active: 'active', completed: 'completed', paused: 'paused', cancelled: 'cancelled' }, prefix: true
+
+  validates :name, presence: true
+  validates :status, inclusion: { in: %w[active completed paused cancelled] }
+  validate :end_date_after_start_date, if: -> { end_date.present? && start_date.present? }
+
+  scope :active, -> { where(status: 'active') }
+
+  private
+
+  def end_date_after_start_date
+    errors.add(:end_date, 'must be after start_date') if end_date < start_date
+  end
+end
+```
+
+#### 3.5 Run Tests - Should Pass
+**Run:** `bundle exec rspec spec/models/treatment_spec.rb --format documentation`
+**Expected:** All pass
+
+### Step 4: TDD Workflow - Pharmacotherapy Model
+
+#### 4.1 Write Failing Tests First
+File: `spec/models/pharmacotherapy_spec.rb`
+```ruby
+describe 'validations' do
+  it 'validates presence of medication_id' do
+    expect(build(:pharmacotherapy, medication_id: nil)).not_to be_valid
+  end
+  it 'validates frequency is in allowed list' do
+    expect(build(:pharmacotherapy, frequency: 'invalid')).not_to be_valid
+    expect(build(:pharmacotherapy, frequency: 'daily')).to be_valid
+  end
+end
+```
+
+#### 4.2 Create Pharmacotherapy Factory
+Create `spec/factories/pharmacotherapies.rb`
+
+#### 4.3 Run Tests - Should Fail
+**Run:** `bundle exec rspec spec/models/pharmacotherapy_spec.rb --format documentation`
+**Expected:** Failures for missing validations
+
+#### 4.4 Implement Pharmacotherapy Model
+File: `app/models/pharmacotherapy.rb`
+```ruby
+class Pharmacotherapy < ApplicationRecord
+  belongs_to :treatment
+  belongs_to :medication
+
+  enum :frequency, { daily: 'daily', twice_daily: 'twice_daily', weekly: 'weekly', as_needed: 'as_needed' }, prefix: true
+
+  validates :medication_id, presence: true
+  validates :frequency, inclusion: { in: %w[daily twice_daily weekly as_needed] }
+end
+```
+
+#### 4.5 Run Tests - Should Pass
+**Run:** `bundle exec rspec spec/models/pharmacotherapy_spec.rb --format documentation`
+**Expected:** All pass
+
+### Step 5: Run Full Suite
+**Run:** `bundle exec rspec spec/models/medication_spec.rb spec/models/treatment_spec.rb spec/models/pharmacotherapy_spec.rb`
+**Expected:** All pass
+
+### Step 6: Refactor (Optional)
+- Consider extracting validations to concerns
+- Add more edge case tests
+- Document model behavior
+
+---
+
+## Test Files to Create Summary
+
+| File | Purpose | Dependencies |
+|------|---------|--------------|
+| `spec/factories/medications.rb` | Build Medication records | None |
+| `spec/factories/patients.rb` | Build Patient records | Person/Dog factory |
+| `spec/factories/treatments.rb` | Build Treatment records | Patient factory |
+| `spec/factories/pharmacotherapies.rb` | Build Pharmacotherapy records | Treatment, Medication factory |
+| `spec/factories/people.rb` | Build Person records (if needed) | None |
+
+## Implementation Order Summary
+
+1. **Create factories** → Enable `build()` and `create()` in specs
+2. **Medication** → Simple model, single validation
+3. **Treatment** → Add enum, scopes, custom validation
+4. **Pharmacotherapy** → Add enum, presence validation
+5. **Run full suite** → Verify all pass together
+6. **Refactor** → Clean up based on test feedback
 
 ### Phase 2: Scheduling Engine (Week 3-4)
 
