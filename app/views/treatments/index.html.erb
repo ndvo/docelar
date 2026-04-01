@@ -10,11 +10,11 @@
   <% if @treatments.empty? %>
     <div class="empty-state">
       <p>Nenhum tratamento cadastrado ainda.</p>
-      <%= link_to "Cadastrar tratamento", new_treatment_path, class: 'btn btn-primary' %>
+      <%= link_to "Cadastrar tratamento", new_treatment_path, class: 'btn btn-primary', data: { turbo_frame: '_top' } %>
     </div>
   <% else %>
     <div class="actions">
-      <%= link_to "Novo tratamento", new_treatment_path, class: 'btn btn-primary' %>
+      <%= link_to "Novo tratamento", new_treatment_path, class: 'btn btn-primary', data: { turbo_frame: '_top' } %>
     </div>
   <% end %>
 </turbo-frame>
