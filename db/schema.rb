@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_30_125347) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_01_134029) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -135,6 +135,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_30_125347) do
     t.string "active_principle"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
+    t.string "dosage"
+    t.string "unit"
   end
 
   create_table "nationalities", force: :cascade do |t|
@@ -197,6 +200,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_30_125347) do
     t.date "end_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "frequency"
+    t.text "instructions"
     t.index ["medication_id"], name: "index_pharmacotherapies_on_medication_id"
     t.index ["treatment_id"], name: "index_pharmacotherapies_on_treatment_id"
   end
@@ -303,6 +308,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_30_125347) do
     t.integer "patient_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status"
+    t.date "start_date"
+    t.date "end_date"
     t.index ["patient_id"], name: "index_treatments_on_patient_id"
   end
 
@@ -337,10 +345,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_30_125347) do
   add_foreign_key "payments", "purchases"
   add_foreign_key "pharmacotherapies", "medications"
   add_foreign_key "pharmacotherapies", "treatments"
+  add_foreign_key "photos", "taggleables"
   add_foreign_key "purchases", "cards"
   add_foreign_key "purchases", "products"
   add_foreign_key "responsibles", "people"
   add_foreign_key "sessions", "users"
+  add_foreign_key "tagged", "taggleables"
   add_foreign_key "tagged", "tags"
   add_foreign_key "tagged_photos", "photos"
   add_foreign_key "tagged_photos", "tags"
