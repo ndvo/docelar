@@ -1,12 +1,20 @@
 <h1>Tratamentos</h1>
 
-<div id="treatments">
-  <% @treatments.each do |treatment| %>
-    <%= render treatment %>
-    <p>
-      <%= link_to "Show this treatment", treatment %>
-    </p>
-  <% end %>
-</div>
+<turbo-frame id="treatments-list">
+  <div class="treatments-grid" id="treatments">
+    <% @treatments.each do |treatment| %>
+      <%= render treatment %>
+    <% end %>
+  </div>
 
-<%= link_to "New treatment", new_treatment_path %>
+  <% if @treatments.empty? %>
+    <div class="empty-state">
+      <p>Nenhum tratamento cadastrado ainda.</p>
+      <%= link_to "Cadastrar tratamento", new_treatment_path, class: 'btn btn-primary' %>
+    </div>
+  <% else %>
+    <div class="actions">
+      <%= link_to "Novo tratamento", new_treatment_path, class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</turbo-frame>

@@ -1,8 +1,7 @@
-<%= form_with(model: treatment) do |form| %>
+<%= form_with(model: treatment, class: 'treatment-form') do |form| %>
   <% if treatment.errors.any? %>
-    <div style="color: red">
+    <div id="error_explanation" role="alert">
       <h2><%= pluralize(treatment.errors.count, "error") %> prohibited this treatment from being saved:</h2>
-
       <ul>
         <% treatment.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,38 +10,109 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :patient_id, style: "display: block" %>
-    <%= form.select :patient_id, options_for_select(@patients&.collect { | patient | [patient.individual.name, patient.id] }, @patient&.id), {}, {} %>
-  </div>
-
   <fieldset>
-    <legend>Tratamentos</legend>
-    <%= form.fields_for :pharmacotherapies do |p_form| %>
-      <div>
-        <%= p_form.label :medication_id, style: "display: block" %>
-        <%= p_form.select :medication_id, options_for_select(@medications&.collect { | medication | [medication.name, medication.id] }, @medication&.id), {}, {} %>
+    <legend>Informações do Tratamento</legend>
+
+    <div class="field">
+      <%= form.label :patient_id, 'Paciente' %>
+      <%= form.select :patient_id, 
+          options_for_select(@patients&.collect { |p| [p.individual.name, p.id] }, treatment.patient_id),
+          { include_blank: '-- selecione --' },
+          required: true %>
+    </div>
+
+    <div class="field">
+      <%= form.label :name, 'Nome do Tratamento' %>
+      <%= form.text_field :name, placeholder: 'ex: Tratamento para dor' %>
+    </div>
+
+    <div class="field">
+      <%= form.label :status, 'Status' %>
+      <%= form.select :status, 
+          options_for_select([['Ativo', 'active'], ['Concluído', 'completed'], ['Pausado', 'paused'], ['Cancelado', 'cancelled']], treatment.status),
+          { include_blank: '-- selecione --' } %>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <%= form.label :start_date, 'Data de Início' %>
+        <%= form.date_field :start_date %>
       </div>
-      <div>
-        <%= p_form.label :dosage_value, style: "display: block" %>
-        <%= p_form.text_field :dosage_value %>
+
+      <div class="field">
+        <%= form.label :end_date, 'Data de Término' %>
+        <%= form.date_field :end_date %>
       </div>
-      <div>
-        <%= p_form.label :dosage_unit, style: "display: block" %>
-        <%= p_form.text_field :dosage_unit %>
-      </div>
-      <div>
-        <%= p_form.label :frequency_value, style: "display: block" %>
-        <%= p_form.text_field :frequency_value %>
-      </div>
-      <div>
-        <%= p_form.label :frequency_unit, style: "display: block" %>
-        <%= p_form.text_field :frequency_unit %>
-      </div>
-    <% end %>
+    </div>
+
+    <div class="field">
+      <%= form.label :notes, 'Observações' %>
+      <%= form.text_area :notes, rows: 3 %>
+    </div>
   </fieldset>
 
-  <div>
-    <%= form.submit %>
+  <fieldset>
+    <legend>Medicamentos</legend>
+    <div data-nested-form-target="list">
+      <%= form.fields_for :pharmacotherapies do |p_form| %>
+        <div class="pharmacotherapy-fields">
+          <div class="field">
+            <%= p_form.label :medication_id, 'Medicamento' %>
+            <%= p_form.select :medication_id,
+                options_for_select(@medications&.collect { |m| [m.name, m.id] }, p_form.object.medication_id),
+                { include_blank: '-- selecione --' } %>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <%= p_form.label :dosage, 'Dosagem' %>
+              <%= p_form.text_field :dosage, placeholder: 'ex: 10mg' %>
+            </div>
+
+            <div class="field">
+              <%= p_form.label :frequency, 'Frequência' %>
+              <%= p_form.select :frequency,
+                  options_for_select([['Diário', 'daily'], ['2x ao dia', 'twice_daily'], ['Semanal', 'weekly'], ['Se necessário', 'as_needed']], p_form.object.frequency),
+                  { include_blank: '-- selecione --' } %>
+            </div>
+          </div>
+
+          <div class="field">
+            <%= p_form.label :instructions, 'Instruções' %>
+            <%= p_form.text_area :instructions, rows: 2, placeholder: 'ex: Tomar com comida' %>
+          </div>
+
+          <% unless p_form.object.new_record? %>
+            <%= p_form.hidden_field :_destroy %>
+            <button type="button" data-action="nested-form#removePharmacotherapy">Remover</button>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <template data-nested-form-target="template">
+      <%= form.fields_for :pharmacotherapies, Pharmacotherapy.new, child_index: 'NEW_RECORD' do |p_form| %>
+        <div class="pharmacotherapy-fields" data-new-record="true">
+          <div class="field">
+            <%= p_form.label :medication_id, 'Medicamento' %>
+            <%= p_form.select :medication_id,
+                options_for_select(@medications&.collect { |m| [m.name, m.id] }),
+                { include_blank: '-- selecione --' } %>
+          </div>
+          <div class="field">
+            <%= p_form.label :dosage, 'Dosagem' %>
+            <%= p_form.text_field :dosage, placeholder: 'ex: 10mg' %>
+          </div>
+          <button type="button" data-action="nested-form#removePharmacotherapy">Remover</button>
+        </div>
+      <% end %>
+    </template>
+
+    <button type="button" data-action="nested-form#addPharmacotherapy">+ Adicionar medicamento</button>
+  </fieldset>
+
+  <div class="actions">
+    <%= link_to 'Cancelar', treatments_path, class: 'cancel-link' %>
+    <%= form.submit 'Salvar' %>
   </div>
 <% end %>

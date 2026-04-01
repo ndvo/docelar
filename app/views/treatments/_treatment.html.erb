@@ -1,12 +1,30 @@
-<div id="<%= dom_id treatment %>">
-  <p>
-    <strong>Name:</strong>
-    <%= treatment.name %>
-  </p>
-
-  <p>
-    <strong>Patient:</strong>
-    <%= treatment.patient_id %>
-  </p>
-
-</div>
+<article class="treatment-card" id="<%= dom_id treatment %>">
+  <header class="treatment-header">
+    <h3><%= link_to treatment.name, treatment %></h3>
+    <span class="treatment-status status-<%= treatment.status %>"><%= t(".status.#{treatment.status}") %></span>
+  </header>
+  
+  <div class="treatment-body">
+    <p class="treatment-patient">
+      <span class="label">Paciente:</span>
+      <%= treatment.patient.individual.name %>
+    </p>
+    
+    <% if treatment.start_date %>
+      <p class="treatment-dates">
+        <span class="label">Período:</span>
+        <%= l treatment.start_date %>
+        <% if treatment.end_date %>
+          - <%= l treatment.end_date %>
+        <% else %>
+          - Em andamento
+        <% end %>
+      </p>
+    <% end %>
+    
+    <p class="treatment-medications">
+      <span class="label">Medicamentos:</span>
+      <%= treatment.pharmacotherapies.count %>
+    </p>
+  </div>
+</article>
