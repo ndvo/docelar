@@ -1,4 +1,4 @@
-<%= form_with(model: treatment, class: 'treatment-form') do |form| %>
+<%= form_with(model: treatment, class: 'treatment-form', data: { controller: 'nested-form' }) do |form| %>
   <% if treatment.errors.any? %>
     <div id="error_explanation" role="alert">
       <h2><%= pluralize(treatment.errors.count, "error") %> prohibited this treatment from being saved:</h2>
@@ -91,7 +91,7 @@
     </div>
 
     <template data-nested-form-target="template">
-      <%= form.fields_for :pharmacotherapies, Pharmacotherapy.new, child_index: 'NEW_RECORD' do |p_form| %>
+      <%= form.fields_for :pharmacotherapies, treatment.pharmacotherapies.build, child_index: 'NEW_RECORD' do |p_form| %>
         <div class="pharmacotherapy-fields" data-new-record="true">
           <div class="field">
             <%= p_form.label :medication_id, 'Medicamento' %>
