@@ -27,7 +27,6 @@ class TreatmentsController < ApplicationController
     @treatment = Treatment.new(treatment_params)
     @patients = Patient.all
 
-    debugger
     respond_to do |format|
       if @treatment.save
         format.html { redirect_to treatment_url(@treatment), notice: "Treatment was successfully created." }
@@ -70,6 +69,6 @@ class TreatmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def treatment_params
-      params.require(:treatment).permit(:name, :patient_id)
+      params.require(:treatment).permit(:name, :patient_id, :status, :start_date, :end_date, :notes, pharmacotherapies_attributes: [:id, :medication_id, :dosage, :frequency, :instructions, :_destroy])
     end
 end
