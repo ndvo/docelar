@@ -70,12 +70,24 @@ Before adding any gem, npm package, or library:
 - Use `describe`/`it` blocks in RSpec
 - Keep specs focused and atomic
 
+## Code Quality and Best Practices
+
+- Use SOLID
+- Use TDD
+- Prefer short methods
+- Avoid testing implementation details
+- Low coupling, high cohesion
+- Follow design and plan
+- Suggest plan improvements
+- Domain Driven Design
+
 ## Available Agents
 
 | Agent | Focus |
 |-------|-------|
 | `hotwire` | Turbo, Stimulus, real-time features |
 | `developer-experience` | Tests, tooling, developer productivity |
+| `rails` | Ruby on Rails, system design, backend |
 | `rails-performance` | Query optimization, caching |
 | `design` | CSS, layouts |
 | `accessibility` | WCAG compliance, screen readers, ARIA, a11y testing |
