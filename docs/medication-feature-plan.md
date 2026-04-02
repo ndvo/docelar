@@ -833,7 +833,7 @@ Create `app/workers/reminder_sender_worker.rb` using Sidekiq/Resque for sending 
 ### Step 7: Create Acknowledgment Controller
 REST endpoint to acknowledge or snooze reminders.
 
-### Phase 3 Status: in_progress
+### Phase 3 Status: completed
 
 - [x] Write MedicationReminder model spec
 - [x] Create factory
@@ -843,7 +843,11 @@ REST endpoint to acknowledge or snooze reminders.
 - [x] Create reminder worker
 - [x] Implement acknowledgment endpoint
 - [x] Add snooze functionality
-- [ ] Write integration tests
+- [x] Write integration tests
+- [x] Add composite indexes on medication_reminders (status, scheduled_at) and (status, snoozed_until)
+- [x] Optimize reminder_service to use batch updates instead of N+1 queries
+- [x] Simplify scopes in MedicationReminder model
+- [x] Add error handling for not found in controller
 
 ### Phase 4: UI Implementation (Week 7-8)
 
