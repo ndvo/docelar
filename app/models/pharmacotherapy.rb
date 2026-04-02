@@ -1,6 +1,7 @@
 class Pharmacotherapy < ApplicationRecord
   belongs_to :treatment
   belongs_to :medication
+  has_many :medication_administrations
 
   enum :frequency, { daily: 'daily', twice_daily: 'twice_daily', weekly: 'weekly', as_needed: 'as_needed' }, default: :daily
 

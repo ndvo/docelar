@@ -1,10 +1,5 @@
 class Dog < ApplicationRecord
   has_one_attached :image
-  after_save :sync_patient
-
-  def sync_patient
-    Patient.find_or_create_by(individual_id: id, individual_type: 'Dog')
-  end
 
   def age
     return nil unless birth
