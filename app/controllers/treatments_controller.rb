@@ -1,31 +1,35 @@
 class TreatmentsController < ApplicationController
   before_action :set_treatment, only: %i[ show edit update destroy ]
+  before_action :set_patient, only: %i[ new create ]
 
   # GET /treatments or /treatments.json
   def index
     @treatments = Treatment.all
   end
 
-  # GET /treatments/1 or /treatments/1.json
-  def show
-  end
-
-  # GET /treatments/new
+  # GET /patients/1/treatments/new
   def new
-    @treatment = Treatment.new
-    2.times { @treatment.pharmacotherapies.build }
+    @treatment = Treatment.new(patient: @patient)
+    @treatment.pharmacotherapies.build
     @medications = Medication.all
     @patients = Patient.all
   end
 
+  # GET /treatments/1 or /treatments/1.json
+  def show
+  end
+
   # GET /treatments/1/edit
   def edit
+    @medications = Medication.all
+    @patients = Patient.all
   end
 
   # POST /treatments or /treatments.json
   def create
     @treatment = Treatment.new(treatment_params)
     @patients = Patient.all
+    @medications = Medication.all
 
     respond_to do |format|
       if @treatment.save
@@ -67,8 +71,12 @@ class TreatmentsController < ApplicationController
       @treatment = Treatment.find(params[:id])
     end
 
+    def set_patient
+      @patient = Patient.find(params[:patient_id]) if params[:patient_id]
+    end
+
     # Only allow a list of trusted parameters through.
     def treatment_params
-      params.require(:treatment).permit(:name, :patient_id, :status, :start_date, :end_date, :notes, pharmacotherapies_attributes: [:id, :medication_id, :dosage, :frequency, :instructions, :_destroy])
+      params.require(:treatment).permit(:name, :patient_id, :status, :start_date, :end_date, pharmacotherapies_attributes: [:id, :medication_id, :dosage, :frequency, :instructions, :_destroy])
     end
 end

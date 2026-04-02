@@ -2,7 +2,10 @@ class MedicationRemindersController < ApplicationController
   before_action :set_reminder, only: %i[show update destroy]
 
   def show
-    render json: @reminder
+    respond_to do |format|
+      format.html
+      format.json { render json: @reminder }
+    end
   end
 
   def update
@@ -14,7 +17,10 @@ class MedicationRemindersController < ApplicationController
       @reminder.snooze(minutes: minutes)
     end
 
-    render json: @reminder
+    respond_to do |format|
+      format.html { redirect_to medication_reminder_path(@reminder), notice: 'Lembrete atualizado.' }
+      format.json { render json: @reminder }
+    end
   end
 
   def destroy
