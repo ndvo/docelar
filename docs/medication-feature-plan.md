@@ -750,6 +750,101 @@ bundle exec rspec spec/models/medication_schedule_spec.rb spec/models/medication
 - [ ] Add snooze functionality
 - [ ] Write integration tests for reminder flow
 
+---
+
+## Phase 3: TDD Implementation Plan (Detailed)
+
+### Overview
+Phase 3 adds reminder and notification functionality for medication schedules.
+
+### Step 1: Create Model Specs First (Write Failing Tests)
+
+#### MedicationReminder Model Spec
+```ruby
+# spec/models/medication_reminder_spec.rb
+RSpec.describe MedicationReminder, type: :model do
+  describe 'associations' do
+    it { should belong_to(:medication_administration) }
+  end
+
+  describe 'status enum' do
+    it 'defines pending, sent, acknowledged, snoozed statuses' do
+      expect(MedicationReminder.statuses).to include('pending', 'sent', 'acknowledged', 'snoozed')
+    end
+  end
+end
+```
+
+**Run:** `bundle exec rspec spec/models/medication_reminder_spec.rb`
+**Expected:** Failure (table doesn't exist)
+
+### Step 2: Create Factory
+```ruby
+# spec/factories/medication_reminders.rb
+FactoryBot.define do
+  factory :medication_reminder do
+    association :medication_administration
+    scheduled_at { 1.hour.from_now }
+    status { :pending }
+  end
+end
+```
+
+### Step 3: Generate Migration
+```bash
+rails generate migration CreateMedicationReminders medication_administration:references scheduled_at:datetime status:string sent_at:datetime acknowledged_at:datetime snoozed_until:datetime
+```
+
+### Step 4: Implement Model
+```ruby
+# app/models/medication_reminder.rb
+class MedicationReminder < ApplicationRecord
+  belongs_to :medication_administration
+
+  enum :status, { pending: 'pending', sent: 'sent', acknowledged: 'acknowledged', 'snoozed' }, default: :pending
+
+  validates :scheduled_at, presence: true
+
+  scope :pending, -> { where(status: :pending, 'scheduled_at <= ?', Time.current) }
+  scope :due_for_sending, -> { pending.where('scheduled_at <= ?', 5.minutes.from_now) }
+
+  def mark_sent
+    update(status: :sent, sent_at: Time.current)
+  end
+
+  def acknowledge
+    update(status: :acknowledged, acknowledged_at: Time.current)
+  end
+
+  def snooze(minutes:)
+    update(status: :snoozed, snoozed_until: minutes.minutes.from_now)
+  end
+end
+```
+
+### Step 5: Run Specs
+```bash
+bundle exec rspec spec/models/medication_reminder_spec.rb
+```
+
+### Step 6: Create Background Worker
+Create `app/workers/reminder_sender_worker.rb` using Sidekiq/Resque for sending reminders at scheduled times.
+
+### Step 7: Create Acknowledgment Controller
+REST endpoint to acknowledge or snooze reminders.
+
+### Phase 3 Status: pending
+
+- [ ] Write MedicationReminder model spec
+- [ ] Create factory
+- [ ] Create migration
+- [ ] Implement MedicationReminder model
+- [ ] Run specs
+- [ ] Create reminder worker
+- [ ] Implement acknowledgment endpoint
+- [ ] Add snooze functionality
+- [ ] Write integration tests
+
 ### Phase 4: UI Implementation (Week 7-8)
 
 **Goal**: Frontend interfaces
