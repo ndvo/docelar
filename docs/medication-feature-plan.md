@@ -725,7 +725,7 @@ bundle exec rspec spec/models/medication_schedule_spec.rb spec/models/medication
 - `skip_dose(reason)` method  
 - `undo_within(minutes)` scope
 
-### Phase 2 Status: in_progress
+### Phase 2 Status: completed
 
 - [x] Write MedicationSchedule model spec
 - [x] Write MedicationAdministration model spec
@@ -737,7 +737,7 @@ bundle exec rspec spec/models/medication_schedule_spec.rb spec/models/medication
 - [x] Implement administration logging methods
 - [x] Add skip/undo functionality
 - [x] Implement schedule generation logic
-- [ ] Write controller specs for API endpoints
+- [x] Write controller specs for API endpoints
 
 ### Phase 3: Reminders (Week 5-6)
 
