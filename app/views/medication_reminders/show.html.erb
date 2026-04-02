@@ -1,0 +1,52 @@
+<main id="main-content" class="reminder-page" role="main" aria-labelledby="reminder-title">
+  <h1 id="reminder-title">Lembrete de Medicamento</h1>
+
+  <section class="reminder-details" aria-labelledby="reminder-info">
+    <h2 id="reminder-info">Informações do Lembrete</h2>
+    
+    <dl>
+      <div class="detail-item">
+        <dt>Medicamento</dt>
+        <dd><%= @reminder.medication_administration.pharmacotherapy.medication.name %></dd>
+      </div>
+      <div class="detail-item">
+        <dt>Paciente</dt>
+        <dd><%= @reminder.medication_administration.pharmacotherapy.treatment.patient.individual.name %></dd>
+      </div>
+      <div class="detail-item">
+        <dt>Horário Agendado</dt>
+        <dd><%= @reminder.medication_administration.scheduled_at.strftime('%H:%M') %></dd>
+      </div>
+      <div class="detail-item">
+        <dt>Status</dt>
+        <dd><span class="status-badge status-<%= @reminder.status %>"><%= @reminder.status %></span></dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="reminder-actions" aria-labelledby="actions-heading">
+    <h2 id="actions-heading">Ações</h2>
+    
+    <% if @reminder.sent? || @reminder.snoozed? %>
+      <%= button_to 'Confirmar', 
+          medication_reminder_path(@reminder, reminder: { action: 'acknowledge' }), 
+          method: :patch,
+          class: 'btn btn-success' %>
+      
+      <%= form_with url: medication_reminder_path(@reminder), method: :patch do |f| %>
+        <%= hidden_field_tag 'reminder[action]', 'snooze' %>
+        <div class="field">
+          <%= label_tag 'reminder[minutes]', 'Adiar por (minutos)' %>
+          <%= number_field_tag 'reminder[minutes]', 15, min: 1, max: 120 %>
+        </div>
+        <%= f.submit 'Adiar', class: 'btn btn-secondary' %>
+      <% end %>
+    <% else %>
+      <p>Este lembrete já foi processado.</p>
+    <% end %>
+  </section>
+
+  <nav class="reminder-nav">
+    <%= link_to 'Voltar', patient_path(@reminder.medication_administration.pharmacotherapy.treatment.patient), class: 'cancel-link' %>
+  </nav>
+</main>
