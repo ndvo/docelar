@@ -92,3 +92,26 @@ a:focus-visible {
 button:focus-visible {
   transform: translateY(1px);
 }
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Make visible for high contrast */
+@media (prefers-contrast: more) {
+  .sr-only {
+    position: static;
+    width: auto;
+    height: auto;
+    clip: auto;
+  }
+}

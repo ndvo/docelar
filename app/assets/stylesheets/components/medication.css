@@ -1,0 +1,380 @@
+/*
+ * Doce Lar - Medication Component Styles
+ * Cozy/hommy aesthetic with warm colors
+ */
+
+:root {
+  --med-bg-primary: #fdf8f3;
+  --med-bg-secondary: #f5efe8;
+  --med-bg-card: #ffffff;
+  --med-text-primary: #4a4a4a;
+  --med-text-secondary: #7a7a7a;
+  --med-accent: #8b6914;
+  --med-accent-light: #d4a55a;
+  --med-success: #4a7c59;
+  --med-warning: #b8860b;
+  --med-danger: #c45c5c;
+  --med-info: #5c7c8b;
+  --med-border: #e0d5c8;
+  --med-radius-sm: 4px;
+  --med-radius-md: 8px;
+  --med-radius-lg: 12px;
+  --med-shadow-sm: 0 1px 3px rgba(74, 74, 74, 0.08);
+  --med-shadow-md: 0 4px 12px rgba(74, 74, 74, 0.1);
+  --med-shadow-lg: 0 8px 24px rgba(74, 74, 74, 0.12);
+  --med-font-serif: 'Georgia', 'Times New Roman', serif;
+  --med-font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.medication-page {
+  background: var(--med-bg-primary);
+  min-height: 100vh;
+  padding: var(--margin-large);
+}
+
+.patient-type-toggle {
+  display: flex;
+  gap: var(--margin-small);
+  margin-bottom: var(--margin-large);
+  background: var(--med-bg-card);
+  padding: var(--margin-tiny);
+  border-radius: var(--med-radius-lg);
+  box-shadow: var(--med-shadow-sm);
+}
+
+.patient-type-toggle button {
+  flex: 1;
+  padding: var(--margin-normal) var(--margin-large);
+  border: none;
+  background: transparent;
+  color: var(--med-text-secondary);
+  font-family: var(--med-font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: var(--med-radius-md);
+  transition: all 0.2s ease;
+}
+
+.patient-type-toggle button:hover {
+  background: var(--med-bg-secondary);
+  color: var(--med-text-primary);
+}
+
+.patient-type-toggle button.active {
+  background: var(--med-accent-light);
+  color: var(--med-text-primary);
+}
+
+.patient-type-toggle button:focus-visible {
+  outline: 3px solid var(--med-accent);
+  outline-offset: 2px;
+}
+
+.dashboard-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--margin-normal);
+  margin-bottom: var(--margin-enourmous);
+}
+
+.summary-card {
+  background: var(--med-bg-card);
+  padding: var(--margin-large);
+  border-radius: var(--med-radius-lg);
+  box-shadow: var(--med-shadow-sm);
+  text-align: center;
+}
+
+.summary-card h2 {
+  font-family: var(--med-font-serif);
+  font-size: 1rem;
+  color: var(--med-text-secondary);
+  margin: 0 0 var(--margin-small) 0;
+  font-weight: 400;
+}
+
+.summary-card .count,
+.summary-card .next-dose-time {
+  font-family: var(--med-font-serif);
+  font-size: 2.5rem;
+  color: var(--med-accent);
+  margin: 0;
+  line-height: 1;
+}
+
+.summary-card .next-dose-medication {
+  font-size: 0.875rem;
+  color: var(--med-text-secondary);
+  margin: var(--margin-small) 0 0 0;
+}
+
+.treatments-list h2,
+.patient-treatments h2,
+.patient-administrations h2 {
+  font-family: var(--med-font-serif);
+  font-size: 1.5rem;
+  color: var(--med-text-primary);
+  margin: 0 0 var(--margin-normal) 0;
+}
+
+.treatments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--margin-normal);
+}
+
+.treatment-card {
+  background: var(--med-bg-card);
+  border-radius: var(--med-radius-lg);
+  box-shadow: var(--med-shadow-sm);
+  padding: var(--margin-large);
+  transition: box-shadow 0.2s ease;
+}
+
+.treatment-card:hover {
+  box-shadow: var(--med-shadow-md);
+}
+
+.treatment-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--margin-normal);
+}
+
+.treatment-card h3 {
+  font-family: var(--med-font-serif);
+  font-size: 1.125rem;
+  margin: 0;
+  color: var(--med-text-primary);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: var(--margin-tiny) var(--margin-small);
+  border-radius: var(--med-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-badge.status-active,
+.status-badge.status-given {
+  background: var(--med-success);
+  color: white;
+}
+
+.status-badge.status-pending {
+  background: var(--med-warning);
+  color: white;
+}
+
+.status-badge.status-skipped {
+  background: var(--med-text-secondary);
+  color: white;
+}
+
+.status-badge.status-completed {
+  background: var(--med-info);
+  color: white;
+}
+
+.status-badge.status-paused,
+.status-badge.status-cancelled {
+  background: var(--med-danger);
+  color: white;
+}
+
+.medication-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--margin-normal) 0;
+}
+
+.medication-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--margin-small) 0;
+  border-bottom: 1px solid var(--med-border);
+}
+
+.medication-list li:last-child {
+  border-bottom: none;
+}
+
+.medication-name {
+  font-weight: 500;
+  color: var(--med-text-primary);
+}
+
+.medication-dosage {
+  color: var(--med-text-secondary);
+  font-size: 0.875rem;
+}
+
+.administration-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.administration-item {
+  display: flex;
+  align-items: center;
+  gap: var(--margin-normal);
+  background: var(--med-bg-card);
+  padding: var(--margin-normal);
+  margin-bottom: var(--margin-small);
+  border-radius: var(--med-radius-md);
+  box-shadow: var(--med-shadow-sm);
+}
+
+.administration-item.status-given {
+  border-left: 4px solid var(--med-success);
+}
+
+.administration-item.status-skipped {
+  border-left: 4px solid var(--med-text-secondary);
+}
+
+.administration-item.status-pending {
+  border-left: 4px solid var(--med-warning);
+}
+
+.admin-time {
+  font-family: var(--med-font-serif);
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--med-accent);
+  min-width: 60px;
+}
+
+.admin-medication {
+  flex: 1;
+}
+
+.admin-medication strong {
+  display: block;
+  color: var(--med-text-primary);
+}
+
+.admin-medication .dosage {
+  font-size: 0.875rem;
+  color: var(--med-text-secondary);
+}
+
+.admin-actions {
+  display: flex;
+  gap: var(--margin-small);
+}
+
+.empty-message {
+  text-align: center;
+  padding: var(--margin-enourmous);
+  color: var(--med-text-secondary);
+  font-style: italic;
+}
+
+.medication-empty-state {
+  text-align: center;
+  padding: var(--margin-enourmous);
+  background: var(--med-bg-card);
+  border-radius: var(--med-radius-lg);
+  box-shadow: var(--med-shadow-sm);
+}
+
+.medication-empty-state svg {
+  width: 64px;
+  height: 64px;
+  color: var(--med-border);
+  margin-bottom: var(--margin-normal);
+}
+
+.medication-empty-state h3 {
+  font-family: var(--med-font-serif);
+  color: var(--med-text-primary);
+  margin: 0 0 var(--margin-small) 0;
+}
+
+.medication-empty-state p {
+  color: var(--med-text-secondary);
+  margin: 0 0 var(--margin-normal) 0;
+}
+
+.patient-header,
+.person-profile-header,
+.dog-profile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--margin-normal);
+  margin-bottom: var(--margin-large);
+}
+
+.patient-header h1,
+.person-profile-header h1,
+.dog-profile-header h1 {
+  font-family: var(--med-font-serif);
+  font-size: 2rem;
+  margin: 0;
+  color: var(--med-text-primary);
+}
+
+.patient-type-badge {
+  display: inline-block;
+  padding: var(--margin-tiny) var(--margin-small);
+  background: var(--med-bg-secondary);
+  border-radius: var(--med-radius-sm);
+  font-size: 0.875rem;
+  color: var(--med-text-secondary);
+}
+
+.treatment-actions {
+  margin-top: var(--margin-normal);
+}
+
+@media (max-width: 600px) {
+  .medication-page {
+    padding: var(--margin-normal);
+  }
+
+  .dashboard-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .treatments-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .administration-item {
+    flex-wrap: wrap;
+  }
+
+  .admin-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .btn-admin,
+  .patient-type-toggle button,
+  .calendar-nav button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1279px) {
+  .btn-admin {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .btn-admin,
+  .patient-type-toggle button {
+    min-height: 60px;
+    min-width: 60px;
+  }
+}
