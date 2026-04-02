@@ -1,25 +1,29 @@
 class ReminderService
   class << self
     def send_due_reminders
-      reminders = MedicationReminder.due_for_sending
-      reminders.each do |reminder|
-        send_reminder(reminder)
-      end
+      due_reminder_ids = MedicationReminder.due_for_sending.pluck(:id)
+      return if due_reminder_ids.empty?
+
+      count = MedicationReminder.where(id: due_reminder_ids).update_all(
+        status: MedicationReminder.statuses[:sent],
+        sent_at: Time.current
+      )
+
+      Rails.logger.info "Sent #{count} reminders"
     end
 
     def process_snoozed_reminders
-      MedicationReminder.where(status: :snoozed)
+      ids = MedicationReminder.where(status: :snoozed)
         .where('snoozed_until <= ?', Time.current)
-        .update_all(status: :pending)
-    end
+        .pluck(:id)
+      return if ids.empty?
 
-    private
+      MedicationReminder.where(id: ids).update_all(
+        status: MedicationReminder.statuses[:pending],
+        snoozed_until: nil
+      )
 
-    def send_reminder(reminder)
-      reminder.mark_sent
-      # TODO: Integrate with actual notification service
-      # e.g., push notification, email, SMS
-      Rails.logger.info "Reminder sent for administration #{reminder.medication_administration_id}"
+      Rails.logger.info "Processed #{ids.length} snoozed reminders"
     end
   end
 end

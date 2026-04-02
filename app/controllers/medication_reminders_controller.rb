@@ -25,7 +25,8 @@ class MedicationRemindersController < ApplicationController
   private
 
   def set_reminder
-    @reminder = MedicationReminder.find(params[:id])
+    @reminder = MedicationReminder.find_by(id: params[:id])
+    head :not_found unless @reminder
   end
 
   def reminder_params

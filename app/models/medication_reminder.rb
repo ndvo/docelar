@@ -5,9 +5,9 @@ class MedicationReminder < ApplicationRecord
 
   validates :scheduled_at, presence: true
 
-  scope :pending_reminders, -> { where(status: :pending).where('scheduled_at <= ?', Time.current) }
-  scope :due_for_sending, -> { pending_reminders.where('scheduled_at <= ?', 5.minutes.from_now) }
+  scope :due_for_sending, -> { where(status: :pending).where('scheduled_at <= ?', 5.minutes.from_now) }
   scope :active, -> { where('snoozed_until IS NULL OR snoozed_until <= ?', Time.current).where.not(status: :acknowledged) }
+  scope :snoozed_due, -> { where(status: :snoozed).where('snoozed_until <= ?', Time.current) }
 
   def mark_sent
     update(status: :sent, sent_at: Time.current)
