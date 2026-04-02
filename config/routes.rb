@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :medications
   resources :pharmacotherapies
   resources :treatments
+  resources :medication_reminders, only: [:show, :update, :destroy]
   resources :cards do
     match :pay, via: [:patch, :post, :put], on: :member
   end
