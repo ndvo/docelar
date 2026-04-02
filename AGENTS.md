@@ -46,6 +46,16 @@ ci(github): add parallel test workflow
 - [ ] Did tests pass?
 - [ ] Did you show the user the diff?
 
+## Commit Planning
+
+When working on multiple changes, plan commits before executing:
+
+1. Run `git status` to see all changes
+2. Run `git diff --stat` to understand scope
+3. Group related changes into logical commits
+4. Draft commit messages following conventional format
+5. Ask user to approve the plan before committing
+
 ## Dependencies
 
 **Avoid adding external dependencies.**
@@ -85,7 +95,35 @@ Before adding any gem, npm package, or library:
 - Suggest plan improvements
 - Domain Driven Design
 
-## Available Agents
+## Work Session Flow
+
+### Start of Session
+1. Read plan document (`docs/*-plan.md`) if exists
+2. Check git status to understand current state
+3. Run failing specs to understand what's broken
+4. Update session summary based on new discoveries
+
+### During Session
+- Keep track of what you're working on and what's been done
+- Ask before continuing to new areas
+- Mark tasks complete as you go
+
+### End of Session
+- Update plan document if needed (add completed items, remove done)
+- Summarize work done for next session
+
+## Stop Points
+
+**Ask for clarification when:**
+- Uncertain about next step or direction
+- Task is complete vs. waiting for user input
+- Multiple approaches available
+- User says "what did we do so far?"
+
+**Continue independently when:**
+- Next step is clear from prior discussion
+- Fix is straightforward and tests guide the way
+- Following an established plan
 
 | Agent | Focus |
 |-------|-------|
