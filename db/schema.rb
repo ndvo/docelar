@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_01_214357) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_02_133748) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -139,6 +139,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_01_214357) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["medication_id"], name: "index_medication_products_on_medication_id"
+  end
+
+  create_table "medication_reminders", force: :cascade do |t|
+    t.integer "medication_administration_id", null: false
+    t.datetime "scheduled_at"
+    t.string "status"
+    t.datetime "sent_at"
+    t.datetime "acknowledged_at"
+    t.datetime "snoozed_until"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["medication_administration_id"], name: "index_medication_reminders_on_medication_administration_id"
+    t.index ["status", "scheduled_at"], name: "index_medication_reminders_on_status_and_scheduled_at"
+    t.index ["status", "snoozed_until"], name: "index_medication_reminders_on_status_and_snoozed_until"
   end
 
   create_table "medication_schedules", force: :cascade do |t|
@@ -364,6 +378,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_01_214357) do
   add_foreign_key "comments", "articles"
   add_foreign_key "medication_administrations", "pharmacotherapies"
   add_foreign_key "medication_products", "medications"
+  add_foreign_key "medication_reminders", "medication_administrations"
   add_foreign_key "medication_schedules", "pharmacotherapies"
   add_foreign_key "nationalities", "countries"
   add_foreign_key "nationalities", "people"
