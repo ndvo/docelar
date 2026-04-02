@@ -5,11 +5,16 @@ Rails.application.routes.draw do
   resources :tags
   resource :session
   resources :passwords, param: :token
-  resources :patients
+  resources :patients do
+    get :medications, on: :member
+    resources :treatments
+  end
+  get 'medications/dashboard', to: 'patients#dashboard', as: 'medication_dashboard'
   resources :medication_products
   resources :medications
   resources :pharmacotherapies
   resources :treatments
+  resources :medication_administrations, only: [:update]
   resources :medication_reminders, only: [:show, :update, :destroy]
   resources :cards do
     match :pay, via: [:patch, :post, :put], on: :member
