@@ -4,8 +4,8 @@ RSpec.describe TreatmentsController, type: :controller do
   let(:user) { User.create!(email_address: 'test@example.com', password: 'password') }
   let(:person) { Person.create!(name: 'John Doe') }
   let(:patient) { Patient.create!(individual: person, individual_type: 'Person') }
-  let(:valid_attributes) { { patient_id: patient.id } }
-  let(:invalid_attributes) { { patient_id: nil } }
+  let(:valid_attributes) { { patient_id: patient.id, start_date: Date.today } }
+  let(:invalid_attributes) { { patient_id: nil, start_date: nil } }
 
   before do
     session = user.sessions.create!(user_agent: 'test', ip_address: '127.0.0.1')
@@ -43,14 +43,50 @@ RSpec.describe TreatmentsController, type: :controller do
   end
 
   describe 'POST #create' do
-    it 'skips - Treatment requires patient association' do
-      skip 'Treatment requires patient association'
+    context 'with valid params' do
+      it 'creates a new Treatment' do
+        expect do
+          post :create, params: { treatment: valid_attributes }
+        end.to change(Treatment, :count).by(1)
+      end
+
+      it 'redirects to the created treatment' do
+        post :create, params: { treatment: valid_attributes }
+        expect(response).to redirect_to(Treatment.last)
+      end
+    end
+
+    context 'with invalid params' do
+      it 'renders new template with error' do
+        post :create, params: { treatment: invalid_attributes }
+        expect(response).to be_unprocessable
+      end
     end
   end
 
   describe 'PUT #update' do
-    it 'skips - Treatment requires patient association' do
-      skip 'Treatment requires patient association'
+    let(:treatment) { Treatment.create!(valid_attributes) }
+    let(:new_attributes) { { name: 'Updated Treatment', status: :completed } }
+
+    context 'with valid params' do
+      it 'updates the requested treatment' do
+        put :update, params: { id: treatment.id, treatment: new_attributes }
+        treatment.reload
+        expect(treatment.name).to eq('Updated Treatment')
+        expect(treatment.status).to eq('completed')
+      end
+
+      it 'redirects to the treatment' do
+        put :update, params: { id: treatment.id, treatment: new_attributes }
+        expect(response).to redirect_to(treatment)
+      end
+    end
+
+    context 'with invalid params' do
+      it 'renders edit template with error' do
+        put :update, params: { id: treatment.id, treatment: { start_date: nil } }
+        expect(response).to be_unprocessable
+      end
     end
   end
 
