@@ -863,6 +863,2030 @@ REST endpoint to acknowledge or snooze reminders.
 - [ ] Implement responsive design
 - [ ] Write feature specs with Capybara
 
+### Phase 4 Status: in_progress
+
+---
+
+## Phase 4: TDD Implementation Plan (Detailed)
+
+### Overview
+Phase 4 implements the frontend UI with a cozy/hommy aesthetic using semantic HTML5 and accessibility-first approach. We follow TDD: write failing feature specs first, then implement views to make them pass.
+
+### Prerequisites (Verify First)
+- Phase 1-3 models exist: Patient, Treatment, Pharmacotherapy, Medication, MedicationSchedule, MedicationAdministration, MedicationReminder
+- Routes defined for nested resources
+- Factories exist for all models
+
+### Step 1: Write Failing Feature Specs (Test-First)
+
+#### 1.1 Patient Medication Dashboard Spec
+File: `spec/features/medication_dashboard_spec.rb`
+```ruby
+require 'rails_helper'
+
+RSpec.describe 'Medication Dashboard', type: :feature do
+  let(:user) { User.create!(email_address: 'test@example.com', password: 'password') }
+  let(:person) { create(:person, name: 'Maria') }
+  let(:dog) { create(:dog, name: 'Rex') }
+  let(:person_patient) { create(:patient, individual: person) }
+  let(:dog_patient) { create(:patient, individual: dog) }
+
+  before { login_as(user) }
+
+  describe 'patient type toggle' do
+    scenario 'shows people and dogs as separate sections' do
+      create(:patient, individual: person)
+      create(:patient, individual: dog)
+      visit patients_path
+      expect(page).to have_content('Maria')
+      expect(page).to have_content('Rex')
+    end
+
+    scenario 'filters by patient type' do
+      create(:patient, individual: person)
+      create(:patient, individual: dog)
+      visit patients_path
+      click_link 'Pessoas'
+      expect(page).to have_content('Maria')
+      expect(page).not_to have_content('Rex')
+    end
+  end
+
+  describe 'dashboard medication summary' do
+    scenario 'shows active treatments with next dose time' do
+      treatment = create(:treatment, patient: person_patient, status: 'active')
+      pharmacotherapy = create(:pharmacotherapy, treatment: treatment)
+      create(:medication_schedule, pharmacotherapy: pharmacotherapy, 
+             times: ['08:00', '20:00'], is_active: true)
+      
+      visit patient_path(person_patient)
+      expect(page).to have_content('Próxima dose: 08:00')
+    end
+  end
+end
+```
+
+#### 1.2 Treatment Form Spec
+File: `spec/features/treatment_management_spec.rb`
+```ruby
+require 'rails_helper'
+
+RSpec.describe 'Treatment Management', type: :feature do
+  let(:user) { User.create!(email_address: 'test@example.com', password: 'password') }
+  let(:person) { create(:person) }
+  let(:dog) { create(:dog) }
+
+  before { login_as(user) }
+
+  describe 'patient type selection' do
+    scenario 'creates treatment for Person' do
+      patient = create(:patient, individual: person)
+      visit new_patient_treatment_path(patient)
+      fill_in 'treatment[name]', with: 'Diabetes Control'
+      select 'Pessoa', from: 'treatment[patient_type]'
+      click_button 'Criar Tratamento'
+      expect(page).to have_content('Diabetes Control')
+    end
+
+    scenario 'creates treatment for Dog' do
+      patient = create(:patient, individual: dog)
+      visit new_patient_treatment_path(patient)
+      fill_in 'treatment[name]', with: 'Flea Treatment'
+      select 'Cachorro', from: 'treatment[patient_type]'
+      click_button 'Criar Tratamento'
+      expect(page).to have_content('Flea Treatment')
+    end
+  end
+
+  describe 'medication entry' do
+    scenario 'adds medication to treatment' do
+      medication = create(:medication, name: 'Insulin')
+      treatment = create(:treatment)
+      visit treatment_path(treatment)
+      click_link 'Adicionar Medicamento'
+      fill_in 'pharmacotherapy[medication_id]', with: medication.id
+      fill_in 'pharmacotherapy[dosage]', with: '10'
+      select 'Diária', from: 'pharmacotherapy[frequency]'
+      click_button 'Adicionar'
+      expect(page).to have_content('Insulin')
+    end
+  end
+
+  describe 'schedule configuration' do
+    scenario 'configures daily schedule with times' do
+      pharmacotherapy = create(:pharmacotherapy)
+      visit edit_pharmacotherapy_path(pharmacotherapy)
+      check 'schedule_enabled'
+      fill_in 'schedule_times', with: '08:00, 20:00'
+      click_button 'Salvar'
+      expect(page).to have_content('08:00')
+    end
+  end
+end
+```
+
+#### 1.3 Administration Logging Spec
+File: `spec/features/administration_logging_spec.rb`
+```ruby
+require 'rails_helper'
+
+RSpec.describe 'Administration Logging', type: :feature do
+  let(:user) { User.create!(email_address: 'test@example.com', password: 'password') }
+  
+  before { login_as(user) }
+
+  scenario 'marks dose as given with one click' do
+    pharmacotherapy = create(:pharmacotherapy)
+    schedule = create(:medication_schedule, pharmacotherapy: pharmacotherapy, times: ['08:00'])
+    administration = create(:medication_administration, 
+                           pharmacotherapy: pharmacotherapy,
+                           scheduled_at: Time.current.beginning_of_day + 8.hours,
+                           status: 'pending')
+    
+    visit treatment_path(schedule.pharmacotherapy.treatment)
+    click_button 'Marcar como dado'
+    expect(administration.reload.status).to eq('given')
+  end
+
+  scenario 'skips dose with reason' do
+    administration = create(:medication_administration, status: 'pending')
+    visit medication_administration_path(administration)
+    click_link 'Pular'
+    fill_in 'reason', with: 'Pet refused'
+    click_button 'Confirmar'
+    expect(administration.reload.status).to eq('skipped')
+  end
+
+  scenario 'undos administration within 5 minutes' do
+    administration = create(:medication_administration, 
+                           status: 'given',
+                           administered_at: 2.minutes.ago)
+    visit medication_administration_path(administration)
+    click_link 'Desfazer'
+    expect(administration.reload.status).to eq('pending')
+  end
+
+  scenario 'logs manual administration' do
+    pharmacotherapy = create(:pharmacotherapy)
+    visit new_treatment_administration_path(pharmacotherapy.treatment)
+    select pharmacotherapy.medication.name, from: 'medication_administration[pharmacotherapy_id]'
+    fill_in 'medication_administration[administered_at]', with: Time.current
+    click_button 'Registrar'
+    expect(page).to have_content('registrada')
+  end
+end
+```
+
+#### 1.4 Calendar View Spec
+File: `spec/features/medication_calendar_spec.rb`
+```ruby
+require 'rails_helper'
+
+RSpec.describe 'Medication Calendar', type: :feature do
+  let(:user) { User.create!(email_address: 'test@example.com', password: 'password') }
+  let(:patient) { create(:patient) }
+
+  before { login_as(user) }
+
+  scenario 'displays monthly calendar with scheduled doses' do
+    pharmacotherapy = create(:pharmacotherapy, treatment: create(:treatment, patient: patient))
+    schedule = create(:medication_schedule, pharmacotherapy: pharmacotherapy, times: ['09:00'])
+    create(:medication_administration, pharmacotherapy: pharmacotherapy, 
+           scheduled_at: Date.today.at_beginning_of_month + 10.hours)
+    
+    visit patient_medications_calendar_path(patient)
+    expect(page).to have_content('09:00')
+    expect(page).to have_css('.calendar-grid')
+  end
+
+  scenario 'navigates between months' do
+    visit patient_medications_calendar_path(patient)
+    click_link 'Próximo mês'
+    expect(page).to have_content(I18n.l(Date.current.next_month, format: :month_year))
+  end
+
+  scenario 'shows administration status with color coding' do
+    create(:medication_administration, pharmacotherapy: create(:pharmacotherapy), 
+           scheduled_at: Time.current, status: 'given')
+    create(:medication_administration, pharmacotherapy: create(:pharmacotherapy), 
+           scheduled_at: 1.day.from_now, status: 'pending')
+    
+    visit patient_medications_calendar_path(patient)
+    expect(page).to have_css('.status-given')
+    expect(page).to have_css('.status-pending')
+  end
+
+  scenario 'responsive calendar on mobile' do
+    visit patient_medications_calendar_path(patient)
+    page.driver.resize(375, 667)
+    expect(page).to have_css('.calendar-day-list')
+  end
+end
+```
+
+#### 1.5 Reminder Notification UI Spec
+File: `spec/features/reminder_notifications_spec.rb`
+```ruby
+require 'rails_helper'
+
+RSpec.describe 'Reminder Notifications', type: :feature do
+  let(:user) { User.create!(email_address: 'test@example.com', password: 'password') }
+  let(:administration) { create(:medication_administration) }
+
+  before { login_as(user) }
+
+  scenario 'displays reminder notification with quick actions' do
+    reminder = create(:medication_reminder, 
+                     medication_administration: administration,
+                     status: 'pending',
+                     scheduled_at: 5.minutes.from_now)
+    
+    visit medication_reminder_path(reminder)
+    expect(page).to have_content('Hora do medicamento')
+    expect(page).to have_button('Dado')
+    expect(page).to have_button('Pular')
+    expect(page).to have_button('Adiar 10min')
+  end
+
+  scenario 'acknowledges and logs administration' do
+    reminder = create(:medication_reminder, medication_administration: administration)
+    
+    visit medication_reminder_path(reminder)
+    click_button 'Dado'
+    expect(administration.reload.status).to eq('given')
+  end
+
+  scenario 'snoozes reminder' do
+    reminder = create(:medication_reminder, medication_administration: administration)
+    
+    visit medication_reminder_path(reminder)
+    click_button 'Adiar 10min'
+    expect(reminder.reload.status).to eq('snoozed')
+  end
+end
+```
+
+**Run:** `bundle exec rspec spec/features/medication_dashboard_spec.rb spec/features/treatment_management_spec.rb spec/features/administration_logging_spec.rb spec/features/medication_calendar_spec.rb spec/features/reminder_notifications_spec.rb`
+**Expected:** All failures (features not implemented yet)
+
+### Step 2: Implement CSS Styles (Cozy/Hommy Aesthetic)
+
+#### 2.1 Create Medication Module CSS
+File: `app/assets/stylesheets/components/medication.css`
+```css
+/* Medication Module - Cozy/Hommy Aesthetic */
+
+:root {
+  --med-bg-warm: #fdf8f4;
+  --med-bg-card: #ffffff;
+  --med-text-primary: #4a4a4a;
+  --med-text-secondary: #7a7a7a;
+  --med-accent: var(--color-primary);
+  --med-accent-light: var(--color-highlight);
+  --med-success: #6b9e6b;
+  --med-warning: #d4a55a;
+  --med-danger: var(--alert);
+  --med-border: #e8e4e0;
+  --med-shadow: rgba(74, 74, 74, 0.08);
+  --med-radius: 12px;
+  --med-radius-sm: 8px;
+}
+
+/* Patient Type Toggle */
+.patient-type-toggle {
+  display: flex;
+  gap: var(--margin-small);
+  margin: var(--margin-large) 0;
+  background: var(--med-bg-warm);
+  padding: var(--margin-small);
+  border-radius: var(--med-radius);
+}
+
+.patient-type-toggle button {
+  flex: 1;
+  padding: var(--margin-normal);
+  border: 2px solid transparent;
+  border-radius: var(--med-radius-sm);
+  background: transparent;
+  color: var(--med-text-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.patient-type-toggle button.active {
+  background: var(--med-bg-card);
+  border-color: var(--med-accent);
+  color: var(--med-accent);
+  font-weight: 600;
+}
+
+/* Medication Dashboard */
+.medication-dashboard {
+  display: grid;
+  gap: var(--margin-large);
+}
+
+.dashboard-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--margin-normal);
+}
+
+.summary-card {
+  background: var(--med-bg-card);
+  border-radius: var(--med-radius);
+  padding: var(--margin-large);
+  box-shadow: 0 2px 8px var(--med-shadow);
+  border-left: 4px solid var(--med-accent);
+}
+
+.summary-card h3 {
+  color: var(--med-text-secondary);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 var(--margin-small) 0;
+}
+
+.summary-card .count {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--med-text-primary);
+}
+
+.next-dose-card {
+  border-left-color: var(--med-warning);
+}
+
+.next-dose-card .next-dose-time {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--med-warning);
+}
+
+/* Treatment Cards */
+.treatments-list {
+  display: grid;
+  gap: var(--margin-normal);
+}
+
+.treatment-card {
+  background: var(--med-bg-card);
+  border-radius: var(--med-radius);
+  padding: var(--margin-large);
+  box-shadow: 0 2px 8px var(--med-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.treatment-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--med-shadow);
+}
+
+.treatment-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--margin-normal);
+}
+
+.treatment-card-header h3 {
+  margin: 0;
+  color: var(--med-text-primary);
+}
+
+.treatment-card-header a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.treatment-status {
+  padding: var(--margin-tiny) var(--margin-small);
+  border-radius: var(--margin-large);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-active {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-completed {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.status-paused {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.status-cancelled {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* Medication List */
+.medication-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--margin-normal) 0;
+}
+
+.medication-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--margin-normal);
+  background: var(--med-bg-warm);
+  border-radius: var(--med-radius-sm);
+  margin-bottom: var(--margin-small);
+}
+
+.medication-info {
+  flex: 1;
+}
+
+.medication-name {
+  font-weight: 600;
+  color: var(--med-text-primary);
+}
+
+.medication-dosage {
+  font-size: 0.875rem;
+  color: var(--med-text-secondary);
+}
+
+.medication-schedule {
+  font-size: 0.875rem;
+  color: var(--med-accent);
+}
+
+/* Administration Quick Actions */
+.administration-actions {
+  display: flex;
+  gap: var(--margin-small);
+  flex-wrap: wrap;
+}
+
+.btn-admin {
+  padding: var(--margin-small) var(--margin-normal);
+  border: none;
+  border-radius: var(--med-radius-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.btn-given {
+  background: var(--med-success);
+  color: white;
+}
+
+.btn-given:hover {
+  background: #5a8a5a;
+}
+
+.btn-skip {
+  background: var(--med-border);
+  color: var(--med-text-secondary);
+}
+
+.btn-skip:hover {
+  background: #d0ccc8;
+}
+
+.btn-snooze {
+  background: var(--med-warning);
+  color: white;
+}
+
+.btn-snooze:hover {
+  background: #c4944a;
+}
+
+/* Calendar Component */
+.medication-calendar {
+  background: var(--med-bg-card);
+  border-radius: var(--med-radius);
+  padding: var(--margin-large);
+  box-shadow: 0 2px 8px var(--med-shadow);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--margin-large);
+}
+
+.calendar-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--med-text-primary);
+}
+
+.calendar-nav {
+  display: flex;
+  gap: var(--margin-small);
+}
+
+.calendar-nav button {
+  padding: var(--margin-small);
+  background: var(--med-bg-warm);
+  border: 1px solid var(--med-border);
+  border-radius: var(--med-radius-sm);
+  cursor: pointer;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendar-day-header {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--med-text-secondary);
+  padding: var(--margin-small);
+}
+
+.calendar-day {
+  min-height: 80px;
+  padding: var(--margin-tiny);
+  background: var(--med-bg-warm);
+  border-radius: var(--med-radius-sm);
+  position: relative;
+}
+
+.calendar-day.today {
+  background: var(--med-accent-light);
+}
+
+.calendar-day-number {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--med-text-secondary);
+}
+
+.calendar-day.today .calendar-day-number {
+  color: var(--med-accent);
+  font-weight: 700;
+}
+
+.calendar-dose {
+  font-size: 0.7rem;
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin-top: 2px;
+  display: block;
+}
+
+.calendar-dose.status-given {
+  background: var(--med-success);
+  color: white;
+}
+
+.calendar-dose.status-pending {
+  background: var(--med-warning);
+  color: white;
+}
+
+.calendar-dose.status-missed {
+  background: var(--med-danger);
+  color: white;
+}
+
+.calendar-dose.status-skipped {
+  background: var(--med-border);
+  color: var(--med-text-secondary);
+}
+
+/* Mobile Calendar */
+@media (max-width: 599px) {
+  .calendar-grid {
+    display: none;
+  }
+  
+  .calendar-day-list {
+    display: block;
+  }
+  
+  .calendar-day-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--margin-normal);
+    border-bottom: 1px solid var(--med-border);
+  }
+  
+  .calendar-day-item.today {
+    background: var(--med-bg-warm);
+  }
+}
+
+@media (min-width: 600px) {
+  .calendar-day-list {
+    display: none;
+  }
+}
+
+/* Reminder Notification */
+.reminder-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--med-bg-card);
+  border-radius: var(--med-radius);
+  box-shadow: 0 4px 20px var(--med-shadow);
+  padding: var(--margin-large);
+  max-width: 320px;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.reminder-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--med-text-primary);
+  margin-bottom: var(--margin-small);
+}
+
+.reminder-medication {
+  font-size: 0.875rem;
+  color: var(--med-text-secondary);
+  margin-bottom: var(--margin-normal);
+}
+
+.reminder-actions {
+  display: flex;
+  gap: var(--margin-small);
+  flex-wrap: wrap;
+}
+
+.reminder-actions .btn {
+  flex: 1;
+  min-width: 80px;
+}
+
+/* Form Styles */
+.treatment-form, .medication-form {
+  background: var(--med-bg-card);
+  border-radius: var(--med-radius);
+  padding: var(--margin-large);
+  box-shadow: 0 2px 8px var(--med-shadow);
+}
+
+.form-section {
+  margin-bottom: var(--margin-large);
+  padding-bottom: var(--margin-large);
+  border-bottom: 1px solid var(--med-border);
+}
+
+.form-section:last-child {
+  border-bottom: none;
+}
+
+.form-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--med-text-primary);
+  margin-bottom: var(--margin-normal);
+}
+
+/* Patient Selector in Forms */
+.patient-type-selector {
+  display: flex;
+  gap: var(--margin-small);
+  margin-bottom: var(--margin-normal);
+}
+
+.patient-type-option {
+  flex: 1;
+  padding: var(--margin-normal);
+  border: 2px solid var(--med-border);
+  border-radius: var(--med-radius-sm);
+  background: white;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.patient-type-option:hover {
+  border-color: var(--med-accent-light);
+}
+
+.patient-type-option.selected {
+  border-color: var(--med-accent);
+  background: var(--med-bg-warm);
+}
+
+.patient-type-option input {
+  position: absolute;
+  opacity: 0;
+}
+
+/* Empty State */
+.medication-empty-state {
+  text-align: center;
+  padding: var(--margin-enourmous);
+  background: var(--med-bg-warm);
+  border-radius: var(--med-radius);
+}
+
+.medication-empty-state svg {
+  width: 64px;
+  height: 64px;
+  color: var(--med-border);
+  margin-bottom: var(--margin-normal);
+}
+
+.medication-empty-state h3 {
+  color: var(--med-text-secondary);
+  margin-bottom: var(--margin-small);
+}
+
+.medication-empty-state p {
+  color: var(--med-text-secondary);
+  opacity: 0.7;
+}
+
+/* History List */
+.administration-history {
+  list-style: none;
+  padding: 0;
+}
+
+.history-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--margin-normal);
+  padding: var(--margin-normal);
+  border-bottom: 1px solid var(--med-border);
+  align-items: center;
+}
+
+.history-datetime {
+  font-size: 0.875rem;
+  color: var(--med-text-secondary);
+  text-align: center;
+}
+
+.history-status {
+  padding: var(--margin-tiny) var(--margin-small);
+  border-radius: var(--margin-large);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .treatment-card,
+  .btn-admin,
+  .reminder-notification {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: more) {
+  :root {
+    --med-border: #000;
+    --med-text-primary: #000;
+    --med-text-secondary: #333;
+  }
+  
+  .treatment-card,
+  .summary-card {
+    border: 2px solid #000;
+  }
+}
+
+/* Focus styles for accessibility */
+.administration-actions button:focus-visible,
+.patient-type-toggle button:focus-visible,
+.calendar-nav button:focus-visible {
+  outline: 3px solid var(--med-accent);
+  outline-offset: 2px;
+}
+```
+
+#### 2.2 Update Application CSS
+File: `app/assets/stylesheets/application.css`
+```css
+/*
+ *= require_tree .
+ *= require_self
+ *= require components/medication
+ */
+```
+
+### Step 3: Create View Templates
+
+All views must implement accessibility-first patterns:
+
+#### Accessibility Requirements (Apply to All Views)
+
+**Skip Link** - Add to application layout:
+```erb
+<a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
+<a href="#main-nav" class="skip-link">Pular para navegação</a>
+```
+
+**CSS for skip links:**
+```css
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--color-primary);
+  color: white;
+  padding: var(--margin-small) var(--margin-normal);
+  z-index: 10000;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+```
+
+**Touch Targets:**
+```css
+@media (max-width: 599px) {
+  .btn-admin, 
+  .patient-type-toggle button,
+  .calendar-nav button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1279px) {
+  .btn-admin {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .btn-admin, 
+  .patient-type-toggle button {
+    min-height: 60px;
+    min-width: 60px;
+  }
+}
+```
+
+**Focus Ring (Enhanced):**
+```css
+:focus-visible {
+  outline: 3px solid var(--med-accent);
+  outline-offset: 2px;
+  border-radius: var(--med-radius-sm);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.btn-admin:focus-visible,
+.treatment-card:focus-within {
+  box-shadow: 0 0 0 3px var(--med-accent);
+}
+```
+
+**Color Contrast Verification:**
+```css
+:root {
+  --med-text-primary: #4a4a4a;    /* AA: 7.41:1 on white */
+  --med-text-secondary: #7a7a7a;  /* AA: 4.52:1 on white (FAIL - needs 4.5+) */
+  --med-warning: #d4a55a;         /* AA: 2.83:1 on white (FAIL) */
+  --med-success: #6b9e6b;        /* AA: 3.03:1 on white (FAIL) */
+}
+
+/* Fix contrast issues */
+--med-text-secondary: #5a5a5a;   /* AA: 6.81:1 */
+--med-warning: #b8860b;           /* AA: 5.18:1 */
+--med-success: #2e7d32;          /* AA: 5.52:1 */
+```
+
+**Screen Reader Announcements (aria-live):**
+```erb
+<div aria-live="polite" aria-atomic="true" class="sr-only" id="dose-status">
+  <%= @dose_status_message %>
+</div>
+
+<div role="status" aria-live="polite">
+  <p class="sr-only">Dose marcada como dada</p>
+</div>
+```
+
+**Keyboard Navigation (D-pad support):**
+```javascript
+document.addEventListener('keydown', (e) => {
+  const focusable = document.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  );
+  const focusableArray = [...focusable];
+  const currentIndex = focusableArray.indexOf(document.activeElement);
+  
+  switch(e.key) {
+    case 'ArrowRight':
+    case 'ArrowDown':
+      e.preventDefault();
+      const nextIndex = currentIndex + 1;
+      if (nextIndex < focusableArray.length) {
+        focusableArray[nextIndex].focus();
+      }
+      break;
+    case 'ArrowLeft':
+    case 'ArrowUp':
+      e.preventDefault();
+      const prevIndex = currentIndex - 1;
+      if (prevIndex >= 0) {
+        focusableArray[prevIndex].focus();
+      }
+      break;
+    case 'Enter':
+    case ' ':
+      if (document.activeElement.tagName === 'BUTTON') {
+        document.activeElement.click();
+      }
+      break;
+    case 'Backspace':
+    case 'Escape':
+      window.history.back();
+      break;
+  }
+});
+```
+
+#### 3.1 Patient Dashboard - Patient Type Selection
+File: `app/views/patients/_patient_type_toggle.html.erb`
+```erb
+<nav class="patient-type-toggle" role="tablist" aria-label="Tipo de paciente">
+  <button type="button" 
+          role="tab" 
+          id="tab-persons"
+          aria-selected="<%= @patient_type == 'Person' %>"
+          aria-controls="panel-persons"
+          tabindex="<%= @patient_type == 'Person' ? '0' : '-1' %>"
+          class="<%= @patient_type == 'Person' ? 'active' : '' %>"
+          data-type="Person">
+    <span aria-hidden="true">👤</span> Pessoas
+  </button>
+  <button type="button" 
+          role="tab" 
+          id="tab-dogs"
+          aria-selected="<%= @patient_type == 'Dog' %>"
+          aria-controls="panel-dogs"
+          tabindex="<%= @patient_type == 'Dog' ? '0' : '-1' %>"
+          class="<%= @patient_type == 'Dog' ? 'active' : '' %>"
+          data-type="Dog">
+    <span aria-hidden="true">🐕</span> Cachorros
+  </button>
+</nav>
+```
+
+**Stimulus Controller for Tab Navigation:**
+```javascript
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  connect() {
+    this.element.addEventListener('keydown', this.handleKeydown.bind(this))
+  }
+
+  handleKeydown(event) {
+    const buttons = Array.from(this.element.querySelectorAll('[role="tab"]'))
+    const currentIndex = buttons.indexOf(document.activeElement)
+    
+    switch(event.key) {
+      case 'ArrowRight':
+      case 'ArrowLeft':
+        event.preventDefault()
+        const direction = event.key === 'ArrowRight' ? 1 : -1
+        const nextIndex = (currentIndex + direction + buttons.length) % buttons.length
+        buttons[nextIndex].focus()
+        buttons[nextIndex].click()
+        break
+      case 'Home':
+        event.preventDefault()
+        buttons[0].focus()
+        break
+      case 'End':
+        event.preventDefault()
+        buttons[buttons.length - 1].focus()
+        break
+    }
+  }
+
+  toggle(event) {
+    const selected = event.target
+    this.element.querySelectorAll('[role="tab"]').forEach(btn => {
+      btn.classList.remove('active')
+      btn.setAttribute('aria-selected', 'false')
+      btn.setAttribute('tabindex', '-1')
+    })
+    selected.classList.add('active')
+    selected.setAttribute('aria-selected', 'true')
+    selected.setAttribute('tabindex', '0')
+  }
+}
+```
+
+#### 3.2 Patient Dashboard - Index View
+File: `app/views/patients/index.html.erb`
+```erb
+<main id="main-content" class="medication-page" role="main" aria-labelledby="page-title">
+  <h1 id="page-title">Medicamentos</h1>
+
+  <%= render 'patient_type_toggle', controller: 'patient-type-toggle' %>
+
+  <section class="medication-dashboard" aria-label="Painel de medicamentos">
+    <section class="dashboard-summary" aria-label="Resumo do dia">
+      <article class="summary-card next-dose-card">
+        <h2>Próxima Dose</h2>
+        <p class="next-dose-time" aria-label="Próxima dose às <%= @next_dose&.strftime('%H:%M') %>">
+          <%= @next_dose&.strftime('%H:%M') || '--:--' %>
+        </p>
+        <p class="next-dose-medication">
+          <%= @next_dose_medication || 'Nenhuma dose agendada' %>
+        </p>
+      </article>
+      
+      <article class="summary-card">
+        <h2>Tratamentos Ativos</h2>
+        <p class="count" aria-label="<%= @active_treatments_count %> tratamentos ativos">
+          <%= @active_treatments_count %>
+        </p>
+      </article>
+      
+      <article class="summary-card">
+        <h2>Doses Hoje</h2>
+        <p class="count" aria-label="<%= @today_doses_count %> doses hoje">
+          <%= @today_doses_count %>
+        </p>
+      </article>
+    </section>
+
+    <section class="treatments-list" aria-labelledby="treatments-heading">
+      <h2 id="treatments-heading">Pacientes</h2>
+      <% if @patients.any? %>
+        <% @patients.each do |patient| %>
+          <%= render 'patients/patient_medication_card', patient: patient %>
+        <% end %>
+      <% else %>
+        <div class="medication-empty-state" role="status">
+          <svg aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" role="img" aria-label="">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+          </svg>
+          <h3>Nenhum paciente cadastrado</h3>
+          <p>Cadastre um paciente para começar a gerenciar medicamentos.</p>
+          <%= link_to 'Cadastrar Paciente', new_patient_path, class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </section>
+  </section>
+</main>
+```
+
+#### 3.3 Patient Medication Card Partial
+File: `app/views/patients/_patient_medication_card.html.erb`
+```erb
+<article class="treatment-card" tabindex="0" aria-label="<%= patient.individual.name %> - <%= patient.treatments.active.any? ? patient.treatments.active.count + ' tratamentos ativos' : 'sem tratamentos ativos' %>">
+  <div class="treatment-card-header">
+    <h3>
+      <%= link_to patient.individual.name, 
+                  patient_type == 'Dog' ? dog_path(patient.individual) : person_path(patient.individual),
+                  aria-label: "Ver medicamentos de #{patient.individual.name}" %>
+    </h3>
+    <span class="treatment-type-badge" aria-hidden="true">
+      <%= patient.individual_type == 'Dog' ? '🐕' : '👤' %>
+    </span>
+  </div>
+  
+  <% if patient.treatments.active.any? %>
+    <ul class="medication-list" role="list" aria-label="Lista de medicamentos">
+      <% patient.treatments.active.each do |treatment| %>
+        <li class="medication-item" role="listitem">
+          <div class="medication-info">
+            <p class="medication-name"><%= treatment.name %></p>
+            <p class="medication-dosage">
+              <%= treatment.pharmacotherapies.map(&:medication).map(&:name).join(', ') %>
+            </p>
+          </div>
+          <div class="medication-schedule" aria-label="Próxima dose">
+            <%= treatment.pharmacotherapies.flat_map { |p| p.medication_schedule&.times }.compact.first || '--:--' %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="no-medications" aria-live="polite">Sem tratamentos ativos</p>
+  <% end %>
+  
+  <div class="treatment-card-actions">
+    <%= link_to 'Ver Medicamentos', 
+                patient_medications_path(patient), 
+                class: 'btn btn-secondary',
+                aria-label: "Ver medicamentos de #{patient.individual.name}" %>
+  </div>
+</article>
+```
+
+#### 3.4 Person Show Page - Medication Hub
+File: `app/views/people/show.html.erb`
+```erb
+<main id="main-content" class="person-show medication-hub" role="main" aria-labelledby="person-name">
+  <header class="person-profile">
+    <h1 id="person-name"><%= @person.name %></h1>
+    <p class="person-type-badge" role="status">Paciente</p>
+  </header>
+
+  <section class="medication-dashboard" aria-labelledby="treatments-heading">
+    <h2 id="treatments-heading">Tratamentos</h2>
+    <%= render 'treatments/treatments_list', treatments: @person.patient.treatments if @person.patient %>
+  </section>
+
+  <section class="medication-calendar" aria-labelledby="calendar-heading">
+    <h2 id="calendar-heading">Calendário de Medicamentos</h2>
+    <%= render 'application/simple_month_navigator' %>
+    <div class="calendar-grid" role="grid" aria-label="Calendário de medicamentos">
+      <div class="calendar-day-header" role="presentation">Dom</div>
+      <div class="calendar-day-header" role="presentation">Seg</div>
+      <div class="calendar-day-header" role="presentation">Ter</div>
+      <div class="calendar-day-header" role="presentation">Qua</div>
+      <div class="calendar-day-header" role="presentation">Qui</div>
+      <div class="calendar-day-header" role="presentation">Sex</div>
+      <div class="calendar-day-header" role="presentation">Sáb</div>
+      <% @calendar_days.each do |day| %>
+        <div class="calendar-day <%= day.today? ? 'today' : '' %>" 
+             role="gridcell" 
+             aria-label="<%= l(day.date, format: :long) %>"
+             tabindex="<%= day.has_doses? ? '0' : '-1' %>">
+          <span class="calendar-day-number" aria-hidden="true"><%= day.day %></span>
+          <% day.doses.each do |dose| %>
+            <span class="calendar-dose status-<%= dose.status %>" 
+                  role="button" 
+                  tabindex="0"
+                  aria-label="<%= dose.time %> - <%= dose.medication_name %> - <%= dose.status %>">
+              <span aria-hidden="true"><%= dose.time %></span> <%= dose.medication_name %>
+            </span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="administration-history" aria-labelledby="history-heading">
+    <h2 id="history-heading">Histórico de Administrações</h2>
+    <%= render 'medication_administrations/history_list', administrations: @recent_administrations %>
+  </section>
+</main>
+```
+
+#### 3.5 Dog Show Page - Medication Hub
+File: `app/views/dogs/show.html.erb`
+```erb
+<main id="main-content" class="dog-show medication-hub" role="main" aria-labelledby="dog-name">
+  <div class="dog-profile">
+    <% if @dog.image.attached? %>
+      <div class="dog-profile-image">
+        <%= image_tag @dog.image, alt: "Foto de <%= @dog.name %>" %>
+      </div>
+    <% end %>
+
+    <div class="dog-profile-header">
+      <h1 id="dog-name"><%= @dog.name %></h1>
+      <span class="dog-sex-badge <%= @dog.sex == 0 ? 'male' : 'female' %>" role="status">
+        <%= @dog.sex == 0 ? 'Macho' : 'Fêmea' %>
+      </span>
+    </div>
+
+    <dl class="dog-details">
+      <% if @dog.race.present? %>
+        <div class="detail-item">
+          <dt>Raça</dt>
+          <dd id="dog-race"><%= @dog.race %></dd>
+        </div>
+      <% end %>
+      
+      <% if @dog.birth.present? %>
+        <div class="detail-item">
+          <dt>Nascimento</dt>
+          <dd id="dog-birth"><%= l @dog.birth %></dd>
+        </div>
+        <div class="detail-item">
+          <dt>Idade</dt>
+          <dd id="dog-age"><%= @dog.age ? "#{@dog.age} anos" : 'Filhote' %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+
+  <section class="medication-dashboard" aria-labelledby="treatments-heading">
+    <h2 id="treatments-heading">Tratamentos</h2>
+    <%= render 'treatments/treatments_list', treatments: @dog.patient.treatments if @dog.patient %>
+  </section>
+
+  <section class="medication-calendar" aria-labelledby="calendar-heading">
+    <h2 id="calendar-heading">Calendário</h2>
+    <%= render 'medication_calendars/calendar', patient: @dog.patient %>
+  </section>
+</main>
+```
+
+#### 3.6 Treatment Form with Patient Type Selection
+File: `app/views/treatments/_form.html.erb`
+```erb
+<main id="main-content" role="main">
+<%= form_with model: treatment, 
+              url: treatment.persisted? ? treatment_path(treatment) : patient_treatments_path(treatment.patient),
+              class: 'treatment-form',
+              data: { turbo: false },
+              aria: { describedby: treatment.errors.any? ? 'error-summary' : nil } do |f| %>
+  <% if treatment.errors.any? %>
+    <div id="error-summary" role="alert" aria-live="assertive" class="form-errors">
+      <h2><%= pluralize(treatment.errors.count, "erro") %> prohibited this treatment from being saved:</h2>
+      <ul>
+        <% treatment.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <fieldset>
+    <legend>Informações do Tratamento</legend>
+    
+    <div class="field">
+      <%= f.label :name do %>
+        Nome do Tratamento <span class="required" aria-hidden="true">*</span>
+      <% end %>
+      <%= f.text_field :name, 
+                       required: true, 
+                       aria.required: true,
+                       autocomplete: 'off' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :patient_type, "Tipo de Paciente" %>
+      <div class="patient-type-selector" role="radiogroup" aria-required="true" aria-label="Selecione o tipo de paciente">
+        <label class="patient-type-option <%= f.object.patient&.individual_type == 'Person' ? 'selected' : '' %>">
+          <%= f.radio_button :patient_type, 'Person', aria: { describedby: 'patient-type-person-help' } %>
+          <span aria-hidden="true">👤</span>
+          <span>Pessoa</span>
+        </label>
+        <label class="patient-type-option <%= f.object.patient&.individual_type == 'Dog' ? 'selected' : '' %>">
+          <%= f.radio_button :patient_type, 'Dog', aria: { describedby: 'patient-type-dog-help' } %>
+          <span aria-hidden="true">🐕</span>
+          <span>Cachorro</span>
+        </label>
+      </div>
+      <p id="patient-type-person-help" class="field-help">Selecione para tratamientos de pessoas</p>
+      <p id="patient-type-dog-help" class="field-help">Selecione para tratamientos de cachorros</p>
+    </div>
+
+    <div class="field">
+      <%= f.label :start_date, "Data de Início" %>
+      <%= f.date_field :start_date, 
+                       autocomplete: 'bday',
+                       min: Date.current,
+                       max: '2099-12-31' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :end_date, "Data de Término" %>
+      <%= f.date_field :end_date,
+                       autocomplete: 'off',
+                       min: Date.current,
+                       max: '2099-12-31' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :status, "Status" %>
+      <%= f.select :status, 
+                   Treatment.statuses.keys.map { |s| [t(".status.#{s}"), s] },
+                   {},
+                   aria: { describedby: 'status-help' } %>
+      <p id="status-help" class="field-help">Status atual do tratamento</p>
+    </div>
+
+    <div class="field">
+      <%= f.label :notes, "Observações" %>
+      <%= f.text_area :notes, 
+                      rows: 3,
+                      aria: { describedby: 'notes-help' },
+                      autocomplete: 'off' %>
+      <p id="notes-help" class="field-help">Informações adicionais sobre o tratamento</p>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Medicamentos</legend>
+    <div id="pharmacotherapies-fields" role="group" aria-label="Lista de medicamentos">
+      <%= f.fields_for :pharmacotherapies do |pharma_form| %>
+        <%= render 'pharmacotherapy_fields', f: pharma_form %>
+      <% end %>
+    </div>
+    <%= link_to_add_association 'Adicionar Medicamento', f, :pharmacotherapies, 
+                                 class: 'btn btn-secondary',
+                                 role: 'button',
+                                 data: { association_insertion_node: '#pharmacotherapies-fields' } %>
+  </fieldset>
+
+  <div class="actions" role="group" aria-label="Ações do formulário">
+    <%= f.submit class: 'btn btn-primary', 
+                 data: { disable_with: 'Salvando...' } %>
+    <%= link_to 'Cancelar', treatments_path, class: 'cancel-link', role: 'button' %>
+  </div>
+<% end %>
+</main>
+```
+
+#### 3.7 Pharmacotherapy Fields Partial
+File: `app/views/treatments/_pharmacotherapy_fields.html.erb`
+```erb
+<div class="pharmacotherapy-fields">
+  <div class="field">
+    <%= f.label :medication_id, "Medicamento" %>
+    <%= f.collection_select :medication_id, Medication.all, :id, :name, 
+                            include_blank: "Selecione um medicamento",
+                            required: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :dosage, "Dosagem" %>
+    <div class="input-with-prefix">
+      <%= f.text_field :dosage, required: true %>
+      <span class="prefix"><%= f.object.unit || 'mg' %></span>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= f.label :frequency, "Frequência" %>
+    <%= f.select :frequency, 
+                 Pharmacotherapy.frequencies.keys.map { |f| [t(".frequency.#{f}"), f] },
+                 required: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :instructions, "Instruções" %>
+    <%= f.text_area :instructions, rows: 2 %>
+  </div>
+
+  <div class="schedule-fields" data-controller="medication-schedule">
+    <div class="field">
+      <label>
+        <%= check_box_tag 'schedule_enabled', '1', f.object.medication_schedule&.is_active %>
+        Ativar agendamento
+      </label>
+    </div>
+
+    <div class="field" data-medication-schedule-target="times">
+      <%= f.label :times, "Horários" %>
+      <%= f.text_field :times, 
+                       value: f.object.medication_schedule&.times&.join(', '),
+                       placeholder: "08:00, 14:00, 20:00" %>
+    </div>
+
+    <div class="field">
+      <label>
+        <%= check_box_tag 'reminder_enabled', '1', f.object.medication_schedule&.reminder_enabled %>
+        Ativar lembretes
+      </label>
+    </div>
+  </div>
+
+  <%= f.hidden_field :_destroy %>
+  <%= link_to 'Remover', '#', class: 'remove-pharmacotherapy', data: { action: 'click->nested-form#remove' } %>
+</div>
+```
+
+#### 3.8 Administration Quick Actions Component
+File: `app/views/medication_administrations/_quick_actions.html.erb`
+```erb
+<div class="administration-actions" role="group" aria-label="Ações de administração de medicamentos">
+  <%= button_to "Marcar como dado",
+                mark_as_given_medication_administration_path(administration),
+                method: :post,
+                class: 'btn btn-given',
+                data: { 
+                  turbo: false,
+                  controller: 'admin-action',
+                  action: 'click->admin-action#markGiven',
+                  status: administration.status
+                },
+                aria: { 
+                  label: "Marcar dose de #{administration.pharmacotherapy.medication.name} como dada",
+                  describedby: "admin-#{administration.id}-help"
+                } %>
+  <span id="admin-<%= administration.id %>-help" class="sr-only">
+    Clique para confirmar que o medicamento foi administrado
+  </span>
+  
+  <%= link_to skip_medication_administration_path(administration),
+              class: 'btn btn-skip',
+              data: { 
+                turbo_frame: "skip-modal-#{administration.id}",
+                action: 'click->modal#open'
+              },
+              role: 'button',
+              aria: { 
+                label: "Pular dose de #{administration.pharmacotherapy.medication.name}",
+                describedby: "skip-#{administration.id}-help"
+              } do %>
+    <span>Pular</span>
+  <% end %>
+  <span id="skip-<%= administration.id %>-help" class="sr-only">
+    Pular esta dose e registrar motivo
+  </span>
+  
+  <% if administration.status == 'given' && administration.created_at > 5.minutes.ago %>
+    <%= link_to undo_medication_administration_path(administration),
+                method: :post,
+                class: 'btn btn-secondary',
+                role: 'button',
+                aria: { 
+                  label: "Desfazer administração de #{administration.pharmacotherapy.medication.name}",
+                  describedby: "undo-#{administration.id}-help"
+                } do %>
+      <span>Desfazer</span>
+    <% end %>
+    <span id="undo-<%= administration.id %>-help" class="sr-only">
+      Você tem 5 minutos para desfazer esta ação
+    </span>
+  <% end %>
+</div>
+
+<div aria-live="polite" aria-atomic="true" class="sr-only" id="admin-status-<%= administration.id %>">
+  <%= "Dose marcada como dada" if flash[:admin_success] %>
+</div>
+```
+
+**Stimulus Controller for Admin Actions:**
+```javascript
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  markGiven(event) {
+    const button = event.target
+    button.setAttribute('aria-busy', 'true')
+    button.disabled = true
+    
+    const announcement = document.getElementById(`admin-status-${button.dataset.adminId}`)
+    if (announcement) {
+      announcement.textContent = 'Marcando dose como dada...'
+      setTimeout(() => {
+        announcement.textContent = 'Dose marcada como dada com sucesso'
+      }, 1000)
+    }
+  }
+}
+```
+
+#### 3.9 Calendar Component
+File: `app/views/medication_calendars/_calendar.html.erb`
+```erb
+<section class="medication-calendar" aria-label="Calendário de medicamentos">
+  <div class="calendar-header">
+    <h2 class="calendar-title"><%= l @month, format: :month_year %></h2>
+    <div class="calendar-nav">
+      <button type="button" aria-label="Mês anterior"
+              data-action="calendar#previousMonth">
+        ←
+      </button>
+      <button type="button" data-action="calendar#today">
+        Hoje
+      </button>
+      <button type="button" aria-label="Próximo mês"
+              data-action="calendar#nextMonth">
+        →
+      </button>
+    </div>
+  </div>
+
+  <div class="calendar-weekdays" role="row">
+    <% %w[Dom Seg Ter Qua Qui Sex Sáb].each do |day| %>
+      <div class="calendar-day-header" role="columnheader"><%= day %></div>
+    <% end %>
+  </div>
+
+  <div class="calendar-grid" role="grid">
+    <% @calendar_days.each do |day| %>
+      <div class="calendar-day <%= 'today' if day.date == Date.today %>" 
+           role="gridcell" 
+           aria-label="<%= l day.date, format: :short %>">
+        <span class="calendar-day-number"><%= day.day %></span>
+        <% day.doses.each do |dose| %>
+          <span class="calendar-dose status-<%= dose.status %>"
+                data-status="<%= dose.status %>"
+                data-time="<%= dose.time %>">
+            <%= dose.time %> <%= dose.medication_name %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="calendar-day-list" aria-hidden="true">
+    <% @upcoming_doses.each do |dose| %>
+      <div class="calendar-day-item <%= 'today' if dose.date == Date.today %>">
+        <span class="item-date"><%= l dose.date, format: :short %></span>
+        <span class="item-time"><%= dose.time %></span>
+        <span class="item-medication"><%= dose.medication_name %></span>
+        <span class="calendar-dose status-<%= dose.status %>"><%= dose.status_label %></span>
+      </div>
+    <% end %>
+  </div>
+</section>
+```
+
+#### 3.10 Reminder Notification Component
+File: `app/views/medication_reminders/_notification.html.erb`
+```erb
+<div class="reminder-notification" 
+     role="alert" 
+     aria-live="assertive"
+     data-controller="reminder-notification"
+     data-reminder-notification-timeout-value="<%= reminder.scheduled_at - Time.current %>">
+  <h3 class="reminder-title">💊 Hora do Medicamento</h3>
+  <p class="reminder-medication">
+    <strong><%= reminder.medication_administration.pharmacotherapy.medication.name %></strong>
+    <br>
+    <%= reminder.medication_administration.pharmacotherapy.dosage %>
+  </p>
+  <div class="reminder-actions">
+    <%= button_to "Dado", 
+                  acknowledge_reminder_path(reminder, status: 'given'),
+                  method: :post,
+                  class: 'btn btn-given',
+                  data: { action: 'click->reminder-notification#acknowledge' } %>
+    
+    <%= button_to "Pular",
+                  skip_reminder_path(reminder),
+                  method: :post,
+                  class: 'btn btn-skip' %>
+    
+    <button type="button" 
+            class="btn btn-snooze"
+            data-action="click->reminder-notification#snooze"
+            data-minutes="10">
+      Adiar 10min
+    </button>
+  </div>
+</div>
+```
+
+### Step 4: Create Stimulus Controllers (Web Components)
+
+All controllers must include keyboard navigation support for TV remotes.
+
+#### 4.1 Patient Type Toggle Controller
+File: `app/javascript/controllers/patient_type_toggle_controller.js`
+```javascript
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = ["button"]
+
+  connect() {
+    this.updateSelectedState()
+    this.element.addEventListener('keydown', this.handleKeydown.bind(this))
+  }
+
+  disconnect() {
+    this.element.removeEventListener('keydown', this.handleKeydown.bind(this))
+  }
+
+  handleKeydown(event) {
+    const buttons = Array.from(this.element.querySelectorAll('[role="tab"]'))
+    if (!buttons.includes(document.activeElement)) return
+
+    const currentIndex = buttons.indexOf(document.activeElement)
+    const direction = event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 1 : -1
+    const nextIndex = (currentIndex + direction + buttons.length) % buttons.length
+
+    switch(event.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        event.preventDefault()
+        buttons[nextIndex].focus()
+        buttons[nextIndex].click()
+        this.announceSelection(buttons[nextIndex].dataset.type)
+        break
+      case 'Home':
+        event.preventDefault()
+        buttons[0].focus()
+        break
+      case 'End':
+        event.preventDefault()
+        buttons[buttons.length - 1].focus()
+        break
+    }
+  }
+
+  announceSelection(type) {
+    const announcement = document.getElementById('patient-type-announcement')
+    if (announcement) {
+      announcement.textContent = `Selecionado: ${type === 'Person' ? 'Pessoas' : 'Cachorros'}`
+    }
+  }
+
+  toggle(event) {
+    const type = event.target.dataset.type
+    this.updateSelectedState()
+    this.dispatch("typeChanged", { detail: { type } })
+  }
+
+  updateSelectedState() {
+    this.element.querySelectorAll("button").forEach(button => {
+      const isSelected = button.getAttribute("aria-selected") === "true"
+      button.classList.toggle("active", isSelected)
+      button.tabIndex = isSelected ? 0 : -1
+    })
+  }
+}
+```
+
+#### 4.2 Medication Schedule Controller
+File: `app/javascript/controllers/medication_schedule_controller.js`
+```javascript
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = ["times"]
+
+  toggleSchedule(event) {
+    const enabled = event.target.checked
+    this.timesTarget.style.display = enabled ? "block" : "none"
+  }
+
+  validateTimes(event) {
+    const value = event.target.value
+    const times = value.split(",").map(t => t.trim())
+    const valid = times.every(t => /^([01]\d|2[0-3]):([0-5]\d)$/.test(t))
+    
+    if (!valid) {
+      event.target.setCustomValidity("Formato inválido. Use HH:MM,HH:MM")
+    } else {
+      event.target.setCustomValidity("")
+    }
+  }
+}
+```
+
+#### 4.3 Calendar Controller
+File: `app/javascript/controllers/calendar_controller.js`
+```javascript
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static values = {
+    currentMonth: Date
+  }
+
+  static targets = ["day", "nav"]
+
+  connect() {
+    this.loadMonthData()
+    this.element.addEventListener('keydown', this.handleKeydown.bind(this))
+    this.announceCurrentMonth()
+  }
+
+  disconnect() {
+    this.element.removeEventListener('keydown', this.handleKeydown.bind(this))
+  }
+
+  handleKeydown(event) {
+    const focused = document.activeElement
+    if (!focused.classList.contains('calendar-day')) return
+
+    const days = Array.from(this.element.querySelectorAll('.calendar-day[tabindex="0"], .calendar-day:not([tabindex])'))
+    const currentIndex = days.indexOf(focused)
+    const cols = 7 // 7 days per week
+
+    switch(event.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        event.preventDefault()
+        this.moveFocus(days, currentIndex, event.key === 'ArrowRight' ? 1 : cols)
+        break
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        event.preventDefault()
+        this.moveFocus(days, currentIndex, event.key === 'ArrowLeft' ? -1 : -cols)
+        break
+      case 'Home':
+        event.preventDefault()
+        this.moveToFirstDayOfWeek(days, currentIndex)
+        break
+      case 'End':
+        event.preventDefault()
+        this.moveToLastDayOfWeek(days, currentIndex)
+        break
+      case 'Enter':
+      case ' ':
+        if (focused.dataset.doses) {
+          this.openDayDetails(focused)
+        }
+        break
+    }
+  }
+
+  moveFocus(days, currentIndex, delta) {
+    let nextIndex = currentIndex + delta
+    if (nextIndex >= 0 && nextIndex < days.length) {
+      days[nextIndex].focus()
+      this.announceDay(days[nextIndex])
+    }
+  }
+
+  moveToFirstDayOfWeek(days, currentIndex) {
+    const dayOfWeek = currentIndex % 7
+    const newIndex = currentIndex - dayOfWeek
+    if (newIndex >= 0) {
+      days[newIndex].focus()
+      this.announceDay(days[newIndex])
+    }
+  }
+
+  moveToLastDayOfWeek(days, currentIndex) {
+    const dayOfWeek = currentIndex % 7
+    const daysUntilEnd = 6 - dayOfWeek
+    const newIndex = currentIndex + daysUntilEnd
+    if (newIndex < days.length) {
+      days[newIndex].focus()
+      this.announceDay(days[newIndex])
+    }
+  }
+
+  announceDay(dayElement) {
+    const announcement = document.getElementById('calendar-announcement')
+    if (announcement) {
+      const date = dayElement.dataset.date
+      const doses = dayElement.dataset.doses || 'sem doses'
+      announcement.textContent = `${date}: ${doses}`
+    }
+  }
+
+  announceCurrentMonth() {
+    const announcement = document.getElementById('calendar-announcement')
+    if (announcement) {
+      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                         'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+      const month = monthNames[this.currentMonthValue.getMonth()]
+      const year = this.currentMonthValue.getFullYear()
+      announcement.textContent = `Calendário de ${month} de ${year}`
+    }
+  }
+
+  openDayDetails(dayElement) {
+    const date = dayElement.dataset.date
+    const url = new URL(window.location.href)
+    url.searchParams.set('selected_date', date)
+    window.location.href = url.toString()
+  }
+
+  async previousMonth() {
+    const date = new Date(this.currentMonthValue)
+    date.setMonth(date.getMonth() - 1)
+    this.currentMonthValue = date
+    this.announceCurrentMonth()
+    await this.loadMonthData()
+  }
+
+  async nextMonth() {
+    const date = new Date(this.currentMonthValue)
+    date.setMonth(date.getMonth() + 1)
+    this.currentMonthValue = date
+    this.announceCurrentMonth()
+    await this.loadMonthData()
+  }
+
+  async today() {
+    this.currentMonthValue = new Date()
+    this.announceCurrentMonth()
+    await this.loadMonthData()
+  }
+
+  async loadMonthData() {
+    const url = new URL(window.location.href)
+    url.searchParams.set("month", this.currentMonthValue.toISOString())
+    
+    const response = await fetch(url.toString(), {
+      headers: { Accept: "text/vnd.turbo-stream.html" }
+    })
+    
+    if (response.ok) {
+      const html = await response.text()
+      this.element.innerHTML = html
+    }
+  }
+}
+```
+
+#### 4.4 Reminder Notification Controller
+File: `app/javascript/controllers/reminder_notification_controller.js`
+```javascript
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static values = {
+    timeout: Number
+  }
+
+  static targets = ["acknowledge"]
+
+  connect() {
+    this.timeoutId = setTimeout(() => {
+      this.showFallback()
+    }, this.timeoutValue * 1000)
+  }
+
+  disconnect() {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId)
+    }
+  }
+
+  async acknowledge(event) {
+    event.preventDefault()
+    const form = event.target.closest("form")
+    
+    await fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: { "X-Requested-With": "XMLHttpRequest" }
+    })
+    
+    this.element.remove()
+  }
+
+  async snooze(event) {
+    const minutes = event.target.dataset.minutes
+    const reminderId = this.element.dataset.reminderId
+    
+    await fetch(`/medication_reminders/${reminderId}/snooze`, {
+      method: "POST",
+      body: JSON.stringify({ minutes }),
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document.querySelector("[name='csrf-token']").content
+      }
+    })
+    
+    this.element.remove()
+  }
+
+  showFallback() {
+    if (this.element.querySelector(".btn-given")) {
+      // Already handled
+    } else {
+      // Show reminder as missed
+      this.element.classList.add("status-missed")
+    }
+  }
+}
+```
+
+### Step 5: Run Feature Specs to Verify
+
+**Run:**
+```bash
+bundle exec rspec spec/features/medication_dashboard_spec.rb spec/features/treatment_management_spec.rb spec/features/administration_logging_spec.rb spec/features/medication_calendar_spec.rb spec/features/reminder_notifications_spec.rb --format documentation
+```
+
+**Expected:** All specs should pass (or have specific failures that guide further implementation)
+
+### Step 6: Additional Implementation Tasks
+
+#### 6.1 Enhance Controllers for View Data
+Update `PatientsController`:
+```ruby
+def index
+  @patient_type = params[:patient_type] || 'Person'
+  @patients = Patient.where(individual_type: @patient_type)
+  @active_treatments_count = Treatment.active.where(patient: @patients).count
+  
+  # Next dose calculation
+  @next_dose, @next_dose_medication = next_dose_for_patients(@patients)
+  @today_doses_count = today_doses_for_patients(@patients)
+end
+```
+
+#### 6.2 Create Calendar Helper
+File: `app/helpers/medication_calendar_helper.rb`
+```ruby
+module MedicationCalendarHelper
+  def calendar_days_for_month(date)
+    start_date = date.at_beginning_of_month.beginning_of_week
+    end_date = date.at_end_of_month.end_of_week
+    
+    (start_date..end_date).map do |day|
+      OpenStruct.new(
+        date: day,
+        day: day.day,
+        today?: day == Date.today,
+        doses: doses_for_day(day)
+      )
+    end
+  end
+  
+  private
+  
+  def doses_for_day(date)
+    administrations = MedicationAdministration.where(
+      scheduled_at: date.all_day
+    ).includes(pharmacotherapy: :medication)
+    
+    administrations.map do |admin|
+      OpenStruct.new(
+        time: admin.scheduled_at.strftime('%H:%M'),
+        status: admin.status,
+        status_label: t(".status.#{admin.status}"),
+        medication_name: admin.pharmacotherapy.medication.name
+      )
+    end
+  end
+end
+```
+
+#### 6.3 Add Routes for New Views
+File: `config/routes.rb`
+```ruby
+resources :patients do
+  resources :treatments, only: [:new, :create, :edit, :update]
+  get :medications, to: 'patients#medications'
+  get :medications/calendar, to: 'patients#calendar'
+end
+
+resources :treatments do
+  resources :pharmacotherapies, only: [:new, :create, :edit, :update, :destroy]
+  resources :medication_administrations, only: [:index, :new, :create]
+end
+
+resources :medication_administrations do
+  member do
+    post :mark_as_given
+    post :skip
+    post :undo
+  end
+end
+
+resources :medication_reminders do
+  member do
+    post :acknowledge
+    post :snooze
+  end
+end
+```
+
+---
+
+### Phase 4 Implementation Summary
+
+| Task | File | Status |
+|------|------|--------|
+| Feature specs (TDD) | spec/features/medication_*.rb | Write first |
+| CSS module | app/assets/stylesheets/components/medication.css | Create |
+| Patient type toggle | app/views/patients/_patient_type_toggle | Create |
+| Patient index/dashboard | app/views/patients/index.html.erb | Update |
+| Patient medication card | app/views/patients/_patient_medication_card | Create |
+| Person show (med hub) | app/views/people/show.html.erb | Update |
+| Dog show (med hub) | app/views/dogs/show.html.erb | Update |
+| Treatment form | app/views/treatments/_form.html.erb | Update |
+| Pharmacotherapy fields | app/views/treatments/_pharmacotherapy_fields | Create |
+| Admin quick actions | app/views/medication_administrations/_quick_actions | Create |
+| Calendar component | app/views/medication_calendars/_calendar | Create |
+| Reminder notification | app/views/medication_reminders/_notification | Create |
+| Stimulus controllers | app/javascript/controllers/*_controller.js | Create |
+| Calendar helper | app/helpers/medication_calendar_helper.rb | Create |
+| Routes | config/routes.rb | Update |
+| Run feature specs | bundle exec rspec | Verify |
+
 ### Phase 5: Polish & Testing (Week 9)
 
 **Goal**: QA and refinements
