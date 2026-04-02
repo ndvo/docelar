@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
-    <title>Docelar</title>
+    <title>Doce Lar</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="Doce Lar - Sua gestão financeira e cuidados em um só lugar">
     <%= csrf_meta_tags %>
@@ -25,6 +25,10 @@
         <% end %>
       </div>
     </header>
+    
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcer"></div>
+    <div aria-live="assertive" aria-atomic="true" class="sr-only" id="error-announcer"></div>
+    
     <main id="main-content" role="main">
       <%= yield %>
     </main>

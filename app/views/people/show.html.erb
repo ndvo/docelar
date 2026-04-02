@@ -1,4 +1,91 @@
-<h1><%= @person.name %></h1>
+<main id="main-content" class="person-show medication-hub" role="main" aria-labelledby="person-name">
+  <header class="person-profile-header">
+    <h1 id="person-name"><%= @person.name %></h1>
+  </header>
 
+  <% patient = Patient.find_by(individual: @person) %>
 
-<%= render partial: "people/show", locals: { person: @person } %>
+  <% if patient %>
+    <section class="medication-dashboard" aria-labelledby="treatments-heading">
+      <h2 id="treatments-heading">Tratamentos</h2>
+      
+      <% if patient.treatments.any? %>
+        <div class="treatments-grid">
+          <% patient.treatments.each do |treatment| %>
+            <article class="treatment-card">
+              <header>
+                <h3><%= treatment.name %></h3>
+                <span class="status-badge status-<%= treatment.status %>"><%= treatment.status %></span>
+              </header>
+              
+              <% if treatment.pharmacotherapies.any? %>
+                <ul class="medication-list">
+                  <% treatment.pharmacotherapies.each do |pharma| %>
+                    <li>
+                      <strong><%= pharma.medication.name %></strong>
+                      <span><%= pharma.dosage %></span>
+                    </li>
+                  <% end %>
+                </ul>
+              <% end %>
+              
+              <div class="treatment-actions">
+                <%= link_to 'Ver Detalhes', treatment_path(treatment), class: 'btn btn-secondary' %>
+              </div>
+            </article>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="empty-message">Nenhum tratamento cadastrado.</p>
+      <% end %>
+    </section>
+
+    <section class="patient-administrations" aria-labelledby="admin-heading">
+      <h2 id="admin-heading">Administrações Hoje</h2>
+      
+      <% today_admins = patient.treatments.flat_map { |t| t.pharmacotherapies.flat_map { |p| p.medication_administrations.where("DATE(scheduled_at) = ?", Date.today) } } %>
+      
+      <% if today_admins.any? %>
+        <ul class="administration-list">
+          <% today_admins.each do |admin| %>
+            <li class="administration-item status-<%= admin.status %>">
+              <div class="admin-time">
+                <%= admin.scheduled_at.strftime('%H:%M') %>
+              </div>
+              <div class="admin-medication">
+                <%= admin.pharmacotherapy.medication.name %>
+                <span class="dosage"><%= admin.pharmacotherapy.dosage %></span>
+              </div>
+              <div class="admin-actions">
+                <% if admin.pending? %>
+                  <%= button_to 'Marcar como dado', 
+                      medication_administration_path(admin, medication_administration: { status: 'given' }), 
+                      method: :patch,
+                      class: 'btn btn-success btn-sm' %>
+                  <%= button_to 'Pular', 
+                      medication_administration_path(admin, medication_administration: { status: 'skipped' }), 
+                      method: :patch,
+                      class: 'btn btn-secondary btn-sm' %>
+                <% else %>
+                  <span class="status-badge"><%= admin.status %></span>
+                <% end %>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="empty-message">Nenhuma administração agendada para hoje.</p>
+      <% end %>
+    </section>
+  <% else %>
+    <div class="empty-message">
+      <p>Esta pessoa não é um paciente.</p>
+      <%= button_to 'Tornar Paciente', patients_path(patient: { individual_id: @person.id, individual_type: 'Person' }), method: :post, class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+
+  <nav class="person-nav">
+    <%= link_to 'Editar', edit_person_path(@person), class: 'btn btn-secondary' %>
+    <%= link_to 'Voltar', people_path, class: 'cancel-link' %>
+  </nav>
+</main>

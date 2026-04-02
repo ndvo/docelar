@@ -1,0 +1,24 @@
+<nav class="patient-type-toggle" role="tablist" aria-label="Tipo de paciente" data-controller="patient-type-toggle">
+  <button type="button" 
+          role="tab" 
+          id="tab-persons"
+          aria-selected="<%= @patient_type == 'Person' %>"
+          aria-controls="panel-persons"
+          tabindex="<%= @patient_type == 'Person' ? '0' : '-1' %>"
+          class="<%= @patient_type == 'Person' ? 'active' : '' %>"
+          data-action="click->patient-type-toggle#toggle"
+          data-type="Person">
+    <span aria-hidden="true">&#128100;</span> Pessoas
+  </button>
+  <button type="button" 
+          role="tab" 
+          id="tab-dogs"
+          aria-selected="<%= @patient_type == 'Dog' %>"
+          aria-controls="panel-dogs"
+          tabindex="<%= @patient_type == 'Dog' ? '0' : '-1' %>"
+          class="<%= @patient_type == 'Dog' ? 'active' : '' %>"
+          data-action="click->patient-type-toggle#toggle"
+          data-type="Dog">
+    <span aria-hidden="true">&#128054;</span> Cachorros
+  </button>
+</nav>

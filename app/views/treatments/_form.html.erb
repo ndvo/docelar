@@ -1,7 +1,7 @@
 <%= form_with(model: treatment, class: 'treatment-form', data: { controller: 'nested-form' }) do |form| %>
   <% if treatment.errors.any? %>
-    <div id="error_explanation" role="alert">
-      <h2><%= pluralize(treatment.errors.count, "error") %> prohibited this treatment from being saved:</h2>
+    <div id="error_explanation" role="alert" aria-labelledby="error-heading">
+      <h2 id="error-heading"><%= pluralize(treatment.errors.count, "erro") %> impediu save:</h2>
       <ul>
         <% treatment.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -16,7 +16,7 @@
     <div class="field">
       <%= form.label :patient_id, 'Paciente' %>
       <%= form.select :patient_id, 
-          options_for_select(@patients&.collect { |p| [p.individual.name, p.id] }, treatment.patient_id),
+          options_for_select(@patients&.collect { |p| [p.individual.name, p.id] }, treatment.patient_id || @patient&.id),
           { include_blank: '-- selecione --' },
           required: true %>
     </div>
@@ -43,11 +43,6 @@
         <%= form.label :end_date, 'Data de Término' %>
         <%= form.date_field :end_date %>
       </div>
-    </div>
-
-    <div class="field">
-      <%= form.label :notes, 'Observações' %>
-      <%= form.text_area :notes, rows: 3 %>
     </div>
   </fieldset>
 
@@ -82,7 +77,9 @@
             <%= p_form.text_area :instructions, rows: 2, placeholder: 'ex: Tomar com comida' %>
           </div>
 
-          <% unless p_form.object.new_record? %>
+          <% if p_form.object.new_record? || p_form.object.id.nil? %>
+            <button type="button" data-action="nested-form#removePharmacotherapy" class="btn-remove">Remover</button>
+          <% else %>
             <%= p_form.hidden_field :_destroy %>
             <button type="button" data-action="nested-form#removePharmacotherapy">Remover</button>
           <% end %>

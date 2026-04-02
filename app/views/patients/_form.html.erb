@@ -1,8 +1,7 @@
-<%= form_with(model: patient) do |form| %>
+<%= form_with(model: patient, data: { controller: 'patient-form-toggle' }) do |form| %>
   <% if patient.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(patient.errors.count, "error") %> prohibited this patient from being saved:</h2>
-
+    <div id="error_explanation" role="alert" aria-labelledby="error-heading">
+      <h2 id="error-heading"><%= pluralize(patient.errors.count, "erro") %> impediu save:</h2>
       <ul>
         <% patient.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,12 +10,30 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :individual_id, style: "display: block" %>
-    <%= form.select :individual_id, options_for_select(@individuals&.collect { | i | [i.name, i.id] }, @i&.id), {}, {} %>
+  <fieldset>
+    <legend>Tipo de Paciente</legend>
+    <div class="patient-type-selector" role="radiogroup" aria-label="Selecione o tipo de paciente">
+      <label class="patient-type-option <%= @patient_type == 'Dog' || @patient_type.nil? ? 'selected' : '' %>">
+        <%= form.radio_button :individual_type, 'Dog', checked: @patient_type == 'Dog' || @patient_type.nil?, data: { action: 'patient-form-toggle#selectType' } %>
+        <span>Cachorro</span>
+      </label>
+      <label class="patient-type-option <%= @patient_type == 'Person' ? 'selected' : '' %>">
+        <%= form.radio_button :individual_type, 'Person', checked: @patient_type == 'Person', data: { action: 'patient-form-toggle#selectType' } %>
+        <span>Pessoa</span>
+      </label>
+    </div>
+  </fieldset>
+
+  <div class="field">
+    <%= form.label :individual_id, 'Selecione o indivíduo' %>
+    <%= form.select :individual_id, 
+        options_for_select(@individuals&.collect { |i| [i.name, i.id] } || [], patient.individual_id),
+        { include_blank: '-- selecione --' },
+        required: true, aria_label: 'Selecione o indivíduo' %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="actions">
+    <%= form.submit 'Salvar' %>
+    <%= link_to 'Cancelar', patients_path, class: 'cancel-link' %>
   </div>
 <% end %>

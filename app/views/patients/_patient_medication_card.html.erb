@@ -1,0 +1,30 @@
+<article class="treatment-card" tabindex="0" aria-label="<%= patient.individual.name %> - <%= patient.treatments.active.any? ? patient.treatments.active.count.to_s + ' tratamentos ativos' : 'sem tratamentos ativos' %>">
+  <div class="treatment-card-header">
+    <h3>
+      <%= link_to patient.individual.name, 
+                  patient.individual_type == 'Dog' ? dog_path(patient.individual) : person_path(patient.individual),
+                  aria_label: "Ver medicamentos de #{patient.individual.name}" %>
+    </h3>
+    <span class="treatment-type-badge" aria-hidden="true">
+      <%= patient.individual_type == 'Dog' ? '🐕' : '👤' %>
+    </span>
+  </div>
+  
+  <% if patient.treatments.active.any? %>
+    <ul class="medication-list" role="list" aria-label="Lista de medicamentos">
+      <% patient.treatments.active.each do |treatment| %>
+        <li class="medication-item" role="listitem">
+          <div class="medication-info">
+            <span class="medication-name"><%= treatment.pharmacotherapies.first&.medication&.name || 'Sem medicação' %></span>
+            <span class="medication-dosage"><%= treatment.pharmacotherapies.first&.dosage || '' %></span>
+          </div>
+          <div class="medication-status">
+            <span class="status-badge status-<%= treatment.status %>"><%= treatment.status %></span>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="no-treatments">Sem tratamentos ativos</p>
+  <% end %>
+</article>
