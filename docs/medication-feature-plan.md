@@ -734,9 +734,9 @@ bundle exec rspec spec/models/medication_schedule_spec.rb spec/models/medication
 - [x] Implement MedicationSchedule model
 - [x] Implement MedicationAdministration model
 - [x] Run specs
-- [ ] Implement schedule generation logic
-- [ ] Implement administration logging methods
-- [ ] Add skip/undo functionality
+- [x] Implement administration logging methods
+- [x] Add skip/undo functionality
+- [x] Implement schedule generation logic
 - [ ] Write controller specs for API endpoints
 
 ### Phase 3: Reminders (Week 5-6)
