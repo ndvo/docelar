@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_03_205144) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_03_212008) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -107,6 +107,23 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_03_205144) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "exam_requests", force: :cascade do |t|
+    t.integer "patient_id", null: false
+    t.integer "medical_appointment_id"
+    t.string "exam_name", null: false
+    t.date "requested_date", null: false
+    t.date "scheduled_date"
+    t.string "status", default: "recommended"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["medical_appointment_id"], name: "index_exam_requests_on_medical_appointment_id"
+    t.index ["patient_id", "status"], name: "index_exam_requests_on_patient_id_and_status"
+    t.index ["patient_id"], name: "index_exam_requests_on_patient_id"
+    t.index ["requested_date"], name: "index_exam_requests_on_requested_date"
+    t.index ["status"], name: "index_exam_requests_on_status"
+  end
+
   create_table "galleries", force: :cascade do |t|
     t.string "folder_name"
     t.string "name"
@@ -133,6 +150,26 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_03_205144) do
     t.index ["patient_id", "appointment_date"], name: "index_medical_appointments_on_patient_id_and_appointment_date"
     t.index ["patient_id"], name: "index_medical_appointments_on_patient_id"
     t.index ["status"], name: "index_medical_appointments_on_status"
+  end
+
+  create_table "medical_exams", force: :cascade do |t|
+    t.integer "patient_id", null: false
+    t.integer "medical_appointment_id"
+    t.date "exam_date"
+    t.string "exam_type", null: false
+    t.string "name"
+    t.string "laboratory"
+    t.string "location"
+    t.text "results_summary"
+    t.text "interpretation"
+    t.string "status", default: "scheduled"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exam_date"], name: "index_medical_exams_on_exam_date"
+    t.index ["medical_appointment_id"], name: "index_medical_exams_on_medical_appointment_id"
+    t.index ["patient_id", "exam_date"], name: "index_medical_exams_on_patient_id_and_exam_date"
+    t.index ["patient_id"], name: "index_medical_exams_on_patient_id"
+    t.index ["status"], name: "index_medical_exams_on_status"
   end
 
   create_table "medication_administrations", force: :cascade do |t|
@@ -392,7 +429,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_03_205144) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "books", "whens", column: "written_on_id"
   add_foreign_key "comments", "articles"
+  add_foreign_key "exam_requests", "medical_appointments"
+  add_foreign_key "exam_requests", "patients"
   add_foreign_key "medical_appointments", "patients"
+  add_foreign_key "medical_exams", "medical_appointments"
+  add_foreign_key "medical_exams", "patients"
   add_foreign_key "medication_administrations", "pharmacotherapies"
   add_foreign_key "medication_products", "medications"
   add_foreign_key "medication_reminders", "medication_administrations"
