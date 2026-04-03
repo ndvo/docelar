@@ -1,6 +1,10 @@
 class PeopleController < ApplicationController
   def index
-    @people = Person.all
+    @people = if params[:search].present?
+      Person.where("name LIKE ?", "%#{params[:search]}%")
+    else
+      Person.all
+    end
   end
 
   def show

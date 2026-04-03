@@ -1,34 +1,47 @@
 
-<%= form_with model: @person do |f| %>
-  <div class="field">
-    <%= f.label :name, 'Nome'  %>
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :borned_on, 'Data de Nascimento'  %>
-    <%= f.date_field :borned_on %>
-  </div>
-  <div class="field">
-    <%= f.label :dead_on, 'Data de Falecimento'  %>
-    <%= f.date_field :dead_on %>
-  </div>
-  <fieldset>
-    <legend>Nacionalidades</legend>
-    <%= f.fields_for :nationalities do |ff| %>
-      <div class="field">
-        <%= ff.hidden_field :person_id, value: @person.id %>
-        <%= ff.label :country, 'País'  %>
-        <%= ff.select :country_id, options_for_select(
-          @countries.map { |c| [c.name, c.id]}
-        ) %>
-      </div>
-      <div class="field">
-        <% @nationalitiy_hows.map do |n| %> 
-          <%= ff.label :how, n[1]  %>
-          <%= ff.radio_button :how, n[0] %>
-        <% end %>
+<article class="card">
+  <%= form_with model: @person do |f| %>
+    <% if @person.errors.any? %>
+      <div id="error_explanation" role="alert">
+        <h2><%= pluralize(@person.errors.count, "erro") %> impediu esta pessoa de ser salva:</h2>
+        <ul>
+          <% @person.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
       </div>
     <% end %>
-  </fieldset>
-  <div class="action"><%= f.submit "Salvar pessoa" %></div>
-<% end %>
+    
+    <div class="field">
+      <%= f.label :name, 'Nome *'  %>
+      <%= f.text_field :name %>
+    </div>
+    <div class="field">
+      <%= f.label :borned_on, 'Data de Nascimento'  %>
+      <%= f.date_field :borned_on %>
+    </div>
+    <div class="field">
+      <%= f.label :dead_on, 'Data de Falecimento'  %>
+      <%= f.date_field :dead_on %>
+    </div>
+    <fieldset>
+      <legend>Nacionalidades</legend>
+      <%= f.fields_for :nationalities do |ff| %>
+        <div class="field">
+          <%= ff.hidden_field :person_id, value: @person.id %>
+          <%= ff.label :country, 'País'  %>
+          <%= ff.select :country_id, options_for_select(
+            @countries.map { |c| [c.name, c.id]}
+          ) %>
+        </div>
+        <div class="field">
+          <% @nationalitiy_hows.each_with_index do |n, i| %> 
+            <%= ff.label :how, n[1], for: "person_nationalities_attributes_0_how_#{i}" %>
+            <%= ff.radio_button :how, n[0], id: "person_nationalities_attributes_0_how_#{i}" %>
+          <% end %>
+        </div>
+      <% end %>
+    </fieldset>
+    <div class="action"><%= f.submit "Salvar pessoa" %></div>
+  <% end %>
+</article>

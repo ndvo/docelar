@@ -1,6 +1,14 @@
 <h1>Pessoas</h1>
 
 <%= link_to 'Cadastrar pessoa', new_person_path %>
+
+<%= form_tag(people_path, method: :get) do %>
+  <%= text_field_tag :search, params[:search], placeholder: 'Buscar' %>
+  <%= submit_tag 'Buscar' %>
+<% end %>
+
+<p class="count">Total: <%= @people.count %> pessoas</p>
+
 <table>
   <thead>
     <tr>
@@ -11,8 +19,11 @@
   <tbody>
     <% @people.each do |p| %>
       <tr>
-        <th><%= p.name %></th>
-        <th><%= link_to 'editar', edit_person_path(p) %></th>
+        <td><%= p.name %></td>
+        <td>
+          <%= link_to 'Ver', person_path(p) %>
+          <%= link_to 'Editar', edit_person_path(p) %>
+        </td>
       </tr>
     <% end %>
   </tbody>

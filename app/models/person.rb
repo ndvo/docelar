@@ -6,4 +6,6 @@ class Person < ApplicationRecord
                                 reject_if: :all_blank
 
   has_one :responsible
+
+  validates :name, presence: true
 end

@@ -3,6 +3,30 @@
     <h1 id="person-name"><%= @person.name %></h1>
   </header>
 
+  <section class="person-details card">
+    <h2>Detalhes</h2>
+    <dl>
+      <% if @person.borned_on %>
+        <div>
+          <dt>Data de Nascimento</dt>
+          <dd><%= l(@person.borned_on, format: :default) %></dd>
+        </div>
+      <% end %>
+      <% if @person.dead_on %>
+        <div>
+          <dt>Data de Falecimento</dt>
+          <dd><%= l(@person.dead_on, format: :default) %></dd>
+        </div>
+      <% end %>
+      <% if @person.nationalities.any? %>
+        <div>
+          <dt>Nacionalidades</dt>
+          <dd><%= @person.nationalities.map { |n| n.country.name }.join(", ") %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </section>
+
   <% patient = Patient.find_by(individual: @person) %>
 
   <% if patient %>
