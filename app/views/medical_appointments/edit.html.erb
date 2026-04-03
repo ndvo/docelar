@@ -1,0 +1,8 @@
+<h1>Editar Consulta</h1>
+
+<%= render 'form', patient: @patient, appointment: @appointment %>
+
+<nav class="actions">
+  <%= link_to 'Ver', patient_medical_appointment_path(@patient, @appointment), class: 'btn btn-secondary' %>
+  <%= link_to 'Voltar', patient_medical_appointments_path(@patient), class: 'cancel-link' %>
+</nav>

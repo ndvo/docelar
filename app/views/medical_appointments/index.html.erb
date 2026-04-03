@@ -1,0 +1,40 @@
+<h1>Consultas</h1>
+
+<%= link_to 'Nova Consulta', new_patient_medical_appointment_path(@patient), class: 'btn btn-primary' %>
+
+<% if @appointments.any? %>
+  <ul class="appointments-list">
+    <% @appointments.each do |appointment| %>
+      <li class="appointment-card">
+        <div class="appointment-header">
+          <span class="appointment-type"><%= appointment.appointment_type.humanize %></span>
+          <span class="appointment-status status-<%= appointment.status %>"><%= appointment.status.humanize %></span>
+        </div>
+        
+        <div class="appointment-date">
+          <%= l(appointment.appointment_date, format: :long) if appointment.appointment_date %>
+        </div>
+        
+        <% if appointment.specialty %>
+          <div class="appointment-specialty"><%= appointment.specialty %></div>
+        <% end %>
+        
+        <% if appointment.professional_name %>
+          <div class="appointment-professional">Dr(a). <%= appointment.professional_name %></div>
+        <% end %>
+        
+        <% if appointment.location %>
+          <div class="appointment-location"><%= appointment.location %></div>
+        <% end %>
+        
+        <div class="appointment-actions">
+          <%= link_to 'Ver', patient_medical_appointment_path(@patient, appointment), class: 'btn btn-secondary' %>
+          <%= link_to 'Editar', edit_patient_medical_appointment_path(@patient, appointment), class: 'btn btn-secondary' %>
+          <%= button_to 'Excluir', patient_medical_appointment_path(@patient, appointment), method: :delete, data: { confirm: 'Tem certeza?' }, class: 'btn btn-danger' %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="empty-message">Nenhuma consulta agendada.</p>
+<% end %>

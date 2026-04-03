@@ -1,0 +1,58 @@
+<%= form_with model: [patient, appointment], url: (appointment.persisted? ? patient_medical_appointment_path(patient, appointment) : patient_medical_appointments_path(patient)), id: 'medical-appointment-form' do |f| %>
+  <% if appointment.errors.any? %>
+    <div id="error_explanation" role="alert">
+      <h2><%= pluralize(appointment.errors.count, "erro") %> impediu esta consulta de ser salva:</h2>
+      <ul>
+        <% appointment.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :appointment_date, "Data e Hora *" %>
+    <%= f.datetime_field :appointment_date %>
+  </div>
+
+  <div class="field">
+    <%= f.label :appointment_type, "Tipo de Consulta *" %>
+    <%= f.select :appointment_type, MedicalAppointment.appointment_types.keys.map { |t| [t.humanize, t] } %>
+  </div>
+
+  <div class="field">
+    <%= f.label :specialty, "Especialidade" %>
+    <%= f.text_field :specialty, placeholder: "e.g., Cardiologia, Dermatologia" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :professional_name, "Médico/Profissional" %>
+    <%= f.text_field :professional_name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :location, "Local" %>
+    <%= f.text_field :location, placeholder: "e.g., Hospital X, Clínica Y" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :reason, "Motivo da Consulta" %>
+    <%= f.text_area :reason, rows: 3, placeholder: "Descreva o motivo da consulta" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :notes, "Observações" %>
+    <%= f.text_area :notes, rows: 3 %>
+  </div>
+
+  <% if action_name == 'edit' || action_name == 'update' %>
+  <div class="field">
+    <%= f.label :status, "Status" %>
+    <%= f.select :status, MedicalAppointment.statuses.keys.map { |s| [s.humanize, s] } %>
+  </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit "Salvar", class: "btn btn-primary" %>
+  </div>
+<% end %>

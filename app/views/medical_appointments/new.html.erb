@@ -1,0 +1,7 @@
+<h1>Nova Consulta</h1>
+
+<%= render 'form', patient: @patient, appointment: @appointment %>
+
+<nav class="actions">
+  <%= link_to 'Voltar', patient_medical_appointments_path(@patient), class: 'cancel-link' %>
+</nav>

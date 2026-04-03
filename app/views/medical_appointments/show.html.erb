@@ -1,0 +1,59 @@
+<main id="main-content">
+  <nav class="breadcrumb">
+    <%= link_to '← Voltar', patient_medical_appointments_path(@appointment.patient) %>
+  </nav>
+
+  <article class="appointment-detail card">
+    <header>
+      <h1><%= @appointment.appointment_type.humanize %></h1>
+      <span class="appointment-status status-<%= @appointment.status %>"><%= @appointment.status.humanize %></span>
+    </header>
+
+    <dl>
+      <div>
+        <dt>Data e Hora</dt>
+        <dd><%= l(@appointment.appointment_date, format: :long) if @appointment.appointment_date %></dd>
+      </div>
+
+      <% if @appointment.specialty %>
+        <div>
+          <dt>Especialidade</dt>
+          <dd><%= @appointment.specialty %></dd>
+        </div>
+      <% end %>
+
+      <% if @appointment.professional_name %>
+        <div>
+          <dt>Médico/Profissional</dt>
+          <dd>Dr(a). <%= @appointment.professional_name %></dd>
+        </div>
+      <% end %>
+
+      <% if @appointment.location %>
+        <div>
+          <dt>Local</dt>
+          <dd><%= @appointment.location %></dd>
+        </div>
+      <% end %>
+
+      <% if @appointment.reason %>
+        <div>
+          <dt>Motivo</dt>
+          <dd><%= @appointment.reason %></dd>
+        </div>
+      <% end %>
+
+      <% if @appointment.notes %>
+        <div>
+          <dt>Observações</dt>
+          <dd><%= @appointment.notes %></dd>
+        </div>
+      <% end %>
+    </dl>
+
+    <nav class="actions">
+      <%= link_to 'Editar', edit_patient_medical_appointment_path(@appointment.patient, @appointment), class: 'btn btn-secondary' %>
+      <%= link_to 'Voltar', patient_medical_appointments_path(@appointment.patient), class: 'cancel-link' %>
+    </nav>
+  </article>
+</main>
