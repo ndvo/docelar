@@ -1,5 +1,7 @@
 <nav class="breadcrumb">
-  <%= link_to '← Galeria', galleries_path %>
+  <%= link_to '← Galerias', galleries_path, data: { turbo_preload: true } %>
+  <span class="separator">/</span>
+  <%= link_to @photo.gallery.name, @photo.gallery, data: { turbo_preload: true } %>
 </nav>
 
 <div class="photo-detail">
@@ -21,10 +23,18 @@
   </article>
 
   <nav class="photo-nav">
-    <div>
-      <% if @photo.previous %>
-        <%= link_to '← Anterior', @photo.previous, class: 'btn btn-secondary' %>
-      <% end %>
+    <div class="nav-arrow">
+      <%= link_to '← Anterior', 
+          @photo.previous || @photo.gallery.photos.order(:id).last, 
+          class: 'btn btn-secondary', 
+          data: { turbo_preload: true } %>
+    </div>
+
+    <div class="photo-position">
+      <span class="position-text"><%= @photo.gallery.photos.order(:id).index(@photo) + 1 %> / <%= @photo.gallery.photos.count %></span>
+      <div class="position-bar">
+        <div class="position-progress" style="width: <%= ((@photo.gallery.photos.order(:id).index(@photo) + 1).to_f / @photo.gallery.photos.count * 100).round %>%"></div>
+      </div>
     </div>
 
     <div class="photo-tags">
@@ -46,10 +56,21 @@
       <% end %>
     </div>
 
-    <div>
-      <% if @photo.next %>
-        <%= link_to 'Próxima →', @photo.next, class: 'btn btn-secondary' %>
-      <% end %>
+    <div class="nav-arrow">
+      <%= link_to 'Próxima →', 
+          @photo.next || @photo.gallery.photos.order(:id).first, 
+          class: 'btn btn-secondary', 
+          data: { turbo_preload: true } %>
     </div>
   </nav>
 </div>
+
+<script>
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowLeft') {
+    Turbo.router.navigate('<%= @photo.previous || @photo.gallery.photos.order(:id).last&.id ? photo_path(@photo.previous || @photo.gallery.photos.order(:id).last) : '#' %>');
+  } else if (e.key === 'ArrowRight') {
+    Turbo.router.navigate('<%= @photo.next || @photo.gallery.photos.order(:id).first&.id ? photo_path(@photo.next || @photo.gallery.photos.order(:id).first) : '#' %>');
+  }
+});
+</script>
