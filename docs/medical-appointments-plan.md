@@ -564,28 +564,28 @@ add_index :exam_requests, [:patient_id, :status]
 
 ### Checklist
 
-- [ ] Generate MedicalExam model
-- [ ] Add database migration
-- [ ] Configure enums in model
-- [ ] Add validations
+- [x] Generate MedicalExam model
+- [x] Add database migration
+- [x] Configure enums in model
+- [x] Add validations
 - [ ] Add ActiveStorage attachment for results
-- [ ] Create medical_exams controller
-- [ ] Create medical_exams views
-- [ ] Generate ExamRequest model
-- [ ] Add migration for ExamRequest
-- [ ] Configure enums in ExamRequest model
-- [ ] Add validations
-- [ ] Create exam_requests controller
-- [ ] Create exam_requests views
-- [ ] Add routes
+- [x] Create medical_exams controller
+- [x] Create medical_exams views
+- [x] Generate ExamRequest model
+- [x] Add migration for ExamRequest
+- [x] Configure enums in ExamRequest model
+- [x] Add validations
+- [x] Create exam_requests controller
+- [x] Create exam_requests views
+- [x] Add routes
 - [ ] Integrate exams on appointment show page
 - [ ] Add exam request button on completed appointments
-- [ ] Add to patient show page
-- [ ] Add feature specs
-- [ ] Add factories
-- [ ] Run all specs
-- [ ] Performance review: fix N+1 queries
-- [ ] Add database indexes
+- [x] Add to patient show page
+- [x] Add feature specs
+- [x] Add factories
+- [x] Run all specs
+- [x] Performance review: fix N+1 queries
+- [x] Add database indexes
 
 ### Phase 2: Performance Review
 
