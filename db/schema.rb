@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_02_140000) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_03_160412) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -115,6 +115,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_02_140000) do
     t.datetime "updated_at", null: false
     t.integer "gallery_id"
     t.index ["gallery_id"], name: "index_galleries_on_gallery_id"
+  end
+
+  create_table "medical_appointments", force: :cascade do |t|
+    t.integer "patient_id", null: false
+    t.datetime "appointment_date"
+    t.string "appointment_type", null: false
+    t.string "specialty"
+    t.string "professional_name"
+    t.string "location"
+    t.text "reason"
+    t.text "notes"
+    t.string "status", default: "scheduled"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["patient_id"], name: "index_medical_appointments_on_patient_id"
   end
 
   create_table "medication_administrations", force: :cascade do |t|
@@ -374,6 +389,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_02_140000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "books", "whens", column: "written_on_id"
   add_foreign_key "comments", "articles"
+  add_foreign_key "medical_appointments", "patients"
   add_foreign_key "medication_administrations", "pharmacotherapies"
   add_foreign_key "medication_products", "medications"
   add_foreign_key "medication_reminders", "medication_administrations"
