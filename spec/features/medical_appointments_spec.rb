@@ -77,4 +77,37 @@ RSpec.describe 'Medical Appointments', type: :feature do
       }.to change(MedicalAppointment, :count).by(-1)
     end
   end
+
+  describe 'appointment preparation' do
+    scenario 'prepares appointment with checklist' do
+      appointment = create(:medical_appointment, 
+        patient: patient, 
+        appointment_date: DateTime.new(2025, 6, 15, 10, 30),
+        appointment_type: :checkup)
+      
+      visit prepare_patient_medical_appointment_path(patient, appointment)
+      
+      fill_in 'medical_appointment[preparation_notes]', with: 'Dor de cabeça'
+      fill_in 'medical_appointment[questions]', with: 'Qual o diagnóstico?'
+      
+      click_button 'Salvar Preparação'
+      
+      expect(page).to have_content('Checklist atualizado')
+      expect(page).to have_content('Dor de cabeça')
+    end
+
+    scenario 'shows preparation summary on appointment details' do
+      appointment = create(:medical_appointment, 
+        patient: patient, 
+        appointment_date: DateTime.now + 7.days,
+        appointment_type: :checkup,
+        preparation_notes: 'Dor de cabeça',
+        checklist: [{ 'text' => 'Levar documentos', 'checked' => true }])
+      
+      visit patient_medical_appointment_path(patient, appointment)
+      
+      expect(page).to have_content('Preparar Consulta')
+      expect(page).to have_content('100% completo')
+    end
+  end
 end
