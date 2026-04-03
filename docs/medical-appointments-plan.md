@@ -613,11 +613,427 @@ add_index :exam_requests, [:patient_id, :status]
      scope :recent, -> { where('exam_date >= ?', 90.days.ago) }
      ```
 
-### Phase 3: Pre-Appointment Preparation
-**Goal**: Help patients prepare for appointments
-- [ ] Add preparation fields to MedicalAppointment
-- [ ] Preparation checklist UI (questions, checklist, fasting)
-- [ ] Pre-appointment view with checklist
+### Phase 3: Pre-Appointment Preparation Implementation Plan
+
+### Goal
+Help patients prepare for appointments with checklist, questions, and preparation notes.
+
+### Model Changes
+
+#### MedicalAppointment - New Fields
+
+Adicionar campos à tabela `medical_appointments`:
+
+```ruby
+class MedicalAppointment < ApplicationRecord
+  # ... existing associations and enums ...
+  
+  # Preparation fields
+  serialize :checklist, JSON  # Array of checklist items with checked status
+  column :preparation_notes, :text  # Symptoms, concerns to mention
+  column :questions, :text           # Questions to ask doctor
+  column :fasting_required, :boolean, default: false
+  column :reminder_sent, :boolean, default: false
+  
+  # Checklist item structure (JSON):
+  # [
+  #   { "id": "medications", "label": "Medicamentos atuais", "checked": false },
+  #   { "id": "results", "label": "Exames anteriores", "checked": false },
+  #   { "id": "id_card", "label": "Documento de identidade", "checked": false },
+  #   { "id": "insurance_card", "label": "Cartão do plano de saúde", "checked": false },
+  #   { "id": "questions", "label": "Lista de perguntas", "checked": false },
+  #   { "id": "symptoms", "label": "Notas sobre sintomas", "checked": false }
+  # ]
+  
+  validates :preparation_notes, length: { maximum: 5000 }
+  validates :questions, length: { maximum: 2000 }
+end
+```
+
+**Database fields:**
+| Field | Type | Required | Default | Notes |
+|-------|------|----------|---------|-------|
+| preparation_notes | text | No | nil | Symptoms, concerns to mention |
+| questions | text | No | nil | Questions to ask doctor |
+| checklist | json | No | [] | Default checklist items |
+| fasting_required | boolean | No | false | Fasting requirement |
+| reminder_sent | boolean | No | false | Reminder notification sent |
+
+### Database Migration
+
+```ruby
+class AddPreparationFieldsToMedicalAppointments < ActiveRecord::Migration[7.1]
+  def change
+    add_column :medical_appointments, :preparation_notes, :text
+    add_column :medical_appointments, :questions, :text
+    add_column :medical_appointments, :checklist, :jsonb, default: []
+    add_column :medical_appointments, :fasting_required, :boolean, default: false
+    add_column :medical_appointments, :reminder_sent, :boolean, default: false
+    
+    add_index :medical_appointments, :checklist, using: :gin
+  end
+end
+```
+
+### Controller Changes
+
+#### MedicalAppointmentsController
+
+Adicionar actions para checklist:
+
+```ruby
+class MedicalAppointmentsController < ApplicationController
+  before_action :set_appointment, only: [:show, :edit, :update, :destroy, :prepare, :update_checklist]
+  
+  # GET /appointments/:id/prepare
+  def prepare
+    # Render preparation view with checklist
+    @checklist_items = @appointment.checklist.presence || default_checklist
+  end
+  
+  # PATCH /appointments/:id/update_checklist
+  def update_checklist
+    respond_to do |format|
+      if @appointment.update(checklist_params)
+        format.turbo_stream
+        format.html { redirect_to prepare_appointment_path(@appointment), notice: 'Checklist atualizado.' }
+      else
+        format.turbo_stream { render turbo_stream: turbo_stream.replace(@appointment) }
+        format.html { redirect_to prepare_appointment_path(@appointment), alert: 'Erro ao atualizar.' }
+      end
+    end
+  end
+  
+  private
+  
+  def checklist_params
+    params.require(:medical_appointment).permit(:preparation_notes, :questions, :fasting_required, checklist: [:id, :label, :checked])
+  end
+  
+  def default_checklist
+    [
+      { id: 'medications', label: 'Medicamentos atuais', checked: false },
+      { id: 'results', label: 'Exames anteriores', checked: false },
+      { id: 'id_card', label: 'Documento de identidade', checked: false },
+      { id: 'insurance_card', label: 'Cartão do plano de saúde', checked: false },
+      { id: 'questions', label: 'Lista de perguntas preparadas', checked: false },
+      { id: 'symptoms', label: 'Notas sobre sintomas', checked: false }
+    ]
+  end
+end
+```
+
+### Routes
+
+```ruby
+resources :medical_appointments do
+  member do
+    get :prepare
+    patch :update_checklist
+  end
+end
+
+# Or as nested:
+resources :patients do
+  resources :appointments, controller: 'medical_appointments' do
+    member do
+      get :prepare
+      patch :update_checklist
+    end
+  end
+end
+```
+
+### Views
+
+#### 1. Preparation View: `app/views/medical_appointments/prepare.html.erb`
+
+```erb
+<div class="appointment-preparation">
+  <header class="page-header">
+    <h1>Preparar Consulta</h1>
+    <%= render 'appointments/status_badge', appointment: @appointment %>
+  </header>
+  
+  <div class="preparation-card">
+    <section class="appointment-info">
+      <h2><%= @appointment.appointment_date.strftime('%d/%m/%Y às %H:%M') %></h2>
+      <p><%= @appointment.specialty %> - <%= @appointment.professional_name %></p>
+      <p><%= @appointment.location %></p>
+    </section>
+    
+    <%= render 'checklist_form', appointment: @appointment, checklist_items: @checklist_items %>
+  </div>
+</div>
+```
+
+#### 2. Checklist Partial: `app/views/medical_appointments/_checklist_form.html.erb`
+
+```erb
+<%= form_with model: appointment, url: update_checklist_medical_appointment_path(appointment), 
+              data: { controller: 'checklist', action: 'change->checklist#submit' } do |f| %>
+  
+  <section class="checklist-section" data-checklist-target="list">
+    <h3>Itens para a Consulta</h3>
+    <ul class="checklist-items">
+      <% checklist_items.each_with_index do |item, index| %>
+        <li class="checklist-item" data-checklist-id="<%= item['id'] %>">
+          <%= check_box_tag "checklist[#{index}][checked]", 
+                            item['checked'], 
+                            item['checked'],
+                            data: { 
+                              action: 'change->checklist#toggle',
+                              checklist_id: item['id']
+                            } %>
+          <%= label_tag "checklist[#{index}][checked]", item['label'] %>
+          <%= hidden_field_tag "checklist[#{index}][id]", item['id'] %>
+          <%= hidden_field_tag "checklist[#{index}][label]", item['label'] %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+  
+  <section class="preparation-notes">
+    <h3>Sintomas e Preocupações</h3>
+    <%= f.text_area :preparation_notes, 
+                    placeholder: 'Liste seus sintomas, preocupações ou informações importantes...',
+                    data: { controller: 'textarea-autosize' },
+                    rows: 4 %>
+  </section>
+  
+  <section class="questions-section">
+    <h3>Perguntas para o Médico</h3>
+    <%= f.text_area :questions, 
+                    placeholder: 'Liste as perguntas que deseja fazer ao médico...',
+                    data: { controller: 'textarea-autosize' },
+                    rows: 4 %>
+  </section>
+  
+  <section class="fasting-section">
+    <div class="checkbox-item">
+      <%= f.check_box :fasting_required %>
+      <%= f.label :fasting_required, 'Jejum obrigatório para este exame' %>
+    </div>
+  </section>
+  
+  <div class="form-actions">
+    <%= f.submit 'Salvar Preparação', class: 'btn btn-primary' %>
+  </div>
+<% end %>
+```
+
+### Stimulus Controller: Checklist
+
+#### `app/javascript/controllers/checklist_controller.js`
+
+```javascript
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = ["list", "progress"]
+  static values = {
+    total: { type: Number, default: 6 },
+    checked: { type: Number, default: 0 }
+  }
+  
+  connect() {
+    this.updateProgress()
+  }
+  
+  toggle(event) {
+    const checkbox = event.target
+    const item = checkbox.closest('.checklist-item')
+    
+    if (checkbox.checked) {
+      item.classList.add('checked')
+    } else {
+      item.classList.remove('checked')
+    }
+    
+    this.updateProgress()
+  }
+  
+  updateProgress() {
+    const checkboxes = this.listTarget.querySelectorAll('input[type="checkbox"]')
+    const total = checkboxes.length
+    const checked = Array.from(checkboxes).filter(cb => cb.checked).length
+    
+    this.dispatch('progress', { detail: { total, checked } })
+    
+    if (this.hasProgressTarget) {
+      const percentage = (checked / total) * 100
+      this.progressTarget.style.width = `${percentage}%`
+      this.progressTarget.textContent = `${checked}/${total} itens`
+    }
+  }
+  
+  submit() {
+    this.element.requestSubmit()
+  }
+}
+```
+
+### Integration with Appointment Show Page
+
+#### Update: `app/views/medical_appointments/show.html.erb`
+
+Adicionar seção de preparação no show:
+
+```erb
+<div class="appointment-show">
+  <% if @appointment.scheduled? %>
+    <section class="preparation-summary">
+      <h3>Preparação</h3>
+      
+      <div class="checklist-summary">
+        <% checked_count = @appointment.checklist.count { |i| i['checked'] } %>
+        <% total_count = @appointment.checklist.length %>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: <%= (checked_count.to_f/total_count*100).round %>%">
+            <%= checked_count %>/<%= total_count %> itens
+          </div>
+        </div>
+        
+        <%= link_to 'Preparar Consulta', prepare_appointment_path(@appointment), 
+                    class: 'btn btn-secondary' %>
+      </div>
+      
+      <% if @appointment.fasting_required? %>
+        <div class="fasting-alert">
+          <strong>Atenção:</strong> Jejum obrigatório para esta consulta
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+</div>
+```
+
+### Feature Specs
+
+#### `spec/features/medical_appointments/preparation_spec.rb`
+
+```ruby
+require 'rails_helper'
+
+RSpec.feature 'Appointment Preparation', type: :feature do
+  let(:patient) { create(:patient) }
+  let(:appointment) { create(:medical_appointment, patient: patient, status: :scheduled) }
+  
+  scenario 'User prepares appointment with checklist' do
+    visit prepare_appointment_path(appointment)
+    
+    check 'Medicamentos atuais'
+    check 'Documento de identidade'
+    
+    fill_in 'medical_appointment_preparation_notes', with: 'Dor de cabeça constante'
+    fill_in 'medical_appointment_questions', with: 'Qual é a causa da dor?'
+    
+    click_button 'Salvar Preparação'
+    
+    expect(page).to have_content('Checklist atualizado')
+    expect(appointment.reload.checklist).to include(hash_including('id' => 'medications', 'checked' => true))
+  end
+  
+  scenario 'User marks fasting required' do
+    visit prepare_appointment_path(appointment)
+    
+    check 'Jejum obrigatório para este exame'
+    click_button 'Salvar Preparação'
+    
+    expect(appointment.reload.fasting_required).to be true
+  end
+  
+  scenario 'Checklist progress updates in real-time with Turbo', :js do
+    visit prepare_appointment_path(appointment)
+    
+    check 'Medicamentos atuais'
+    
+    expect(page).to have_css('.progress-fill[style*="33%"]')
+  end
+  
+  scenario 'Preparation shows on appointment show page' do
+    appointment.update!(
+      preparation_notes: 'Dor no peito',
+      questions: 'Preciso fazer exame?',
+      fasting_required: true,
+      checklist: [
+        { 'id' => 'medications', 'label' => 'Medicamentos', 'checked' => true },
+        { 'id' => 'results', 'label' => 'Exames', 'checked' => false }
+      ]
+    )
+    
+    visit medical_appointment_path(appointment)
+    
+    expect(page).to have_content('Preparação')
+    expect(page).to have_content('1/2 itens')
+    expect(page).to have_content('Jejum obrigatório')
+  end
+end
+```
+
+### Performance Considerations
+
+1. **Turbo Stream Updates**
+   - Use `render turbo_stream` for checklist updates
+   - Avoid full page reload on checkbox toggle
+   - Optimistic UI updates for better UX
+
+2. **Database Queries**
+   - Checklist stored as JSONB - efficient for small arrays
+   - Add GIN index on `checklist` column for filtering
+   - Use `select` to load only needed fields: `MedicalAppointment.select(:id, :checklist, :fasting_required)`
+
+3. **Caching**
+   - Cache default checklist items
+   - Cache preparation progress for dashboard
+
+4. **UX Performance**
+   - Debounce autosave (if implemented): 500ms delay
+   - Lazy load preparation view if not immediately needed
+   - Use CSS transitions for progress bar animations
+
+### Default Checklist Items
+
+| ID | Label (PT) | Label (EN) |
+|----|------------|------------|
+| medications | Medicamentos atuais | Current medications |
+| results | Exames anteriores | Previous exam results |
+| id_card | Documento de identidade | ID card |
+| insurance_card | Cartão do plano de saúde | Insurance card |
+| questions | Lista de perguntas preparadas | Prepared questions list |
+| symptoms | Notas sobre sintomas | Symptoms notes |
+
+### Integration Points
+
+1. **Patient Dashboard**: Show upcoming appointments with preparation progress
+2. **Appointment Show**: Display preparation summary with link to prepare
+3. **Notifications**: Send reminder before appointment (future Phase 4)
+
+### Accessibility (WCAG 2.1)
+
+- Use `<fieldset>` for checkbox groups
+- Use `<legend>` for section titles
+- Associate labels with inputs (using `for` attribute)
+- Progress bar should have `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax`
+- Focus indicators on checkboxes
+- Keyboard navigation support (Tab, Space to toggle)
+
+### Checklist
+
+- [ ] Add migration with preparation fields
+- [ ] Update MedicalAppointment model with JSON serialization
+- [ ] Add validations for preparation fields
+- [ ] Add prepare and update_checklist routes
+- [ ] Add prepare action to controller
+- [ ] Add update_checklist action with Turbo support
+- [ ] Create prepare.html.erb view
+- [ ] Create _checklist_form.html.erb partial
+- [ ] Create checklist Stimulus controller
+- [ ] Integrate preparation summary on show page
+- [ ] Add feature specs
+- [ ] Add database index on checklist JSONB
+- [ ] Test Turbo Stream updates
+- [ ] Verify mobile responsiveness
 
 ### Phase 4: Post-Appointment Follow-Up
 **Goal**: Track tasks after physician visit
