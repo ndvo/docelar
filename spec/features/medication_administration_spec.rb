@@ -12,9 +12,9 @@ RSpec.describe 'Medication Administration', type: :feature do
       treatment = create(:treatment, patient: patient, start_date: Date.today)
       pharmacotherapy = create(:pharmacotherapy, treatment: treatment)
       administration = create(:medication_administration, pharmacotherapy: pharmacotherapy,
-                           scheduled_at: Time.current, status: 'pending')
+                           scheduled_at: Date.today.to_s, status: 'pending')
       
-      visit patient_path(patient)
+      visit person_path(person)
       
       expect(page).to have_button('Marcar como dado')
     end
@@ -25,9 +25,9 @@ RSpec.describe 'Medication Administration', type: :feature do
       treatment = create(:treatment, patient: patient, start_date: Date.today)
       pharmacotherapy = create(:pharmacotherapy, treatment: treatment)
       administration = create(:medication_administration, pharmacotherapy: pharmacotherapy,
-                           scheduled_at: Time.current, status: 'pending')
+                           scheduled_at: Date.today.to_s, status: 'pending')
       
-      visit patient_path(patient)
+      visit person_path(person)
       
       expect(page).to have_button('Pular')
     end

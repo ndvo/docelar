@@ -66,9 +66,8 @@ RSpec.describe 'Patient Management', type: :feature do
       dog = create(:dog, name: 'Buddy')
       
       visit dog_path(dog)
-      click_button 'Tornar Paciente'
       
-      expect(Patient.count).to eq(1)
+      expect { click_button 'Tornar Paciente' }.to change(Patient, :count).by(1)
       expect(Patient.last.individual).to eq(dog)
     end
   end
@@ -85,9 +84,8 @@ RSpec.describe 'Patient Management', type: :feature do
       person = create(:person, name: 'Maria')
       
       visit person_path(person)
-      click_button 'Tornar Paciente'
       
-      expect(Patient.count).to eq(1)
+      expect { click_button 'Tornar Paciente' }.to change(Patient, :count).by(1)
       expect(Patient.last.individual).to eq(person)
     end
   end

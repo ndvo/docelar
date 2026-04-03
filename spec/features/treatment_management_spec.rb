@@ -31,9 +31,8 @@ RSpec.describe 'Treatment Management', type: :feature do
       visit new_patient_treatment_path(patient)
       fill_in 'treatment[name]', with: 'Physical Therapy'
       fill_in 'treatment[start_date]', with: Date.today
-      click_button 'Salvar'
       
-      expect(Treatment.count).to eq(1)
+      expect { click_button 'Salvar' }.to change(Treatment, :count).by(1)
       expect(Treatment.last.name).to eq('Physical Therapy')
       expect(Treatment.last.pharmacotherapies).to be_empty
     end
@@ -48,9 +47,7 @@ RSpec.describe 'Treatment Management', type: :feature do
       fill_in 'treatment[name]', with: 'Infection Treatment'
       fill_in 'treatment[start_date]', with: Date.today
       
-      click_button 'Salvar'
-      
-      expect(Treatment.count).to eq(1)
+      expect { click_button 'Salvar' }.to change(Treatment, :count).by(1)
       expect(Treatment.last.name).to eq('Infection Treatment')
     end
   end

@@ -5,9 +5,9 @@ RSpec.describe PharmacotherapiesController, type: :controller do
   let(:person) { Person.create!(name: 'John Doe') }
   let(:patient) { Patient.create!(individual: person, individual_type: 'Person') }
   let(:medication) { Medication.create!(name: 'Aspirin') }
-  let(:treatment) { Treatment.create!(patient: patient) }
-  let(:valid_attributes) { { treatment_id: treatment.id, medication_id: medication.id } }
-  let(:invalid_attributes) { { treatment_id: nil, medication_id: nil } }
+  let(:treatment) { Treatment.create!(patient: patient, start_date: Date.today) }
+  let(:valid_attributes) { { treatment_id: treatment.id, medication_id: medication.id, dosage: '10mg', frequency: 'daily' } }
+  let(:invalid_attributes) { { treatment_id: nil, medication_id: nil, dosage: nil, frequency: nil } }
 
   before do
     session = user.sessions.create!(user_agent: 'test', ip_address: '127.0.0.1')
