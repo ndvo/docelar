@@ -1,0 +1,38 @@
+<main id="main-content">
+  <nav class="breadcrumb">
+    <%= link_to '← Voltar', patient_exam_requests_path(@exam_request.patient) %>
+  </nav>
+
+  <article class="exam-request-detail card">
+    <header>
+      <h1><%= @exam_request.exam_name %></h1>
+      <span class="request-status status-<%= @exam_request.status %>"><%= @exam_request.status.humanize %></span>
+    </header>
+
+    <dl>
+      <div>
+        <dt>Data da Solicitação</dt>
+        <dd><%= l(@exam_request.requested_date, format: :long) if @exam_request.requested_date %></dd>
+      </div>
+
+      <% if @exam_request.scheduled_date %>
+        <div>
+          <dt>Data Agendada</dt>
+          <dd><%= l(@exam_request.scheduled_date, format: :long) %></dd>
+        </div>
+      <% end %>
+
+      <% if @exam_request.notes %>
+        <div>
+          <dt>Observações</dt>
+          <dd><%= @exam_request.notes %></dd>
+        </div>
+      <% end %>
+    </dl>
+
+    <nav class="actions">
+      <%= link_to 'Editar', edit_patient_exam_request_path(@patient, @exam_request), class: 'btn btn-secondary' %>
+      <%= link_to 'Voltar', patient_exam_requests_path(@patient), class: 'cancel-link' %>
+    </nav>
+  </article>
+</main>

@@ -1,0 +1,58 @@
+<%= form_with model: [patient, exam], url: (exam.persisted? ? patient_medical_exam_path(patient, exam) : patient_medical_exams_path(patient)), id: 'medical-exam-form' do |f| %>
+  <% if exam.errors.any? %>
+    <div id="error_explanation" role="alert">
+      <h2><%= pluralize(exam.errors.count, "erro") %> impediu este exame de ser salvo:</h2>
+      <ul>
+        <% exam.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :exam_date, "Data do Exame *" %>
+    <%= f.date_field :exam_date %>
+  </div>
+
+  <div class="field">
+    <%= f.label :exam_type, "Tipo de Exame *" %>
+    <%= f.select :exam_type, MedicalExam.exam_types.keys.map { |t| [t.humanize, t] } %>
+  </div>
+
+  <div class="field">
+    <%= f.label :name, "Nome do Exame" %>
+    <%= f.text_field :name, placeholder: "e.g., Hemograma Completo" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :laboratory, "Laboratório" %>
+    <%= f.text_field :laboratory %>
+  </div>
+
+  <div class="field">
+    <%= f.label :location, "Local" %>
+    <%= f.text_field :location, placeholder: "e.g., Laboratório X, Clínica Y" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :results_summary, "Resultados" %>
+    <%= f.text_area :results_summary, rows: 3 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :interpretation, "Interpretação" %>
+    <%= f.text_area :interpretation, rows: 3, placeholder: "Sua compreensão do resultado" %>
+  </div>
+
+  <% if action_name == 'edit' || action_name == 'update' %>
+  <div class="field">
+    <%= f.label :status, "Status" %>
+    <%= f.select :status, MedicalExam.statuses.keys.map { |s| [s.humanize, s] } %>
+  </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit "Salvar", class: "btn btn-primary" %>
+  </div>
+<% end %>

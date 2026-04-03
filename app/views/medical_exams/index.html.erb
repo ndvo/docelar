@@ -1,0 +1,40 @@
+<h1>Exames</h1>
+
+<%= link_to 'Novo Exame', new_patient_medical_exam_path(@patient), class: 'btn btn-primary' %>
+
+<% if @exams.any? %>
+  <ul class="exams-list">
+    <% @exams.each do |exam| %>
+      <li class="exam-card">
+        <div class="exam-header">
+          <span class="exam-type"><%= exam.exam_type.humanize %></span>
+          <span class="exam-status status-<%= exam.status %>"><%= exam.status.humanize %></span>
+        </div>
+        
+        <div class="exam-date">
+          <%= l(exam.exam_date, format: :long) if exam.exam_date %>
+        </div>
+        
+        <% if exam.name %>
+          <div class="exam-name"><%= exam.name %></div>
+        <% end %>
+        
+        <% if exam.laboratory %>
+          <div class="exam-lab">Laboratório: <%= exam.laboratory %></div>
+        <% end %>
+        
+        <% if exam.location %>
+          <div class="exam-location">Local: <%= exam.location %></div>
+        <% end %>
+        
+        <div class="exam-actions">
+          <%= link_to 'Ver', patient_medical_exam_path(@patient, exam), class: 'btn btn-secondary' %>
+          <%= link_to 'Editar', edit_patient_medical_exam_path(@patient, exam), class: 'btn btn-secondary' %>
+          <%= button_to 'Excluir', patient_medical_exam_path(@patient, exam), method: :delete, data: { confirm: 'Tem certeza?' }, class: 'btn btn-danger' %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="empty-message">Nenhum exame registrado.</p>
+<% end %>

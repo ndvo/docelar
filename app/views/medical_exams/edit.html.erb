@@ -1,0 +1,8 @@
+<h1>Editar Exame</h1>
+
+<%= render 'form', patient: @patient, exam: @exam %>
+
+<nav class="actions">
+  <%= link_to 'Ver', patient_medical_exam_path(@patient, @exam), class: 'btn btn-secondary' %>
+  <%= link_to 'Voltar', patient_medical_exams_path(@patient), class: 'cancel-link' %>
+</nav>

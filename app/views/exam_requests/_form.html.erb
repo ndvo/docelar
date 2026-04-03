@@ -1,0 +1,43 @@
+<%= form_with model: [patient, exam_request], url: (exam_request.persisted? ? patient_exam_request_path(patient, exam_request) : patient_exam_requests_path(patient)), id: 'exam-request-form' do |f| %>
+  <% if exam_request.errors.any? %>
+    <div id="error_explanation" role="alert">
+      <h2><%= pluralize(exam_request.errors.count, "erro") %> impediu esta solicitação de ser salva:</h2>
+      <ul>
+        <% exam_request.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :exam_name, "Nome do Exame *" %>
+    <%= f.text_field :exam_name, placeholder: "e.g., Ressonância Magnética" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :requested_date, "Data da Solicitação *" %>
+    <%= f.date_field :requested_date %>
+  </div>
+
+  <div class="field">
+    <%= f.label :scheduled_date, "Data Agendada" %>
+    <%= f.date_field :scheduled_date %>
+  </div>
+
+  <div class="field">
+    <%= f.label :notes, "Observações" %>
+    <%= f.text_area :notes, rows: 3 %>
+  </div>
+
+  <% if action_name == 'edit' || action_name == 'update' %>
+  <div class="field">
+    <%= f.label :status, "Status" %>
+    <%= f.select :status, ExamRequest.statuses.keys.map { |s| [s.humanize, s] } %>
+  </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit "Salvar", class: "btn btn-primary" %>
+  </div>
+<% end %>

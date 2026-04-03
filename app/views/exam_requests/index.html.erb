@@ -1,0 +1,38 @@
+<h1>Solicitações de Exames</h1>
+
+<%= link_to 'Nova Solicitação', new_patient_exam_request_path(@patient), class: 'btn btn-primary' %>
+
+<% if @exam_requests.any? %>
+  <ul class="exam-requests-list">
+    <% @exam_requests.each do |request| %>
+      <li class="exam-request-card">
+        <div class="request-header">
+          <span class="request-name"><%= request.exam_name %></span>
+          <span class="request-status status-<%= request.status %>"><%= request.status.humanize %></span>
+        </div>
+        
+        <div class="request-date">
+          Solicitado em: <%= l(request.requested_date, format: :long) if request.requested_date %>
+        </div>
+        
+        <% if request.scheduled_date %>
+          <div class="scheduled-date">
+            Agendado para: <%= l(request.scheduled_date, format: :long) %>
+          </div>
+        <% end %>
+        
+        <% if request.notes %>
+          <div class="request-notes"><%= request.notes %></div>
+        <% end %>
+        
+        <div class="request-actions">
+          <%= link_to 'Ver', patient_exam_request_path(@patient, request), class: 'btn btn-secondary' %>
+          <%= link_to 'Editar', edit_patient_exam_request_path(@patient, request), class: 'btn btn-secondary' %>
+          <%= button_to 'Excluir', patient_exam_request_path(@patient, request), method: :delete, data: { confirm: 'Tem certeza?' }, class: 'btn btn-danger' %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="empty-message">Nenhuma solicitação de exame.</p>
+<% end %>

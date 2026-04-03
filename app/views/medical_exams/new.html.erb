@@ -1,0 +1,7 @@
+<h1>Novo Exame</h1>
+
+<%= render 'form', patient: @patient, exam: @exam %>
+
+<nav class="actions">
+  <%= link_to 'Voltar', patient_medical_exams_path(@patient), class: 'cancel-link' %>
+</nav>

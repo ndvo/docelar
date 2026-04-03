@@ -1,0 +1,59 @@
+<main id="main-content">
+  <nav class="breadcrumb">
+    <%= link_to '← Voltar', patient_medical_exams_path(@exam.patient) %>
+  </nav>
+
+  <article class="exam-detail card">
+    <header>
+      <h1><%= @exam.exam_type.humanize %></h1>
+      <span class="exam-status status-<%= @exam.status %>"><%= @exam.status.humanize %></span>
+    </header>
+
+    <dl>
+      <% if @exam.name %>
+        <div>
+          <dt>Nome do Exame</dt>
+          <dd><%= @exam.name %></dd>
+        </div>
+      <% end %>
+
+      <div>
+        <dt>Data do Exame</dt>
+        <dd><%= l(@exam.exam_date, format: :long) if @exam.exam_date %></dd>
+      </div>
+
+      <% if @exam.laboratory %>
+        <div>
+          <dt>Laboratório</dt>
+          <dd><%= @exam.laboratory %></dd>
+        </div>
+      <% end %>
+
+      <% if @exam.location %>
+        <div>
+          <dt>Local</dt>
+          <dd><%= @exam.location %></dd>
+        </div>
+      <% end %>
+
+      <% if @exam.results_summary %>
+        <div>
+          <dt>Resultados</dt>
+          <dd><%= @exam.results_summary %></dd>
+        </div>
+      <% end %>
+
+      <% if @exam.interpretation %>
+        <div>
+          <dt>Interpretação</dt>
+          <dd><%= @exam.interpretation %></dd>
+        </div>
+      <% end %>
+    </dl>
+
+    <nav class="actions">
+      <%= link_to 'Editar', edit_patient_medical_exam_path(@patient, @exam), class: 'btn btn-secondary' %>
+      <%= link_to 'Voltar', patient_medical_exams_path(@patient), class: 'cancel-link' %>
+    </nav>
+  </article>
+</main>

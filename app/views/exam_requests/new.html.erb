@@ -1,0 +1,7 @@
+<h1>Nova Solicitação de Exame</h1>
+
+<%= render 'form', patient: @patient, exam_request: @exam_request %>
+
+<nav class="actions">
+  <%= link_to 'Voltar', patient_exam_requests_path(@patient), class: 'cancel-link' %>
+</nav>
