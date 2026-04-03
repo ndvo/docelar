@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :patients do
     get :medications, on: :member
     resources :treatments
+    resources :medical_appointments
   end
   get 'medications/dashboard', to: 'patients#dashboard', as: 'medication_dashboard'
   resources :medication_products
