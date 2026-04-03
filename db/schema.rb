@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_02_133748) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_02_140000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -251,11 +251,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_02_133748) do
     t.integer "gallery_id"
     t.string "title"
     t.text "description"
-    t.integer "taggleable_id"
     t.string "google_photos_id"
     t.index ["gallery_id"], name: "index_photos_on_gallery_id"
     t.index ["google_photos_id"], name: "index_photos_on_google_photos_id"
-    t.index ["taggleable_id"], name: "index_photos_on_taggleable_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -385,7 +383,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_02_133748) do
   add_foreign_key "payments", "purchases"
   add_foreign_key "pharmacotherapies", "medications"
   add_foreign_key "pharmacotherapies", "treatments"
-  add_foreign_key "photos", "taggleables"
   add_foreign_key "purchases", "cards"
   add_foreign_key "purchases", "products"
   add_foreign_key "responsibles", "people"
