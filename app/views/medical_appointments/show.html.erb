@@ -49,9 +49,28 @@
           <dd><%= @appointment.notes %></dd>
         </div>
       <% end %>
+
+      <% if @appointment.scheduled? && @appointment.appointment_date >= Date.today %>
+        <div class="preparation-summary">
+          <dt>Preparação</dt>
+          <dd>
+            <% if @appointment.fasting_required %>
+              <span class="fasting-badge">Jejum obrigatório</span>
+            <% end %>
+            <% if @appointment.checklist_progress > 0 %>
+              <div class="checklist-progress-mini">
+                <span>Checklist: <%= @appointment.checklist_progress %>% completo</span>
+              </div>
+            <% end %>
+          </dd>
+        </div>
+      <% end %>
     </dl>
 
     <nav class="actions">
+      <% if @appointment.scheduled? && @appointment.appointment_date >= Date.today %>
+        <%= link_to 'Preparar Consulta', prepare_patient_medical_appointment_path(@appointment.patient, @appointment), class: 'btn btn-primary' %>
+      <% end %>
       <%= link_to 'Editar', edit_patient_medical_appointment_path(@appointment.patient, @appointment), class: 'btn btn-secondary' %>
       <%= link_to 'Voltar', patient_medical_appointments_path(@appointment.patient), class: 'cancel-link' %>
     </nav>

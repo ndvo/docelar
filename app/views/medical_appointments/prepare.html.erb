@@ -1,0 +1,90 @@
+<main id="main-content">
+  <nav class="breadcrumb">
+    <%= link_to '← Voltar', patient_medical_appointment_path(@patient, @appointment) %>
+  </nav>
+
+  <article class="preparation-detail card">
+    <header>
+      <h1>Preparar Consulta</h1>
+      <span class="appointment-type"><%= @appointment.appointment_type.humanize %></span>
+    </header>
+
+    <div class="appointment-info">
+      <p><strong>Data:</strong> <%= l(@appointment.appointment_date, format: :long) %></p>
+      <p><strong>Local:</strong> <%= @appointment.location || 'Não informado' %></p>
+      <p><strong>Médico:</strong> <%= @appointment.professional_name || 'Não informado' %></p>
+    </div>
+
+    <%= form_with model: @appointment, url: update_checklist_patient_medical_appointment_path(@patient, @appointment), id: 'preparation-form' do |f| %>
+      <div class="preparation-section">
+        <h2>Informações para a Consulta</h2>
+        
+        <div class="field">
+          <%= f.label :preparation_notes, "Sintomas e Preocupações" %>
+          <%= f.text_area :preparation_notes, rows: 4, placeholder: "Descreva seus sintomas ou preocupações para mencionar ao médico" %>
+        </div>
+
+        <div class="field">
+          <%= f.label :questions, "Perguntas para o Médico" %>
+          <%= f.text_area :questions, rows: 4, placeholder: "Liste suas perguntas para fazer ao médico" %>
+        </div>
+
+        <div class="field">
+          <%= f.label :fasting_required, class: "checkbox-label" do %>
+            <%= f.check_box :fasting_required %>
+            Jejum obrigatório
+          <% end %>
+        </div>
+      </div>
+
+      <div class="checklist-section" data-controller="checklist">
+        <h2>Checklist</h2>
+        
+        <div class="checklist-progress">
+          <div class="progress-bar" role="progressbar" style="width: <%= @appointment.checklist_progress %>%">
+            <span class="progress-text"><%= @appointment.checklist_progress %>% completo</span>
+          </div>
+        </div>
+
+        <div class="checklist-items">
+          <div class="checklist-item">
+            <%= f.label :checklist, "Itens do Checklist (um por linha)", class: "sr-only" %>
+            <%= f.text_area :checklist_json, 
+                value: (@appointment.checklist || []).map { |item| item['text'] }.join("\n"),
+                rows: 6, 
+                placeholder: "Digite os itens do checklist, um por linha",
+                data: { checklist_target: 'input' } %>
+            <p class="help-text">Digite os itens que deseja verificar, um por linha</p>
+          </div>
+
+          <div class="checklist-status">
+            <h3>Status dos Itens</h3>
+            <div class="checklist-items-list">
+              <% (@appointment.checklist || []).each_with_index do |item, index| %>
+                <div class="checklist-item-row">
+                  <label>
+                    <input type="checkbox" 
+                           name="checklist_items[]" 
+                           value="<%= index %>"
+                           <%= item['checked'] ? 'checked' : '' %>
+                           data-action="checklist#toggle"
+                           data-index="<%= index %>">
+                    <span class="<%= item['checked'] ? 'checked' : '' %>"><%= item['text'] %></span>
+                  </label>
+                </div>
+              <% end %>
+              <% if @appointment.checklist.empty? %>
+                <p class="empty-message">Adicione itens acima para criar seu checklist</p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "Salvar Preparação", class: "btn btn-primary" %>
+        <%= link_to 'Ver Detalhes da Consulta', patient_medical_appointment_path(@patient, @appointment), class: 'btn btn-secondary' %>
+      </div>
+    <% end %>
+  </article>
+</main>
