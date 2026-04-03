@@ -395,12 +395,223 @@ end
 - [x] Performance review: fix N+1 query
 - [x] Add database indexes
 
-### Phase 2: Exam Tracking
-**Goal**: Track medical exams from request to results
-- [ ] MedicalExam model + CRUD
-- [ ] ExamRequest model (requested → scheduled → completed)
-- [ ] Attach results file to exam
-- [ ] Link exams to appointments
+---
+
+## Phase 2: Exam Tracking Implementation Plan
+
+### Goal
+Track medical exams from request to results - link exams to appointments, record results, attach files.
+
+### Models
+
+#### 1. MedicalExam
+
+**Purpose**: Track medical exams from scheduling to results
+
+```ruby
+class MedicalExam < ApplicationRecord
+  belongs_to :patient
+  belongs_to :medical_appointment, optional: true
+  
+  enum :exam_type, {
+    blood_test: 'blood_test',
+    urine_test: 'urine_test',
+    imaging: 'imaging',
+    biopsy: 'biopsy',
+    ecg: 'ecg',
+    echo: 'echo',
+    x_ray: 'x_ray',
+    ultrasound: 'ultrasound',
+    tomography: 'tomography',
+    resonance: 'resonance',
+    other: 'other'
+  }, prefix: true
+
+  enum :status, {
+    scheduled: 'scheduled',
+    completed: 'completed',
+    results_received: 'results_received'
+  }, default: :scheduled
+
+  validates :exam_date, presence: true
+  validates :exam_type, presence: true
+end
+```
+
+**Database fields:**
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| patient_id | FK | Yes | Links to Patient |
+| medical_appointment_id | FK | No | Links to appointment |
+| exam_date | date | Yes | |
+| exam_type | string | Yes | enum |
+| name | string | No | e.g., "Complete Blood Count" |
+| laboratory | string | No | Lab name |
+| location | string | No | Where exam is done |
+| results_summary | text | No | Results text |
+| results_file | attachment | No | Paperclip/ActiveStorage |
+| interpretation | text | No | Patient's understanding |
+| status | string | No | Default: scheduled |
+
+#### 2. ExamRequest
+
+**Purpose**: Track recommended but not-yet-completed exams (ordered by doctor but not scheduled)
+
+```ruby
+class ExamRequest < ApplicationRecord
+  belongs_to :patient
+  belongs_to :medical_appointment, optional: true
+  
+  enum :status, {
+    recommended: 'recommended',
+    requested: 'requested',
+    scheduled: 'scheduled',
+    completed: 'completed',
+    cancelled: 'cancelled'
+  }, default: :recommended
+
+  validates :exam_name, presence: true
+  validates :requested_date, presence: true
+end
+```
+
+**Database fields:**
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| patient_id | FK | Yes | Links to Patient |
+| medical_appointment_id | FK | No | Link to appointment that ordered it |
+| exam_name | string | Yes | e.g., "MRI Brain" |
+| requested_date | date | Yes | When doctor ordered it |
+| scheduled_date | date | No | When exam is scheduled |
+| status | string | No | Default: recommended |
+| notes | text | No | Additional info |
+
+### Implementation Steps
+
+1. **Generate models**
+   ```bash
+   bin/rails g model MedicalExam patient:references medical_appointment:references exam_date:date exam_type:integer name:string laboratory:string location:string results_summary:text interpretation:text status:integer
+   bin/rails g model ExamRequest patient:references medical_appointment:references exam_name:string requested_date:date scheduled_date:date status:integer notes:text
+   ```
+
+2. **Add attachments** (use existing ActiveStorage setup)
+   - Add `results_file` attachment to MedicalExam
+
+3. **Configure enums in models**
+   - MedicalExam: exam_type, status
+   - ExamRequest: status
+
+4. **Add validations**
+   - MedicalExam: exam_date, exam_type required
+   - ExamRequest: exam_name, requested_date required
+
+5. **Create controllers**
+   - `app/controllers/medical_exams_controller.rb`
+   - `app/controllers/exam_requests_controller.rb`
+
+6. **Create views**
+   - `medical_exams/index.html.erb`
+   - `medical_exams/show.html.erb`
+   - `medical_exams/_form.html.erb`
+   - `medical_exams/new.html.erb`
+   - `medical_exams/edit.html.erb`
+   - `exam_requests/index.html.erb`
+   - `exam_requests/show.html.erb`
+   - `exam_requests/_form.html.erb`
+   - `exam_requests/new.html.erb`
+   - `exam_requests/edit.html.erb`
+
+7. **Add routes**
+   ```ruby
+   resources :patients do
+     resources :medical_exams
+     resources :exam_requests
+   end
+   ```
+
+8. **Integrate with appointments**
+   - Show linked exams on appointment detail page
+   - Add "Request Exam" button on completed appointments
+   - Show exam requests on patient dashboard
+
+9. **Add feature specs**
+   - `spec/features/medical_exams_spec.rb`
+   - `spec/features/exam_requests_spec.rb`
+
+10. **Add factories**
+    - `spec/factories/medical_exams.rb`
+    - `spec/factories/exam_requests.rb`
+
+### Database Indexes
+
+Add indexes for common queries:
+```ruby
+add_index :medical_exams, :patient_id
+add_index :medical_exams, :exam_date
+add_index :medical_exams, :status
+add_index :medical_exams, [:patient_id, :exam_date]
+add_index :exam_requests, :patient_id
+add_index :exam_requests, :status
+add_index :exam_requests, [:patient_id, :status]
+```
+
+### Integration Points
+
+1. **Appointment → Exams**: From appointment show, see linked exams
+2. **Appointment → Exam Requests**: From completed appointment, request new exam
+3. **Patient → Exams**: List all exams on patient page
+4. **Patient → Exam Requests**: List pending exam requests
+
+### Checklist
+
+- [ ] Generate MedicalExam model
+- [ ] Add database migration
+- [ ] Configure enums in model
+- [ ] Add validations
+- [ ] Add ActiveStorage attachment for results
+- [ ] Create medical_exams controller
+- [ ] Create medical_exams views
+- [ ] Generate ExamRequest model
+- [ ] Add migration for ExamRequest
+- [ ] Configure enums in ExamRequest model
+- [ ] Add validations
+- [ ] Create exam_requests controller
+- [ ] Create exam_requests views
+- [ ] Add routes
+- [ ] Integrate exams on appointment show page
+- [ ] Add exam request button on completed appointments
+- [ ] Add to patient show page
+- [ ] Add feature specs
+- [ ] Add factories
+- [ ] Run all specs
+- [ ] Performance review: fix N+1 queries
+- [ ] Add database indexes
+
+### Phase 2: Performance Review
+
+**Before implementation, consider:**
+
+1. **N+1 Query Risks**
+   - Patient show page: will load exams - use `.limit(5)` and assign to variable
+   - Appointment show: will load linked exams - use `.includes(:medical_exams)`
+   - Use `.includes()` when loading associations
+
+2. **Database Indexes**
+   - Index on `patient_id` (always needed for FK)
+   - Index on `exam_date` (sorting)
+   - Index on `status` (filtering: pending results)
+   - Composite index `(patient_id, exam_date)` for common query
+
+3. **File Upload Performance**
+   - Results files may be large - consider image processing for thumbnails
+   - Use background jobs for file processing if needed
+
+4. **Query Scopes**
+   - Add scopes for common filters:
+     ```ruby
+     scope :pending_results, -> { where(status: :scheduled).where('exam_date < ?', Date.today) }
+     scope :recent, -> { where('exam_date >= ?', 90.days.ago) }
+     ```
 
 ### Phase 3: Pre-Appointment Preparation
 **Goal**: Help patients prepare for appointments
