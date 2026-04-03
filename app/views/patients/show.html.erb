@@ -44,9 +44,11 @@
   <section class="patient-appointments" aria-labelledby="appointments-heading">
     <h2 id="appointments-heading">Consultas</h2>
     
-    <% if @patient.medical_appointments.any? %>
+    <% appointments = @patient.medical_appointments.order(appointment_date: :desc).limit(5).to_a %>
+    
+    <% if appointments.any? %>
       <div class="appointments-list">
-        <% @patient.medical_appointments.order(appointment_date: :desc).first(5).each do |appointment| %>
+        <% appointments.each do |appointment| %>
           <article class="appointment-card">
             <header>
               <h3><%= appointment.appointment_type.humanize %></h3>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_03_160412) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_03_205144) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -129,7 +129,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_03_160412) do
     t.string "status", default: "scheduled"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["appointment_date"], name: "index_medical_appointments_on_appointment_date"
+    t.index ["patient_id", "appointment_date"], name: "index_medical_appointments_on_patient_id_and_appointment_date"
     t.index ["patient_id"], name: "index_medical_appointments_on_patient_id"
+    t.index ["status"], name: "index_medical_appointments_on_status"
   end
 
   create_table "medication_administrations", force: :cascade do |t|
