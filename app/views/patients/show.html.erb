@@ -80,6 +80,70 @@
     <%= link_to 'Nova Consulta', new_patient_medical_appointment_path(@patient), class: 'btn btn-primary' %>
   </section>
 
+  <section class="patient-exams" aria-labelledby="exams-heading">
+    <h2 id="exams-heading">Exames</h2>
+    
+    <% exams = @patient.medical_exams.order(exam_date: :desc).limit(5).to_a %>
+    
+    <% if exams.any? %>
+      <div class="exams-list">
+        <% exams.each do |exam| %>
+          <article class="exam-card">
+            <header>
+              <h3><%= exam.exam_type.humanize %></h3>
+              <span class="status-badge status-<%= exam.status %>"><%= exam.status.humanize %></span>
+            </header>
+            
+            <div class="exam-date">
+              <%= l(exam.exam_date, format: :long) if exam.exam_date %>
+            </div>
+            
+            <% if exam.name || exam.laboratory %>
+              <div class="exam-details">
+                <%= exam.name if exam.name %>
+                <%= " - #{exam.laboratory}" if exam.laboratory %>
+              </div>
+            <% end %>
+            
+            <div class="exam-actions">
+              <%= link_to 'Ver', patient_medical_exam_path(@patient, exam), class: 'btn btn-secondary btn-sm' %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+      <%= link_to 'Ver Todos os Exames', patient_medical_exams_path(@patient), class: 'btn btn-secondary' %>
+    <% else %>
+      <p class="empty-message">Nenhum exame registrado.</p>
+    <% end %>
+    
+    <%= link_to 'Novo Exame', new_patient_medical_exam_path(@patient), class: 'btn btn-primary' %>
+  </section>
+
+  <section class="patient-exam-requests" aria-labelledby="exam-requests-heading">
+    <h2 id="exam-requests-heading">Solicitações de Exames</h2>
+    
+    <% exam_requests = @patient.exam_requests.order(requested_date: :desc).limit(5).to_a %>
+    
+    <% if exam_requests.any? %>
+      <ul class="exam-requests-list">
+        <% exam_requests.each do |request| %>
+          <li class="exam-request-card">
+            <div class="request-name"><%= request.exam_name %></div>
+            <span class="status-badge status-<%= request.status %>"><%= request.status.humanize %></span>
+            <div class="request-date">
+              <%= l(request.requested_date, format: :long) if request.requested_date %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+      <%= link_to 'Ver Todas as Solicitações', patient_exam_requests_path(@patient), class: 'btn btn-secondary' %>
+    <% else %>
+      <p class="empty-message">Nenhuma solicitação de exame.</p>
+    <% end %>
+    
+    <%= link_to 'Nova Solicitação', new_patient_exam_request_path(@patient), class: 'btn btn-primary' %>
+  </section>
+
   <section class="patient-administrations" aria-labelledby="admin-heading">
     <h2 id="admin-heading">Administrações Hoje</h2>
     
