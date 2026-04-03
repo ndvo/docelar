@@ -41,6 +41,43 @@
     <% end %>
   </section>
 
+  <section class="patient-appointments" aria-labelledby="appointments-heading">
+    <h2 id="appointments-heading">Consultas</h2>
+    
+    <% if @patient.medical_appointments.any? %>
+      <div class="appointments-list">
+        <% @patient.medical_appointments.order(appointment_date: :desc).first(5).each do |appointment| %>
+          <article class="appointment-card">
+            <header>
+              <h3><%= appointment.appointment_type.humanize %></h3>
+              <span class="status-badge status-<%= appointment.status %>"><%= appointment.status.humanize %></span>
+            </header>
+            
+            <div class="appointment-date">
+              <%= l(appointment.appointment_date, format: :long) if appointment.appointment_date %>
+            </div>
+            
+            <% if appointment.specialty || appointment.professional_name %>
+              <div class="appointment-details">
+                <%= appointment.specialty if appointment.specialty %>
+                <%= " - Dr(a). #{appointment.professional_name}" if appointment.professional_name %>
+              </div>
+            <% end %>
+            
+            <div class="appointment-actions">
+              <%= link_to 'Ver', patient_medical_appointment_path(@patient, appointment), class: 'btn btn-secondary btn-sm' %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+      <%= link_to 'Ver Todas as Consultas', patient_medical_appointments_path(@patient), class: 'btn btn-secondary' %>
+    <% else %>
+      <p class="empty-message">Nenhuma consulta agendada.</p>
+    <% end %>
+    
+    <%= link_to 'Nova Consulta', new_patient_medical_appointment_path(@patient), class: 'btn btn-primary' %>
+  </section>
+
   <section class="patient-administrations" aria-labelledby="admin-heading">
     <h2 id="admin-heading">Administrações Hoje</h2>
     
