@@ -1020,18 +1020,18 @@ end
 
 ### Checklist
 
-- [ ] Add migration with preparation fields
-- [ ] Update MedicalAppointment model with JSON serialization
-- [ ] Add validations for preparation fields
-- [ ] Add prepare and update_checklist routes
-- [ ] Add prepare action to controller
-- [ ] Add update_checklist action with Turbo support
-- [ ] Create prepare.html.erb view
-- [ ] Create _checklist_form.html.erb partial
-- [ ] Create checklist Stimulus controller
-- [ ] Integrate preparation summary on show page
-- [ ] Add feature specs
-- [ ] Add database index on checklist JSONB
+- [x] Add migration with preparation fields
+- [x] Update MedicalAppointment model with JSON serialization
+- [x] Add validations for preparation fields
+- [x] Add prepare and update_checklist routes
+- [x] Add prepare action to controller
+- [x] Add update_checklist action with Turbo support
+- [x] Create prepare.html.erb view
+- [x] Create _checklist_form.html.erb partial
+- [x] Create checklist Stimulus controller
+- [x] Integrate preparation summary on show page
+- [x] Add feature specs
+- [x] Add database index on checklist JSONB
 - [ ] Test Turbo Stream updates
 - [ ] Verify mobile responsiveness
 
