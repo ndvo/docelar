@@ -1,6 +1,6 @@
 class MedicalAppointmentsController < ApplicationController
   before_action :set_patient, only: [:index, :new, :create]
-  before_action :set_appointment, only: [:show, :edit, :update, :destroy]
+  before_action :set_appointment, only: [:show, :edit, :update, :destroy, :prepare, :update_checklist]
 
   def index
     @appointments = @patient.medical_appointments.order(appointment_date: :desc)
@@ -41,6 +41,21 @@ class MedicalAppointmentsController < ApplicationController
     redirect_to patient_medical_appointments_path(@appointment.patient), notice: 'Consulta removida.'
   end
 
+  def prepare
+    @patient = @appointment.patient
+  end
+
+  def update_checklist
+    respond_to do |format|
+      if @appointment.update(appointment_params)
+        format.turbo_stream
+        format.html { redirect_to prepare_patient_medical_appointment_path(@appointment.patient, @appointment), notice: 'Checklist atualizado.' }
+      else
+        format.html { render :prepare, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
 
   def set_patient
@@ -60,7 +75,12 @@ class MedicalAppointmentsController < ApplicationController
       :location,
       :reason,
       :notes,
-      :status
+      :status,
+      :preparation_notes,
+      :questions,
+      :checklist,
+      :fasting_required,
+      :reminder_sent
     )
   end
 end

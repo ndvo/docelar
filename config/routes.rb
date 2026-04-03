@@ -8,7 +8,10 @@ Rails.application.routes.draw do
   resources :patients do
     get :medications, on: :member
     resources :treatments
-    resources :medical_appointments
+    resources :medical_appointments do
+      get :prepare, on: :member
+      patch :update_checklist, on: :member
+    end
     resources :medical_exams
     resources :exam_requests
   end
