@@ -46,6 +46,7 @@ end
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods, type: :model
   config.include FactoryBot::Syntax::Methods, type: :feature
+  config.include FactoryBot::Syntax::Methods, type: :view
   Capybara.default_driver = :rack_test
   Capybara.javascript_driver = :rack_test
 
