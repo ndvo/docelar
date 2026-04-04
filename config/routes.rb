@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     end
     resources :medical_exams
     resources :exam_requests
+    resources :medical_conditions
   end
   get 'medications/dashboard', to: 'patients#dashboard', as: 'medication_dashboard'
   resources :medication_products
