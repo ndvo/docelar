@@ -11,7 +11,7 @@ RSpec.describe 'Medical Appointments', type: :feature do
     scenario 'creates new appointment' do
       visit new_patient_medical_appointment_path(patient)
       
-      fill_in 'medical_appointment[appointment_date]', with: DateTime.new(2025, 6, 15, 10, 30)
+      fill_in 'medical_appointment[appointment_date]', with: DateTime.now + 7.days
       select 'Checkup', from: 'medical_appointment[appointment_type]'
       fill_in 'medical_appointment[specialty]', with: 'Cardiologia'
       fill_in 'medical_appointment[professional_name]', with: 'Dr. João'
@@ -24,8 +24,17 @@ RSpec.describe 'Medical Appointments', type: :feature do
       expect(page).to have_content('Cardiologia')
     end
 
+    scenario 'shows validation errors when creating with missing fields' do
+      visit new_patient_medical_appointment_path(patient)
+      
+      click_button 'Salvar'
+      
+      expect(page).to have_content('erro')
+      expect(page).to have_content('não pode ficar em branco')
+    end
+
     scenario 'lists appointments on patient page' do
-      create(:medical_appointment, patient: patient, appointment_date: DateTime.new(2025, 6, 15), appointment_type: :checkup)
+      create(:medical_appointment, patient: patient, appointment_date: DateTime.now + 7.days, appointment_type: :checkup)
       
       visit patient_path(patient)
       
@@ -36,7 +45,7 @@ RSpec.describe 'Medical Appointments', type: :feature do
     scenario 'shows appointment details' do
       appointment = create(:medical_appointment, 
         patient: patient, 
-        appointment_date: DateTime.new(2025, 6, 15, 10, 30),
+        appointment_date: DateTime.now + 7.days,
         appointment_type: :specialist,
         specialty: 'Cardiologia',
         professional_name: 'Dr. João',
@@ -54,7 +63,7 @@ RSpec.describe 'Medical Appointments', type: :feature do
     scenario 'edits appointment' do
       appointment = create(:medical_appointment, 
         patient: patient, 
-        appointment_date: DateTime.new(2025, 6, 15),
+        appointment_date: DateTime.now + 7.days,
         appointment_type: :checkup)
       
       visit edit_patient_medical_appointment_path(patient, appointment)
@@ -67,7 +76,7 @@ RSpec.describe 'Medical Appointments', type: :feature do
     scenario 'deletes appointment' do
       appointment = create(:medical_appointment, 
         patient: patient, 
-        appointment_date: DateTime.new(2025, 6, 15),
+        appointment_date: DateTime.now + 7.days,
         appointment_type: :checkup)
       
       visit patient_medical_appointments_path(patient)
@@ -76,13 +85,27 @@ RSpec.describe 'Medical Appointments', type: :feature do
         click_button 'Excluir', match: :first
       }.to change(MedicalAppointment, :count).by(-1)
     end
+
+    scenario 'cancels appointment' do
+      appointment = create(:medical_appointment, 
+        patient: patient, 
+        appointment_date: DateTime.now + 7.days,
+        appointment_type: :checkup,
+        status: :scheduled)
+      
+      visit edit_patient_medical_appointment_path(patient, appointment)
+      select 'Cancelled', from: 'medical_appointment[status]'
+      click_button 'Salvar'
+      
+      expect(page).to have_content('Cancelled')
+    end
   end
 
   describe 'appointment preparation' do
     scenario 'prepares appointment with checklist' do
       appointment = create(:medical_appointment, 
         patient: patient, 
-        appointment_date: DateTime.new(2025, 6, 15, 10, 30),
+        appointment_date: DateTime.now + 7.days,
         appointment_type: :checkup)
       
       visit prepare_patient_medical_appointment_path(patient, appointment)
@@ -101,6 +124,7 @@ RSpec.describe 'Medical Appointments', type: :feature do
         patient: patient, 
         appointment_date: DateTime.now + 7.days,
         appointment_type: :checkup,
+        status: :scheduled,
         preparation_notes: 'Dor de cabeça',
         checklist: [{ 'text' => 'Levar documentos', 'checked' => true }])
       

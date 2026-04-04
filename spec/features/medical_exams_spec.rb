@@ -11,7 +11,7 @@ RSpec.describe 'Medical Exams', type: :feature do
     scenario 'creates new exam' do
       visit new_patient_medical_exam_path(patient)
       
-      fill_in 'medical_exam[exam_date]', with: Date.new(2025, 6, 15)
+      fill_in 'medical_exam[exam_date]', with: Date.today + 7.days
       select 'Blood test', from: 'medical_exam[exam_type]'
       fill_in 'medical_exam[name]', with: 'Hemograma Completo'
       fill_in 'medical_exam[laboratory]', with: 'Lab São Paulo'
@@ -23,8 +23,17 @@ RSpec.describe 'Medical Exams', type: :feature do
       expect(page).to have_content('Hemograma Completo')
     end
 
+    scenario 'shows validation errors when creating with missing fields' do
+      visit new_patient_medical_exam_path(patient)
+      
+      click_button 'Salvar'
+      
+      expect(page).to have_content('erro')
+      expect(page).to have_content('não pode ficar em branco')
+    end
+
     scenario 'lists exams on patient page' do
-      create(:medical_exam, patient: patient, exam_date: Date.new(2025, 6, 15), exam_type: :blood_test)
+      create(:medical_exam, patient: patient, exam_date: Date.today + 7.days, exam_type: :blood_test)
       
       visit patient_path(patient)
       
@@ -35,7 +44,7 @@ RSpec.describe 'Medical Exams', type: :feature do
     scenario 'shows exam details' do
       exam = create(:medical_exam, 
         patient: patient, 
-        exam_date: Date.new(2025, 6, 15),
+        exam_date: Date.today + 7.days,
         exam_type: :blood_test,
         name: 'Hemograma Completo',
         laboratory: 'Lab São Paulo',
@@ -52,7 +61,7 @@ RSpec.describe 'Medical Exams', type: :feature do
     scenario 'edits exam' do
       exam = create(:medical_exam, 
         patient: patient, 
-        exam_date: Date.new(2025, 6, 15),
+        exam_date: Date.today + 7.days,
         exam_type: :blood_test)
       
       visit edit_patient_medical_exam_path(patient, exam)
@@ -65,7 +74,7 @@ RSpec.describe 'Medical Exams', type: :feature do
     scenario 'deletes exam' do
       exam = create(:medical_exam, 
         patient: patient, 
-        exam_date: Date.new(2025, 6, 15),
+        exam_date: Date.today + 7.days,
         exam_type: :blood_test)
       
       visit patient_medical_exams_path(patient)

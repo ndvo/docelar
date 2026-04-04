@@ -12,7 +12,7 @@ RSpec.describe 'Exam Requests', type: :feature do
       visit new_patient_exam_request_path(patient)
       
       fill_in 'exam_request[exam_name]', with: 'Ressonância Magnética'
-      fill_in 'exam_request[requested_date]', with: Date.new(2025, 6, 15)
+      fill_in 'exam_request[requested_date]', with: Date.today
       
       click_button 'Salvar'
       
@@ -20,8 +20,17 @@ RSpec.describe 'Exam Requests', type: :feature do
       expect(page).to have_content('Ressonância Magnética')
     end
 
+    scenario 'shows validation errors when creating with missing fields' do
+      visit new_patient_exam_request_path(patient)
+      
+      click_button 'Salvar'
+      
+      expect(page).to have_content('erro')
+      expect(page).to have_content('não pode ficar em branco')
+    end
+
     scenario 'lists exam requests on patient page' do
-      create(:exam_request, patient: patient, exam_name: 'Ressonância Magnética', requested_date: Date.new(2025, 6, 15))
+      create(:exam_request, patient: patient, exam_name: 'Ressonância Magnética', requested_date: Date.today)
       
       visit patient_path(patient)
       
@@ -33,8 +42,8 @@ RSpec.describe 'Exam Requests', type: :feature do
       request = create(:exam_request, 
         patient: patient, 
         exam_name: 'Ressonância Magnética',
-        requested_date: Date.new(2025, 6, 15),
-        scheduled_date: Date.new(2025, 7, 1),
+        requested_date: Date.today,
+        scheduled_date: Date.today + 14.days,
         notes: 'Para verificar articulação')
       
       visit patient_exam_request_path(patient, request)
@@ -47,7 +56,7 @@ RSpec.describe 'Exam Requests', type: :feature do
       request = create(:exam_request, 
         patient: patient, 
         exam_name: 'Ressonância Magnética',
-        requested_date: Date.new(2025, 6, 15))
+        requested_date: Date.today)
       
       visit edit_patient_exam_request_path(patient, request)
       select 'Scheduled', from: 'exam_request[status]'
@@ -60,7 +69,7 @@ RSpec.describe 'Exam Requests', type: :feature do
       request = create(:exam_request, 
         patient: patient, 
         exam_name: 'Ressonância Magnética',
-        requested_date: Date.new(2025, 6, 15))
+        requested_date: Date.today)
       
       visit patient_exam_requests_path(patient)
       

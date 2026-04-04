@@ -13,7 +13,7 @@ RSpec.describe 'Medical Conditions', type: :feature do
       
       fill_in 'medical_condition[condition_name]', with: 'Hipertensão'
       fill_in 'medical_condition[icd_code]', with: 'I10'
-      fill_in 'medical_condition[diagnosed_date]', with: Date.new(2025, 6, 15)
+      fill_in 'medical_condition[diagnosed_date]', with: Date.today
       select 'Active', from: 'medical_condition[status]'
       
       click_button 'Salvar'
@@ -23,8 +23,17 @@ RSpec.describe 'Medical Conditions', type: :feature do
       expect(page).to have_content('I10')
     end
 
+    scenario 'shows validation errors when creating with missing fields' do
+      visit new_patient_medical_condition_path(patient)
+      
+      click_button 'Salvar'
+      
+      expect(page).to have_content('erro')
+      expect(page).to have_content('não pode ficar em branco')
+    end
+
     scenario 'lists conditions on patient page' do
-      create(:medical_condition, patient: patient, condition_name: 'Diabetes', diagnosed_date: Date.new(2025, 6, 15))
+      create(:medical_condition, patient: patient, condition_name: 'Diabetes', diagnosed_date: Date.today)
       
       visit patient_path(patient)
       
@@ -37,7 +46,7 @@ RSpec.describe 'Medical Conditions', type: :feature do
         patient: patient, 
         condition_name: 'Hipertensão',
         icd_code: 'I10',
-        diagnosed_date: Date.new(2025, 6, 15),
+        diagnosed_date: Date.today,
         severity: :moderate,
         status: :chronic)
       
@@ -53,7 +62,7 @@ RSpec.describe 'Medical Conditions', type: :feature do
       condition = create(:medical_condition, 
         patient: patient, 
         condition_name: 'Hipertensão',
-        diagnosed_date: Date.new(2025, 6, 15))
+        diagnosed_date: Date.today)
       
       visit edit_patient_medical_condition_path(patient, condition)
       select 'Resolved', from: 'medical_condition[status]'
@@ -66,7 +75,7 @@ RSpec.describe 'Medical Conditions', type: :feature do
       condition = create(:medical_condition, 
         patient: patient, 
         condition_name: 'Hipertensão',
-        diagnosed_date: Date.new(2025, 6, 15))
+        diagnosed_date: Date.today)
       
       visit patient_medical_conditions_path(patient)
       
