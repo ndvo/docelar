@@ -1,6 +1,6 @@
 class MedicalAppointmentsController < ApplicationController
   before_action :set_patient, only: [:index, :new, :create]
-  before_action :set_appointment, only: [:show, :edit, :update, :destroy, :prepare, :update_checklist]
+  before_action :set_appointment, only: [:show, :edit, :update, :destroy, :prepare, :update_checklist, :follow_up]
 
   def index
     @appointments = @patient.medical_appointments.order(appointment_date: :desc)
@@ -56,6 +56,10 @@ class MedicalAppointmentsController < ApplicationController
     end
   end
 
+  def follow_up
+    @patient = @appointment.patient
+  end
+
   private
 
   def set_patient
@@ -80,7 +84,11 @@ class MedicalAppointmentsController < ApplicationController
       :questions,
       :checklist,
       :fasting_required,
-      :reminder_sent
+      :reminder_sent,
+      :prescribed_medications,
+      :post_appointment_notes,
+      :follow_up_date,
+      :follow_up_required
     )
   end
 end

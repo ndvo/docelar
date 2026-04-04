@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resources :medical_appointments do
       get :prepare, on: :member
       patch :update_checklist, on: :member
+      get :follow_up, on: :member
     end
     resources :medical_exams
     resources :exam_requests
