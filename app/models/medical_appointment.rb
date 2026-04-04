@@ -3,6 +3,8 @@ class MedicalAppointment < ApplicationRecord
   has_many :medical_exams
   has_many :exam_requests
 
+  attr_accessor :create_treatments
+
   enum :appointment_type, {
     checkup: 'checkup',
     specialist: 'specialist',
@@ -45,5 +47,18 @@ class MedicalAppointment < ApplicationRecord
 
   def prescribed_medications_list
     prescribed_medications || []
+  end
+
+  def create_treatments_from_prescriptions(appointment_id)
+    prescribed_medications_list.each do |med|
+      next if med['name'].blank?
+      
+      Treatment.create!(
+        patient: patient,
+        start_date: Date.today,
+        status: :active,
+        notes: "Criado a partir da consulta ##{appointment_id}. Medication: #{med['name']}"
+      )
+    end
   end
 end

@@ -30,6 +30,9 @@ class MedicalAppointmentsController < ApplicationController
 
   def update
     if @appointment.update(appointment_params)
+      if params[:medical_appointment][:create_treatments] == '1'
+        @appointment.create_treatments_from_prescriptions(@appointment.id)
+      end
       redirect_to patient_medical_appointment_path(@appointment.patient, @appointment), notice: 'Consulta atualizada com sucesso.'
     else
       render :edit, status: :unprocessable_entity
@@ -88,7 +91,8 @@ class MedicalAppointmentsController < ApplicationController
       :prescribed_medications,
       :post_appointment_notes,
       :follow_up_date,
-      :follow_up_required
+      :follow_up_required,
+      :create_treatments
     )
   end
 end

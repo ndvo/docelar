@@ -35,6 +35,13 @@
               placeholder: "Digite os medicamentos prescritos, um por linha" %>
           <p class="help-text">Digite os nomes dos medicamentos, um por linha</p>
         </div>
+
+        <div class="field">
+          <%= f.label :create_treatments, class: "checkbox-label" do %>
+            <%= f.check_box :create_treatments %>
+            Criar tratamentos para estes medicamentos
+          <% end %>
+        </div>
       </div>
 
       <div class="follow-up-scheduling-section">
