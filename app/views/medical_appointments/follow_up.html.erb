@@ -1,0 +1,62 @@
+<main id="main-content">
+  <nav class="breadcrumb">
+    <%= link_to '← Voltar', patient_medical_appointment_path(@patient, @appointment) %>
+  </nav>
+
+  <article class="follow-up-detail card">
+    <header>
+      <h1>Follow-up da Consulta</h1>
+      <span class="appointment-type"><%= @appointment.appointment_type.humanize %></span>
+    </header>
+
+    <div class="appointment-summary">
+      <p><strong>Data:</strong> <%= l(@appointment.appointment_date, format: :long) %></p>
+      <p><strong>Médico:</strong> <%= @appointment.professional_name || 'Não informado' %></p>
+    </div>
+
+    <%= form_with model: @appointment, url: patient_medical_appointment_path(@patient, @appointment), id: 'follow-up-form' do |f| %>
+      <div class="follow-up-section">
+        <h2>Resumo da Consulta</h2>
+        
+        <div class="field">
+          <%= f.label :post_appointment_notes, "Observações Pós-Consulta" %>
+          <%= f.text_area :post_appointment_notes, rows: 4, placeholder: "Descreva o que foi discutido na consulta, diagnóstico, recomendações..." %>
+        </div>
+      </div>
+
+      <div class="medications-section">
+        <h2>Medicamentos Prescritos</h2>
+        
+        <div class="field">
+          <%= f.label :prescribed_medications_json, "Medicamentos (um por linha)", class: "sr-only" %>
+          <%= f.text_area :prescribed_medications_json, 
+              value: (@appointment.prescribed_medications || []).map { |med| med['name'] }.join("\n"),
+              rows: 4, 
+              placeholder: "Digite os medicamentos prescritos, um por linha" %>
+          <p class="help-text">Digite os nomes dos medicamentos, um por linha</p>
+        </div>
+      </div>
+
+      <div class="follow-up-scheduling-section">
+        <h2>Agendar Retorno</h2>
+        
+        <div class="field">
+          <%= f.label :follow_up_required, class: "checkbox-label" do %>
+            <%= f.check_box :follow_up_required %>
+            Necessita retorno
+          <% end %>
+        </div>
+
+        <div class="field">
+          <%= f.label :follow_up_date, "Data do Retorno" %>
+          <%= f.date_field :follow_up_date, min: Date.today %>
+        </div>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "Salvar", class: "btn btn-primary" %>
+        <%= link_to 'Ver Detalhes da Consulta', patient_medical_appointment_path(@patient, @appointment), class: 'btn btn-secondary' %>
+      </div>
+    <% end %>
+  </article>
+</main>

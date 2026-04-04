@@ -104,7 +104,8 @@
         <%= link_to 'Preparar Consulta', prepare_patient_medical_appointment_path(@appointment.patient, @appointment), class: 'btn btn-primary' %>
       <% end %>
       <% if @appointment.completed? %>
-        <%= link_to 'Solicitar Exame', new_patient_exam_request_path(@appointment.patient, medical_appointment_id: @appointment.id), class: 'btn btn-primary' %>
+        <%= link_to 'Follow-up', follow_up_patient_medical_appointment_path(@appointment.patient, @appointment), class: 'btn btn-primary' %>
+        <%= link_to 'Solicitar Exame', new_patient_exam_request_path(@appointment.patient, medical_appointment_id: @appointment.id), class: 'btn btn-secondary' %>
       <% end %>
       <%= link_to 'Editar', edit_patient_medical_appointment_path(@appointment.patient, @appointment), class: 'btn btn-secondary' %>
       <%= link_to 'Voltar', patient_medical_appointments_path(@appointment.patient), class: 'cancel-link' %>
