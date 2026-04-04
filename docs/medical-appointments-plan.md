@@ -1324,17 +1324,17 @@ add_index :family_medical_histories, [:patient_id, :relation]
 
 ### Checklist
 
-- [ ] Generate FamilyMedicalHistory model
-- [ ] Add database migration
-- [ ] Configure enums in model
-- [ ] Add validations
-- [ ] Create family_medical_histories controller
-- [ ] Create family_medical_histories views
-- [ ] Add routes
-- [ ] Add to patient show page
-- [ ] Add feature specs
-- [ ] Add database indexes
-- [ ] Performance review
+- [x] Generate FamilyMedicalHistory model
+- [x] Add database migration
+- [x] Configure enums in model
+- [x] Add validations
+- [x] Create family_medical_histories controller
+- [x] Create family_medical_histories views
+- [x] Add routes
+- [x] Add to patient show page
+- [x] Add feature specs
+- [x] Add database indexes
+- [x] Performance review
 
 ### Phase 7: Health Summary & UX
 **Goal**: Unified health view for physician visits
