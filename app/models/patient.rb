@@ -4,6 +4,7 @@ class Patient < ApplicationRecord
   has_many :medical_appointments
   has_many :medical_exams
   has_many :exam_requests
+  has_many :medical_conditions
 
   validates :individual_id, uniqueness: { scope: :individual_type }
 end
