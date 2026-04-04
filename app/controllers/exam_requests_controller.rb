@@ -11,7 +11,7 @@ class ExamRequestsController < ApplicationController
   end
 
   def new
-    @exam_request = @patient.exam_requests.build
+    @exam_request = @patient.exam_requests.build(medical_appointment_id: params[:medical_appointment_id])
   end
 
   def create
