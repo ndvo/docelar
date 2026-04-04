@@ -1121,11 +1121,124 @@ end
 - [x] Add database index on follow_up_date
 - [x] Performance review
 
-### Phase 5: Conditions Tracking
-**Goal**: Track diagnosed conditions
-- [ ] MedicalCondition model + CRUD
-- [ ] MedicalConditionTreatment join table
-- [ ] Link conditions to treatments
+---
+
+### Phase 5: Conditions Tracking Implementation Plan
+
+### Goal
+Track diagnosed conditions - create, update, and monitor health conditions over time.
+
+### Models
+
+#### 1. MedicalCondition
+
+**Purpose**: Track diagnosed conditions
+
+```ruby
+class MedicalCondition < ApplicationRecord
+  belongs_to :patient
+  has_many :medical_condition_treatments
+  has_many :treatments, through: :medical_condition_treatments
+  
+  enum :status, {
+    active: 'active',
+    resolved: 'resolved',
+    chronic: 'chronic',
+    under_treatment: 'under_treatment'
+  }, default: :active
+
+  enum :severity, {
+    mild: 'mild',
+    moderate: 'moderate',
+    severe: 'severe'
+  }, prefix: true
+
+  validates :condition_name, presence: true
+  validates :diagnosed_date, presence: true
+end
+```
+
+**Database fields:**
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| patient_id | FK | Yes | Links to Patient |
+| condition_name | string | Yes | e.g., "Hypertension" |
+| icd_code | string | No | ICD-10 code |
+| diagnosed_date | date | Yes | When diagnosed |
+| status | string | No | Default: active |
+| severity | string | No | mild/moderate/severe |
+| notes | text | No | Additional info |
+| resolved_date | date | No | When resolved |
+
+#### 2. MedicalConditionTreatment (Join Table)
+
+```ruby
+class MedicalConditionTreatment < ApplicationRecord
+  belongs_to :medical_condition
+  belongs_to :treatment
+  # Optional: linking conditions to treatments
+end
+```
+
+### Implementation Steps
+
+1. **Generate models**
+   ```bash
+   bin/rails g model MedicalCondition patient:references condition_name:string icd_code:string diagnosed_date:date status:integer severity:integer notes:text resolved_date:date
+   bin/rails g model MedicalConditionTreatment medical_condition:references treatment:references
+   ```
+
+2. **Configure enums in models**
+   - MedicalCondition: status, severity
+
+3. **Add validations**
+   - condition_name, diagnosed_date required
+
+4. **Create controllers**
+   - `app/controllers/medical_conditions_controller.rb`
+
+5. **Create views**
+   - `medical_conditions/index.html.erb`
+   - `medical_conditions/show.html.erb`
+   - `medical_conditions/_form.html.erb`
+   - `medical_conditions/new.html.erb`
+   - `medical_conditions/edit.html.erb`
+
+6. **Add routes**
+   ```ruby
+   resources :patients do
+     resources :medical_conditions
+   end
+   ```
+
+7. **Add to patient show page**
+   - Show active conditions count
+   - List recent conditions
+
+8. **Add feature specs**
+   - `spec/features/medical_conditions_spec.rb`
+
+### Database Indexes
+
+```ruby
+add_index :medical_conditions, [:patient_id, :status]
+add_index :medical_conditions, :diagnosed_date
+```
+
+### Checklist
+
+- [ ] Generate MedicalCondition model
+- [ ] Add database migration
+- [ ] Configure enums in model
+- [ ] Add validations
+- [ ] Generate MedicalConditionTreatment join table
+- [ ] Create medical_conditions controller
+- [ ] Create medical_conditions views
+- [ ] Add routes
+- [ ] Add to patient show page
+- [ ] Add feature specs
+- [ ] Add database indexes
+- [ ] Performance review
 
 ### Phase 6: Family Medical History
 **Goal**: Track family health background
