@@ -109,5 +109,24 @@ RSpec.describe 'Medical Appointments', type: :feature do
       expect(page).to have_content('Preparar Consulta')
       expect(page).to have_content('100% completo')
     end
+
+    scenario 'completes follow-up after appointment' do
+      appointment = create(:medical_appointment, 
+        patient: patient, 
+        appointment_date: DateTime.now - 1.day,
+        appointment_type: :checkup,
+        status: :completed)
+      
+      visit follow_up_patient_medical_appointment_path(patient, appointment)
+      
+      fill_in 'medical_appointment[post_appointment_notes]', with: 'Diagnostico: Hipertensao'
+      check 'medical_appointment_follow_up_required'
+      fill_in 'medical_appointment[follow_up_date]', with: Date.today + 30.days
+      
+      click_button 'Salvar'
+      
+      expect(page).to have_content('Consulta atualizada com sucesso')
+      expect(page).to have_content('Follow-up')
+    end
   end
 end

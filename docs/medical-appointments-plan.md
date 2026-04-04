@@ -1112,14 +1112,14 @@ end
 
 ### Checklist
 
-- [ ] Add migration with follow-up fields
-- [ ] Update MedicalAppointment model
-- [ ] Add follow_up route and action
-- [ ] Create follow_up.html.erb view
+- [x] Add migration with follow-up fields
+- [x] Update MedicalAppointment model
+- [x] Add follow_up route and action
+- [x] Create follow_up.html.erb view
 - [ ] Integrate with treatment creation
-- [ ] Add feature specs
-- [ ] Add database index on follow_up_date
-- [ ] Performance review
+- [x] Add feature specs
+- [x] Add database index on follow_up_date
+- [x] Performance review
 
 ### Phase 5: Conditions Tracking
 **Goal**: Track diagnosed conditions
