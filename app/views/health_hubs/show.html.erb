@@ -1,16 +1,21 @@
-<main id="main-content">
-  <nav class="breadcrumb">
+<main id="main-content" role="main" aria-labelledby="health-hub-title">
+  <nav class="breadcrumb" aria-label="Navegação">
     <%= link_to '← Voltar', @patient %>
   </nav>
 
   <div class="health-hub">
     <header class="health-hub-header">
-      <h1>Resumo de Saúde</h1>
+      <div class="patient-context">
+        <h1 id="health-hub-title">Resumo de Saúde</h1>
+        <p class="patient-name"><%= @patient.individual.name %></p>
+      </div>
       <%= link_to 'Editar Perfil', edit_patient_path(@patient), class: 'btn btn-secondary' %>
     </header>
 
-    <div class="health-summary-cards">
-      <div class="summary-card appointments">
+    <div class="health-summary-cards" role="region" aria-label="Resumo de saúde">
+      <div class="summary-card appointments" role="article" aria-label="Próximas consultas">
+        <div class="card-count" aria-hidden="true"><%= @patient.medical_appointments.upcoming.count %></div>
+        <div class="card-label">Próximas Consultas</div>
         <div class="card-count"><%= @patient.medical_appointments.upcoming.count %></div>
         <div class="card-label">Próximas Consultas</div>
         <% if @upcoming_appointments.any? %>
@@ -26,7 +31,7 @@
         <%= link_to 'Ver Todas', patient_medical_appointments_path(@patient), class: 'card-link' %>
       </div>
 
-      <div class="summary-card conditions">
+      <div class="summary-card conditions" role="article" aria-label="Condições ativas">
         <div class="card-count"><%= @active_conditions.count %></div>
         <div class="card-label">Condições Ativas</div>
         <% if @active_conditions.any? %>
@@ -42,7 +47,7 @@
         <%= link_to 'Ver Todas', patient_medical_conditions_path(@patient), class: 'card-link' %>
       </div>
 
-      <div class="summary-card treatments">
+      <div class="summary-card treatments" role="article" aria-label="Tratamentos ativos">
         <div class="card-count"><%= @active_treatments.count %></div>
         <div class="card-label">Tratamentos Ativos</div>
         <% if @active_treatments.any? %>
@@ -58,7 +63,7 @@
         <%= link_to 'Ver Todos', patient_treatments_path(@patient), class: 'card-link' %>
       </div>
 
-      <div class="summary-card exams">
+      <div class="summary-card exams" role="article" aria-label="Exames realizados">
         <div class="card-count"><%= @patient.medical_exams.count %></div>
         <div class="card-label">Exames Realizados</div>
         <% if @recent_exams.any? %>
@@ -75,22 +80,24 @@
       </div>
     </div>
 
-    <nav class="health-hub-tabs" role="tablist">
-      <%= link_to 'Visão Geral', patient_health_path(@patient), class: 'tab active' %>
-      <%= link_to 'Consultas', patient_medical_appointments_path(@patient), class: 'tab' %>
-      <%= link_to 'Condições', patient_medical_conditions_path(@patient), class: 'tab' %>
-      <%= link_to 'Medicamentos', patient_treatments_path(@patient), class: 'tab' %>
-      <%= link_to 'Exames', patient_medical_exams_path(@patient), class: 'tab' %>
-      <%= link_to 'Histórico Familiar', patient_family_medical_histories_path(@patient), class: 'tab' %>
+    <nav class="health-hub-tabs" role="navigation" aria-label="Navegação de seções">
+      <div class="tabs-scroll">
+        <%= link_to 'Visão Geral', patient_health_path(@patient), class: 'tab active', aria_current: 'page' %>
+        <%= link_to 'Consultas', patient_medical_appointments_path(@patient), class: 'tab' %>
+        <%= link_to 'Condições', patient_medical_conditions_path(@patient), class: 'tab' %>
+        <%= link_to 'Medicamentos', patient_treatments_path(@patient), class: 'tab' %>
+        <%= link_to 'Exames', patient_medical_exams_path(@patient), class: 'tab' %>
+        <%= link_to 'Histórico Familiar', patient_family_medical_histories_path(@patient), class: 'tab' %>
+      </div>
     </nav>
 
-    <section class="quick-actions">
-      <h2>Ações Rápidas</h2>
-      <div class="action-buttons">
+    <section class="quick-actions" aria-labelledby="quick-actions-heading">
+      <h2 id="quick-actions-heading">Ações Rápidas</h2>
+      <div class="action-buttons" role="group" aria-label="Ações rápidas">
         <%= link_to 'Nova Consulta', new_patient_medical_appointment_path(@patient), class: 'btn btn-primary' %>
-        <%= link_to 'Solicitar Exame', new_patient_exam_request_path(@patient), class: 'btn btn-secondary' %>
-        <%= link_to 'Nova Condição', new_patient_medical_condition_path(@patient), class: 'btn btn-secondary' %>
-        <%= link_to 'Novo Histórico', new_patient_family_medical_history_path(@patient), class: 'btn btn-secondary' %>
+        <%= link_to 'Solicitar Exame', new_patient_exam_request_path(@patient), class: 'btn btn-primary' %>
+        <%= link_to 'Nova Condição', new_patient_medical_condition_path(@patient), class: 'btn btn-primary' %>
+        <%= link_to 'Novo Histórico', new_patient_family_medical_history_path(@patient), class: 'btn btn-primary' %>
       </div>
     </section>
   </div>
