@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_03_212649) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_04_102421) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -151,8 +151,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_03_212649) do
     t.json "checklist", default: []
     t.boolean "fasting_required", default: false
     t.boolean "reminder_sent", default: false
+    t.json "prescribed_medications", default: []
+    t.text "post_appointment_notes"
+    t.date "follow_up_date"
+    t.boolean "follow_up_required", default: false
     t.index ["appointment_date"], name: "index_medical_appointments_on_appointment_date"
     t.index ["checklist"], name: "index_medical_appointments_on_checklist"
+    t.index ["follow_up_date"], name: "index_medical_appointments_on_follow_up_date"
     t.index ["patient_id", "appointment_date"], name: "index_medical_appointments_on_patient_id_and_appointment_date"
     t.index ["patient_id"], name: "index_medical_appointments_on_patient_id"
     t.index ["status"], name: "index_medical_appointments_on_status"
