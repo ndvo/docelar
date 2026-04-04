@@ -169,6 +169,31 @@
     <%= link_to 'Nova Condição', new_patient_medical_condition_path(@patient), class: 'btn btn-primary' %>
   </section>
 
+  <section class="patient-family-history" aria-labelledby="family-history-heading">
+    <h2 id="family-history-heading">Histórico Familiar</h2>
+    
+    <% family_histories = @patient.family_medical_histories.order(diagnosed_relative_date: :desc).limit(5).to_a %>
+    
+    <% if family_histories.any? %>
+      <ul class="family-history-list">
+        <% family_histories.each do |history| %>
+          <li class="family-history-card">
+            <div class="history-condition"><%= history.condition_name %></div>
+            <span class="history-relation"><%= history.relation.humanize %></span>
+            <div class="history-date">
+              <%= l(history.diagnosed_relative_date, format: :long) if history.diagnosed_relative_date %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+      <%= link_to 'Ver Todo Histórico', patient_family_medical_histories_path(@patient), class: 'btn btn-secondary' %>
+    <% else %>
+      <p class="empty-message">Nenhum histórico familiar registrado.</p>
+    <% end %>
+    
+    <%= link_to 'Novo Histórico', new_patient_family_medical_history_path(@patient), class: 'btn btn-primary' %>
+  </section>
+
   <section class="patient-administrations" aria-labelledby="admin-heading">
     <h2 id="admin-heading">Administrações Hoje</h2>
     

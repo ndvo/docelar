@@ -1,0 +1,40 @@
+<h1>Histórico Familiar</h1>
+
+<%= link_to 'Novo Histórico', new_patient_family_medical_history_path(@patient), class: 'btn btn-primary' %>
+
+<% if @family_histories.any? %>
+  <ul class="family-history-list">
+    <% @family_histories.each do |history| %>
+      <li class="family-history-card">
+        <div class="history-header">
+          <h3><%= history.condition_name %></h3>
+          <span class="history-relation"><%= history.relation.humanize %></span>
+        </div>
+        
+        <% if history.icd_code %>
+          <div class="history-icd">CID-10: <%= history.icd_code %></div>
+        <% end %>
+        
+        <div class="history-date">
+          Diagnosticado em: <%= l(history.diagnosed_relative_date, format: :long) if history.diagnosed_relative_date %>
+        </div>
+        
+        <% if history.age_at_diagnosis %>
+          <div class="history-age">Idade ao diagnosticar: <%= history.age_at_diagnosis %> anos</div>
+        <% end %>
+        
+        <% if history.notes %>
+          <div class="history-notes"><%= history.notes %></div>
+        <% end %>
+        
+        <div class="history-actions">
+          <%= link_to 'Ver', patient_family_medical_history_path(@patient, history), class: 'btn btn-secondary' %>
+          <%= link_to 'Editar', edit_patient_family_medical_history_path(@patient, history), class: 'btn btn-secondary' %>
+          <%= button_to 'Excluir', patient_family_medical_history_path(@patient, history), method: :delete, data: { confirm: 'Tem certeza?' }, class: 'btn btn-danger' %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="empty-message">Nenhum histórico familiar registrado.</p>
+<% end %>

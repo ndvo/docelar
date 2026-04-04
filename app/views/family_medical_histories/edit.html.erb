@@ -1,0 +1,8 @@
+<h1>Editar Histórico Familiar</h1>
+
+<%= render 'form', patient: @patient, history: @history %>
+
+<nav class="actions">
+  <%= link_to 'Ver', patient_family_medical_history_path(@patient, @history), class: 'btn btn-secondary' %>
+  <%= link_to 'Voltar', patient_family_medical_histories_path(@patient), class: 'cancel-link' %>
+</nav>

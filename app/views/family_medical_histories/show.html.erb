@@ -1,0 +1,45 @@
+<main id="main-content">
+  <nav class="breadcrumb">
+    <%= link_to '← Voltar', patient_family_medical_histories_path(@history.patient) %>
+  </nav>
+
+  <article class="family-history-detail card">
+    <header>
+      <h1><%= @history.condition_name %></h1>
+      <span class="history-relation"><%= @history.relation.humanize %></span>
+    </header>
+
+    <dl>
+      <% if @history.icd_code %>
+        <div>
+          <dt>Código CID-10</dt>
+          <dd><%= @history.icd_code %></dd>
+        </div>
+      <% end %>
+
+      <div>
+        <dt>Data do Diagnóstico (Familiar)</dt>
+        <dd><%= l(@history.diagnosed_relative_date, format: :long) if @history.diagnosed_relative_date %></dd>
+      </div>
+
+      <% if @history.age_at_diagnosis %>
+        <div>
+          <dt>Idade ao Diagnosticar</dt>
+          <dd><%= @history.age_at_diagnosis %> anos</dd>
+        </div>
+      <% end %>
+
+      <% if @history.notes %>
+        <div>
+          <dt>Observações</dt>
+          <dd><%= @history.notes %></dd>
+        </div>
+      <% end %>
+    </dl>
+
+    <nav class="actions">
+      <%= link_to 'Editar', edit_patient_family_medical_history_path(@patient, @history), class: 'btn btn-secondary' %>
+      <%= link_to 'Voltar', patient_family_medical_histories_path(@patient), class: 'cancel-link' %>
+    </nav>
+  </article>
+</main>

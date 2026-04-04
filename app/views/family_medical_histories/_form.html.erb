@@ -1,0 +1,46 @@
+<%= form_with model: [patient, history], url: (history.persisted? ? patient_family_medical_history_path(patient, history) : patient_family_medical_histories_path(patient)), id: 'family-history-form' do |f| %>
+  <% if history.errors.any? %>
+    <div id="error_explanation" role="alert">
+      <h2><%= pluralize(history.errors.count, "erro") %> impediu este histórico de ser salvo:</h2>
+      <ul>
+        <% history.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :relation, "Parentesco *" %>
+    <%= f.select :relation, FamilyMedicalHistory.relations.keys.map { |r| [r.humanize, r] } %>
+  </div>
+
+  <div class="field">
+    <%= f.label :condition_name, "Condição *" %>
+    <%= f.text_field :condition_name, placeholder: "e.g., Diabetes, Hipertensão" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :icd_code, "Código CID-10" %>
+    <%= f.text_field :icd_code, placeholder: "e.g., E11" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :diagnosed_relative_date, "Data do Diagnóstico (Familiar) *" %>
+    <%= f.date_field :diagnosed_relative_date %>
+  </div>
+
+  <div class="field">
+    <%= f.label :age_at_diagnosis, "Idade ao Diagnosticar" %>
+    <%= f.number_field :age_at_diagnosis, min: 0, placeholder: "e.g., 45" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :notes, "Observações" %>
+    <%= f.text_area :notes, rows: 3 %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Salvar", class: "btn btn-primary" %>
+  </div>
+<% end %>
