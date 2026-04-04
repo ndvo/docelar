@@ -1,0 +1,7 @@
+<h1>Nova Condição</h1>
+
+<%= render 'form', patient: @patient, condition: @condition %>
+
+<nav class="actions">
+  <%= link_to 'Voltar', patient_medical_conditions_path(@patient), class: 'cancel-link' %>
+</nav>

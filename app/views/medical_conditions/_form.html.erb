@@ -1,0 +1,53 @@
+<%= form_with model: [patient, condition], url: (condition.persisted? ? patient_medical_condition_path(patient, condition) : patient_medical_conditions_path(patient)), id: 'medical-condition-form' do |f| %>
+  <% if condition.errors.any? %>
+    <div id="error_explanation" role="alert">
+      <h2><%= pluralize(condition.errors.count, "erro") %> impediu esta condição de ser salva:</h2>
+      <ul>
+        <% condition.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :condition_name, "Nome da Condição *" %>
+    <%= f.text_field :condition_name, placeholder: "e.g., Hipertensão" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :icd_code, "Código CID-10" %>
+    <%= f.text_field :icd_code, placeholder: "e.g., I10" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :diagnosed_date, "Data do Diagnóstico *" %>
+    <%= f.date_field :diagnosed_date %>
+  </div>
+
+  <div class="field">
+    <%= f.label :severity, "Severidade" %>
+    <%= f.select :severity, MedicalCondition.severities.keys.map { |s| [s.humanize, s] }, include_blank: "Selecione" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :status, "Status" %>
+    <%= f.select :status, MedicalCondition.statuses.keys.map { |s| [s.humanize, s] } %>
+  </div>
+
+  <div class="field">
+    <%= f.label :notes, "Observações" %>
+    <%= f.text_area :notes, rows: 3 %>
+  </div>
+
+  <% if action_name == 'edit' || action_name == 'update' %>
+  <div class="field">
+    <%= f.label :resolved_date, "Data de Resolução" %>
+    <%= f.date_field :resolved_date %>
+  </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit "Salvar", class: "btn btn-primary" %>
+  </div>
+<% end %>

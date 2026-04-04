@@ -144,6 +144,31 @@
     <%= link_to 'Nova Solicitação', new_patient_exam_request_path(@patient), class: 'btn btn-primary' %>
   </section>
 
+  <section class="patient-conditions" aria-labelledby="conditions-heading">
+    <h2 id="conditions-heading">Condições de Saúde</h2>
+    
+    <% conditions = @patient.medical_conditions.order(diagnosed_date: :desc).limit(5).to_a %>
+    
+    <% if conditions.any? %>
+      <ul class="conditions-list">
+        <% conditions.each do |condition| %>
+          <li class="condition-card">
+            <div class="condition-name"><%= condition.condition_name %></div>
+            <span class="status-badge status-<%= condition.status %>"><%= condition.status.humanize %></span>
+            <div class="condition-date">
+              <%= l(condition.diagnosed_date, format: :long) if condition.diagnosed_date %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+      <%= link_to 'Ver Todas as Condições', patient_medical_conditions_path(@patient), class: 'btn btn-secondary' %>
+    <% else %>
+      <p class="empty-message">Nenhuma condição registrada.</p>
+    <% end %>
+    
+    <%= link_to 'Nova Condição', new_patient_medical_condition_path(@patient), class: 'btn btn-primary' %>
+  </section>
+
   <section class="patient-administrations" aria-labelledby="admin-heading">
     <h2 id="admin-heading">Administrações Hoje</h2>
     

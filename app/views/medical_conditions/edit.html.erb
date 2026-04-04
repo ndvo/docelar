@@ -1,0 +1,8 @@
+<h1>Editar Condição</h1>
+
+<%= render 'form', patient: @patient, condition: @condition %>
+
+<nav class="actions">
+  <%= link_to 'Ver', patient_medical_condition_path(@patient, @condition), class: 'btn btn-secondary' %>
+  <%= link_to 'Voltar', patient_medical_conditions_path(@patient), class: 'cancel-link' %>
+</nav>

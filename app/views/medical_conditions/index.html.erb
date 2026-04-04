@@ -1,0 +1,40 @@
+<h1>Condições de Saúde</h1>
+
+<%= link_to 'Nova Condição', new_patient_medical_condition_path(@patient), class: 'btn btn-primary' %>
+
+<% if @conditions.any? %>
+  <ul class="conditions-list">
+    <% @conditions.each do |condition| %>
+      <li class="condition-card">
+        <div class="condition-header">
+          <h3><%= condition.condition_name %></h3>
+          <span class="condition-status status-<%= condition.status %>"><%= condition.status.humanize %></span>
+        </div>
+        
+        <% if condition.icd_code %>
+          <div class="condition-icd">CID-10: <%= condition.icd_code %></div>
+        <% end %>
+        
+        <div class="condition-date">
+          Diagnosticada em: <%= l(condition.diagnosed_date, format: :long) if condition.diagnosed_date %>
+        </div>
+        
+        <% if condition.severity %>
+          <div class="condition-severity">Severidade: <%= condition.severity.humanize %></div>
+        <% end %>
+        
+        <% if condition.notes %>
+          <div class="condition-notes"><%= condition.notes %></div>
+        <% end %>
+        
+        <div class="condition-actions">
+          <%= link_to 'Ver', patient_medical_condition_path(@patient, condition), class: 'btn btn-secondary' %>
+          <%= link_to 'Editar', edit_patient_medical_condition_path(@patient, condition), class: 'btn btn-secondary' %>
+          <%= button_to 'Excluir', patient_medical_condition_path(@patient, condition), method: :delete, data: { confirm: 'Tem certeza?' }, class: 'btn btn-danger' %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="empty-message">Nenhuma condição registrada.</p>
+<% end %>

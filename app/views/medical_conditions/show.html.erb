@@ -1,0 +1,52 @@
+<main id="main-content">
+  <nav class="breadcrumb">
+    <%= link_to '← Voltar', patient_medical_conditions_path(@condition.patient) %>
+  </nav>
+
+  <article class="condition-detail card">
+    <header>
+      <h1><%= @condition.condition_name %></h1>
+      <span class="condition-status status-<%= @condition.status %>"><%= @condition.status.humanize %></span>
+    </header>
+
+    <dl>
+      <% if @condition.icd_code %>
+        <div>
+          <dt>Código CID-10</dt>
+          <dd><%= @condition.icd_code %></dd>
+        </div>
+      <% end %>
+
+      <div>
+        <dt>Data do Diagnóstico</dt>
+        <dd><%= l(@condition.diagnosed_date, format: :long) if @condition.diagnosed_date %></dd>
+      </div>
+
+      <% if @condition.severity %>
+        <div>
+          <dt>Severidade</dt>
+          <dd><%= @condition.severity.humanize %></dd>
+        </div>
+      <% end %>
+
+      <% if @condition.notes %>
+        <div>
+          <dt>Observações</dt>
+          <dd><%= @condition.notes %></dd>
+        </div>
+      <% end %>
+
+      <% if @condition.resolved_date %>
+        <div>
+          <dt>Data de Resolução</dt>
+          <dd><%= l(@condition.resolved_date, format: :long) %></dd>
+        </div>
+      <% end %>
+    </dl>
+
+    <nav class="actions">
+      <%= link_to 'Editar', edit_patient_medical_condition_path(@patient, @condition), class: 'btn btn-secondary' %>
+      <%= link_to 'Voltar', patient_medical_conditions_path(@patient), class: 'cancel-link' %>
+    </nav>
+  </article>
+</main>
