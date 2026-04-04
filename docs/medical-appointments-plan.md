@@ -1035,12 +1035,91 @@ end
 - [x] Test Turbo Stream updates
 - [x] Verify mobile responsiveness
 
-### Phase 4: Post-Appointment Follow-Up
-**Goal**: Track tasks after physician visit
-- [ ] Add follow-up fields to MedicalAppointment
-- [ ] Link exams to appointments (recommended → requested → scheduled)
-- [ ] Post-appointment notes
-- [ ] Link prescribed medications to existing Treatment system
+### Phase 4: Post-Appointment Follow-Up Implementation Plan
+
+### Goal
+Track tasks after physician visit - record prescribed medications, follow-up exams, and post-appointment notes.
+
+### Model Changes
+
+#### MedicalAppointment - New Fields
+
+Adicionar campos à tabela `medical_appointments`:
+
+```ruby
+class MedicalAppointment < ApplicationRecord
+  # ... existing fields ...
+  
+  # Post-appointment fields
+  serialize :prescribed_medications, JSON  # Array of medications prescribed
+  field :post_appointment_notes, :text     # Notes after visit
+  field :follow_up_date, :date             # Next appointment date
+  field :follow_up_required, :boolean     # Needs follow-up
+end
+```
+
+**Database fields:**
+| Field | Type | Required | Default | Notes |
+|-------|------|----------|---------|-------|
+| prescribed_medications | json | No | [] | Medications from appointment |
+| post_appointment_notes | text | No | nil | Notes after visit |
+| follow_up_date | date | No | nil | Next appointment |
+| follow_up_required | boolean | No | false | Needs follow-up |
+
+### Integration with Treatment System
+
+- Link prescribed medications to existing `Treatment` model
+- Create new treatments from appointment
+- Track medication purchases
+
+### Views
+
+1. **Post-appointment View**: `app/views/medical_appointments/follow_up.html.erb`
+   - Show summary of completed appointment
+   - Form to add prescribed medications
+   - Form to request follow-up exams
+   - Option to schedule next appointment
+
+2. **Edit MedicalAppointment**: Add new fields to form
+
+### Routes
+
+```ruby
+resources :patients do
+  resources :medical_appointments do
+    member do
+      get :prepare
+      patch :update_checklist
+      get :follow_up
+      post :add_prescribed_medication
+    end
+  end
+end
+```
+
+### Feature Specs
+
+- `spec/features/medical_appointments_spec.rb`
+  - scenario 'records prescribed medications after appointment'
+  - scenario 'schedules follow-up appointment'
+  - scenario 'creates treatment from prescribed medication'
+
+### Performance Considerations
+
+1. **Prescribed medications**: Store as JSONB for efficiency
+2. **Queries**: Use scopes for upcoming follow-ups
+3. **Link to treatments**: Eager load associations
+
+### Checklist
+
+- [ ] Add migration with follow-up fields
+- [ ] Update MedicalAppointment model
+- [ ] Add follow_up route and action
+- [ ] Create follow_up.html.erb view
+- [ ] Integrate with treatment creation
+- [ ] Add feature specs
+- [ ] Add database index on follow_up_date
+- [ ] Performance review
 
 ### Phase 5: Conditions Tracking
 **Goal**: Track diagnosed conditions
