@@ -1227,18 +1227,18 @@ add_index :medical_conditions, :diagnosed_date
 
 ### Checklist
 
-- [ ] Generate MedicalCondition model
-- [ ] Add database migration
-- [ ] Configure enums in model
-- [ ] Add validations
-- [ ] Generate MedicalConditionTreatment join table
-- [ ] Create medical_conditions controller
-- [ ] Create medical_conditions views
-- [ ] Add routes
-- [ ] Add to patient show page
-- [ ] Add feature specs
-- [ ] Add database indexes
-- [ ] Performance review
+- [x] Generate MedicalCondition model
+- [x] Add database migration
+- [x] Configure enums in model
+- [x] Add validations
+- [x] Generate MedicalConditionTreatment join table
+- [x] Create medical_conditions controller
+- [x] Create medical_conditions views
+- [x] Add routes
+- [x] Add to patient show page
+- [x] Add feature specs
+- [x] Add database indexes
+- [x] Performance review
 
 ### Phase 6: Family Medical History
 **Goal**: Track family health background
