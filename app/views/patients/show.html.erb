@@ -4,6 +4,7 @@
     <span class="patient-type-badge">
       <%= @patient.individual_type == 'Dog' ? 'Cachorro' : 'Pessoa' %>
     </span>
+    <%= link_to 'Resumo de Saúde', health_patient_path(@patient), class: 'btn btn-primary' %>
   </header>
 
   <section class="patient-treatments" aria-labelledby="treatments-heading">
