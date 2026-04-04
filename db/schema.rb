@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_04_102421) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_04_111559) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -161,6 +161,31 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_04_102421) do
     t.index ["patient_id", "appointment_date"], name: "index_medical_appointments_on_patient_id_and_appointment_date"
     t.index ["patient_id"], name: "index_medical_appointments_on_patient_id"
     t.index ["status"], name: "index_medical_appointments_on_status"
+  end
+
+  create_table "medical_condition_treatments", force: :cascade do |t|
+    t.integer "medical_condition_id", null: false
+    t.integer "treatment_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["medical_condition_id"], name: "index_medical_condition_treatments_on_medical_condition_id"
+    t.index ["treatment_id"], name: "index_medical_condition_treatments_on_treatment_id"
+  end
+
+  create_table "medical_conditions", force: :cascade do |t|
+    t.integer "patient_id", null: false
+    t.string "condition_name", null: false
+    t.string "icd_code"
+    t.date "diagnosed_date", null: false
+    t.string "status", default: "active"
+    t.string "severity"
+    t.text "notes"
+    t.date "resolved_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["diagnosed_date"], name: "index_medical_conditions_on_diagnosed_date"
+    t.index ["patient_id", "status"], name: "index_medical_conditions_on_patient_id_and_status"
+    t.index ["patient_id"], name: "index_medical_conditions_on_patient_id"
   end
 
   create_table "medical_exams", force: :cascade do |t|
@@ -443,6 +468,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_04_102421) do
   add_foreign_key "exam_requests", "medical_appointments"
   add_foreign_key "exam_requests", "patients"
   add_foreign_key "medical_appointments", "patients"
+  add_foreign_key "medical_condition_treatments", "medical_conditions"
+  add_foreign_key "medical_condition_treatments", "treatments"
+  add_foreign_key "medical_conditions", "patients"
   add_foreign_key "medical_exams", "medical_appointments"
   add_foreign_key "medical_exams", "patients"
   add_foreign_key "medication_administrations", "pharmacotherapies"
