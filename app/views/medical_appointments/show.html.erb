@@ -65,11 +65,46 @@
           </dd>
         </div>
       <% end %>
+
+      <% if @appointment.medical_exams.any? %>
+        <div class="linked-exams">
+          <dt>Exames</dt>
+          <dd>
+            <ul class="exams-list">
+              <% @appointment.medical_exams.each do |exam| %>
+                <li>
+                  <%= link_to exam.exam_type.humanize, patient_medical_exam_path(@appointment.patient, exam) %>
+                  <span class="exam-status status-<%= exam.status %>"><%= exam.status.humanize %></span>
+                </li>
+              <% end %>
+            </ul>
+          </dd>
+        </div>
+      <% end %>
+
+      <% if @appointment.exam_requests.any? %>
+        <div class="linked-exam-requests">
+          <dt>Solicitações de Exames</dt>
+          <dd>
+            <ul class="exam-requests-list">
+              <% @appointment.exam_requests.each do |request| %>
+                <li>
+                  <%= link_to request.exam_name, patient_exam_request_path(@appointment.patient, request) %>
+                  <span class="request-status status-<%= request.status %>"><%= request.status.humanize %></span>
+                </li>
+              <% end %>
+            </ul>
+          </dd>
+        </div>
+      <% end %>
     </dl>
 
     <nav class="actions">
       <% if @appointment.scheduled? && @appointment.appointment_date >= Date.today %>
         <%= link_to 'Preparar Consulta', prepare_patient_medical_appointment_path(@appointment.patient, @appointment), class: 'btn btn-primary' %>
+      <% end %>
+      <% if @appointment.completed? %>
+        <%= link_to 'Solicitar Exame', new_patient_exam_request_path(@appointment.patient, medical_appointment_id: @appointment.id), class: 'btn btn-primary' %>
       <% end %>
       <%= link_to 'Editar', edit_patient_medical_appointment_path(@appointment.patient, @appointment), class: 'btn btn-secondary' %>
       <%= link_to 'Voltar', patient_medical_appointments_path(@appointment.patient), class: 'cancel-link' %>

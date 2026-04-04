@@ -1,0 +1,27 @@
+<turbo-stream action="replace" target="checklist-progress-<%= @appointment.id %>">
+  <template>
+    <div class="progress-bar" role="progressbar" style="width: <%= @appointment.checklist_progress %>%">
+      <span class="progress-text"><%= @appointment.checklist_progress %>% completo</span>
+    </div>
+  </template>
+</turbo-stream>
+
+<turbo-stream action="replace" target="checklist-items-<%= @appointment.id %>">
+  <template>
+    <div class="checklist-items-list">
+      <% (@appointment.checklist || []).each_with_index do |item, index| %>
+        <div class="checklist-item-row">
+          <label>
+            <input type="checkbox" 
+                   name="checklist_items[]" 
+                   value="<%= index %>"
+                   <%= item['checked'] ? 'checked' : '' %>
+                   data-action="checklist#toggle"
+                   data-index="<%= index %>">
+            <span class="<%= item['checked'] ? 'checked' : '' %>"><%= item['text'] %></span>
+          </label>
+        </div>
+      <% end %>
+    </div>
+  </template>
+</turbo-stream>

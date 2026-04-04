@@ -40,7 +40,7 @@
       <div class="checklist-section" data-controller="checklist">
         <h2>Checklist</h2>
         
-        <div class="checklist-progress">
+        <div class="checklist-progress" id="checklist-progress-<%= @appointment.id %>">
           <div class="progress-bar" role="progressbar" style="width: <%= @appointment.checklist_progress %>%">
             <span class="progress-text"><%= @appointment.checklist_progress %>% completo</span>
           </div>
@@ -57,7 +57,7 @@
             <p class="help-text">Digite os itens que deseja verificar, um por linha</p>
           </div>
 
-          <div class="checklist-status">
+          <div class="checklist-status" id="checklist-items-<%= @appointment.id %>">
             <h3>Status dos Itens</h3>
             <div class="checklist-items-list">
               <% (@appointment.checklist || []).each_with_index do |item, index| %>
