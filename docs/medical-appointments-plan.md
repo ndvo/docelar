@@ -568,7 +568,7 @@ add_index :exam_requests, [:patient_id, :status]
 - [x] Add database migration
 - [x] Configure enums in model
 - [x] Add validations
-- [ ] Add ActiveStorage attachment for results
+- [x] Add ActiveStorage attachment for results
 - [x] Create medical_exams controller
 - [x] Create medical_exams views
 - [x] Generate ExamRequest model
@@ -578,8 +578,8 @@ add_index :exam_requests, [:patient_id, :status]
 - [x] Create exam_requests controller
 - [x] Create exam_requests views
 - [x] Add routes
-- [ ] Integrate exams on appointment show page
-- [ ] Add exam request button on completed appointments
+- [x] Integrate exams on appointment show page
+- [x] Add exam request button on completed appointments
 - [x] Add to patient show page
 - [x] Add feature specs
 - [x] Add factories
@@ -1032,8 +1032,8 @@ end
 - [x] Integrate preparation summary on show page
 - [x] Add feature specs
 - [x] Add database index on checklist JSONB
-- [ ] Test Turbo Stream updates
-- [ ] Verify mobile responsiveness
+- [x] Test Turbo Stream updates
+- [x] Verify mobile responsiveness
 
 ### Phase 4: Post-Appointment Follow-Up
 **Goal**: Track tasks after physician visit
