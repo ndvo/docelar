@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_04_111559) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_04_121158) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -122,6 +122,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_04_111559) do
     t.index ["patient_id"], name: "index_exam_requests_on_patient_id"
     t.index ["requested_date"], name: "index_exam_requests_on_requested_date"
     t.index ["status"], name: "index_exam_requests_on_status"
+  end
+
+  create_table "family_medical_histories", force: :cascade do |t|
+    t.integer "patient_id", null: false
+    t.string "relation", null: false
+    t.string "condition_name", null: false
+    t.string "icd_code"
+    t.date "diagnosed_relative_date", null: false
+    t.text "notes"
+    t.integer "age_at_diagnosis"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["diagnosed_relative_date"], name: "index_family_medical_histories_on_diagnosed_relative_date"
+    t.index ["patient_id", "relation"], name: "index_family_medical_histories_on_patient_id_and_relation"
+    t.index ["patient_id"], name: "index_family_medical_histories_on_patient_id"
   end
 
   create_table "galleries", force: :cascade do |t|
@@ -467,6 +482,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_04_111559) do
   add_foreign_key "comments", "articles"
   add_foreign_key "exam_requests", "medical_appointments"
   add_foreign_key "exam_requests", "patients"
+  add_foreign_key "family_medical_histories", "patients"
   add_foreign_key "medical_appointments", "patients"
   add_foreign_key "medical_condition_treatments", "medical_conditions"
   add_foreign_key "medical_condition_treatments", "treatments"
