@@ -24,6 +24,7 @@ class MedicalAppointment < ApplicationRecord
   scope :upcoming, -> { where('appointment_date >= ?', Date.today).order(appointment_date: :asc) }
   scope :past, -> { where('appointment_date < ?', Date.today).order(appointment_date: :desc) }
   scope :pending_preparation, -> { where(status: :scheduled).where('appointment_date >= ?', Date.today) }
+  scope :needs_follow_up, -> { where(follow_up_required: true).where('follow_up_date >= ?', Date.today) }
 
   def checklist_items
     checklist || []
@@ -40,5 +41,9 @@ class MedicalAppointment < ApplicationRecord
     items = checklist_items
     return false if items.empty?
     items.all? { |item| item['checked'] }
+  end
+
+  def prescribed_medications_list
+    prescribed_medications || []
   end
 end
