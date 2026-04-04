@@ -49,6 +49,13 @@
           <dd><%= @exam.interpretation %></dd>
         </div>
       <% end %>
+
+      <% if @exam.results_file.attached? %>
+        <div>
+          <dt>Arquivo de Resultados</dt>
+          <dd><%= link_to @exam.results_file.filename, @exam.results_file, target: '_blank', class: 'btn btn-secondary' %></dd>
+        </div>
+      <% end %>
     </dl>
 
     <nav class="actions">

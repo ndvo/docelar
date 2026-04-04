@@ -2,6 +2,8 @@ class MedicalExam < ApplicationRecord
   belongs_to :patient
   belongs_to :medical_appointment, optional: true
 
+  has_one_attached :results_file
+
   enum :exam_type, {
     blood_test: 'blood_test',
     urine_test: 'urine_test',

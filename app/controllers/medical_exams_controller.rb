@@ -61,7 +61,8 @@ class MedicalExamsController < ApplicationController
       :results_summary,
       :interpretation,
       :status,
-      :medical_appointment_id
+      :medical_appointment_id,
+      :results_file
     )
   end
 end
