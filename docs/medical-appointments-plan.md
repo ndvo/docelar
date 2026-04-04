@@ -1336,12 +1336,107 @@ add_index :family_medical_histories, [:patient_id, :relation]
 - [x] Add database indexes
 - [x] Performance review
 
-### Phase 7: Health Summary & UX
-**Goal**: Unified health view for physician visits
-- [ ] Health Hub layout (summary card, sections with counts)
-- [ ] Health summary view (appointments, conditions, treatments, exams)
-- [ ] Tab/filter navigation
-- [ ] Mobile-responsive design
+---
+
+### Phase 7: Health Summary & UX Implementation Plan
+
+### Goal
+Create a unified health hub view for physician visits - consolidated view of all health data.
+
+### Components
+
+#### 1. Health Hub Controller
+
+**Purpose**: Aggregate all health data for a patient
+
+```ruby
+class HealthHubsController < ApplicationController
+  def show
+    @patient = Patient.find(params[:patient_id])
+    @appointments = @patient.medical_appointments.upcoming
+    @conditions = @patient.medical_conditions.active_conditions
+    @treatments = @patient.treatments.active
+    @exams = @patient.medical_exams.order(exam_date: :desc).limit(5)
+    @family_history = @patient.family_medical_histories
+  end
+end
+```
+
+#### 2. Health Hub View
+
+**Purpose**: Display consolidated health information
+
+```
+app/views/health_hubs/show.html.erb
+
+Sections:
+- Patient summary card (name, age, photo)
+- Upcoming appointments (next 3)
+- Active conditions (count + list)
+- Active treatments (count + medications)
+- Recent exams (last 5)
+- Family history summary
+- Quick actions (add appointment, request exam, add condition)
+```
+
+#### 3. Tab Navigation
+
+- Overview (default)
+- Appointments
+- Conditions
+- Treatments/Medications
+- Exams
+- Family History
+
+#### 4. Mobile Design
+
+- Collapsible sections
+- Bottom navigation for mobile
+- Touch-friendly buttons
+
+### Implementation Steps
+
+1. **Create HealthHubController**
+   - Aggregate all health associations
+   - Handle filters
+
+2. **Create Health Hub View**
+   - Summary card with counts
+   - Tab navigation
+   - Recent items from each category
+
+3. **Add Health Hub Route**
+   ```ruby
+   get 'patients/:id/health', to: 'health_hubs#show', as: 'patient_health'
+   ```
+
+4. **Add link from patient page**
+   - "Health Hub" button in patient header
+
+5. **Add Turbo frames for tabs** (optional)
+   - Lazy load tab content
+
+### Database Considerations
+
+No new tables needed - uses existing data.
+
+### Views
+
+- `app/views/health_hubs/show.html.erb` - Main health hub
+- `app/views/health_hubs/_appointment_summary.html.erb` - Partial
+- `app/views/health_hubs/_condition_summary.html.erb` - Partial
+
+### Checklist
+
+- [ ] Create HealthHubController
+- [ ] Add health route
+- [ ] Create health hub view
+- [ ] Add tab navigation
+- [ ] Add summary card with counts
+- [ ] Integrate with patient page
+- [ ] Mobile responsive design
+- [ ] Add feature specs
+- [ ] Performance review
 
 ### Phase 8: Enhancements
 **Goal**: Nice-to-have features
