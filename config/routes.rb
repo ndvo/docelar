@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
   resources :patients do
     get :medications, on: :member
+    get :health, on: :member
     resources :treatments
     resources :medical_appointments do
       get :prepare, on: :member
