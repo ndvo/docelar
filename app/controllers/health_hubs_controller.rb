@@ -4,7 +4,7 @@ class HealthHubsController < ApplicationController
   def show
     @upcoming_appointments = @patient.medical_appointments.upcoming.limit(3)
     @active_conditions = @patient.medical_conditions.active_conditions
-    @active_treatments = @patient.treatments.active
+    @active_treatments = @patient.treatments.active.includes(:pharmacotherapies)
     @recent_exams = @patient.medical_exams.order(exam_date: :desc).limit(5)
     @family_history = @patient.family_medical_histories
   end
