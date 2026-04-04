@@ -1240,10 +1240,101 @@ add_index :medical_conditions, :diagnosed_date
 - [x] Add database indexes
 - [x] Performance review
 
-### Phase 6: Family Medical History
-**Goal**: Track family health background
-- [ ] FamilyMedicalHistory model + CRUD
-- [ ] Display on health summary
+---
+
+### Phase 6: Family Medical History Implementation Plan
+
+### Goal
+Track family health background - record conditions that run in the family.
+
+### Model
+
+#### FamilyMedicalHistory
+
+**Purpose**: Track family health conditions
+
+```ruby
+class FamilyMedicalHistory < ApplicationRecord
+  belongs_to :patient
+
+  enum :relation, {
+    mother: 'mother',
+    father: 'father',
+    sibling: 'sibling',
+    grandparent: 'grandparent',
+    other: 'other'
+  }
+
+  validates :relation, presence: true
+  validates :condition_name, presence: true
+  validates :diagnosed_relative_date, presence: true
+end
+```
+
+**Database fields:**
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| patient_id | FK | Yes | Links to Patient |
+| relation | string | Yes | mother/father/sibling/grandparent/other |
+| condition_name | string | Yes | e.g., "Diabetes" |
+| icd_code | string | No | ICD-10 code |
+| diagnosed_relative_date | date | Yes | When relative was diagnosed |
+| notes | text | No | Additional info |
+| age_at_diagnosis | integer | No | Age when diagnosed |
+
+### Implementation Steps
+
+1. **Generate model**
+   ```bash
+   bin/rails g model FamilyMedicalHistory patient:references relation:string condition_name:string icd_code:string diagnosed_relative_date:date notes:text age_at_diagnosis:integer
+   ```
+
+2. **Configure enums in model**
+   - FamilyMedicalHistory: relation
+
+3. **Add validations**
+
+4. **Create controller**
+   - `app/controllers/family_medical_histories_controller.rb`
+
+5. **Create views**
+   - `family_medical_histories/index.html.erb`
+   - `family_medical_histories/show.html.erb`
+   - `family_medical_histories/_form.html.erb`
+   - `family_medical_histories/new.html.erb`
+   - `family_medical_histories/edit.html.erb`
+
+6. **Add routes**
+   ```ruby
+   resources :patients do
+     resources :family_medical_histories
+   end
+   ```
+
+7. **Add to patient show page**
+   - Show family history section
+
+8. **Add feature specs**
+
+### Database Indexes
+
+```ruby
+add_index :family_medical_histories, [:patient_id, :relation]
+```
+
+### Checklist
+
+- [ ] Generate FamilyMedicalHistory model
+- [ ] Add database migration
+- [ ] Configure enums in model
+- [ ] Add validations
+- [ ] Create family_medical_histories controller
+- [ ] Create family_medical_histories views
+- [ ] Add routes
+- [ ] Add to patient show page
+- [ ] Add feature specs
+- [ ] Add database indexes
+- [ ] Performance review
 
 ### Phase 7: Health Summary & UX
 **Goal**: Unified health view for physician visits
