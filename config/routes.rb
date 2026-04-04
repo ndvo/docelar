@@ -6,8 +6,10 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   resources :patients do
-    get :medications, on: :member
-    get :health, on: :member
+    member do
+      get :medications
+      get :health, to: 'health_hubs#show'
+    end
     resources :treatments
     resources :medical_appointments do
       get :prepare, on: :member
