@@ -2,7 +2,7 @@
   <div class="treatment-card-header">
     <h3>
       <%= link_to patient.individual.name, 
-                  patient.individual_type == 'Dog' ? dog_path(patient.individual) : person_path(patient.individual),
+                  patient,
                   aria_label: "Ver medicamentos de #{patient.individual.name}" %>
     </h3>
     <span class="treatment-type-badge" aria-hidden="true">

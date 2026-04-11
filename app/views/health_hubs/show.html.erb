@@ -82,7 +82,7 @@
 
     <nav class="health-hub-tabs" role="navigation" aria-label="Navegação de seções">
       <div class="tabs-scroll">
-        <%= link_to 'Visão Geral', patient_health_path(@patient), class: 'tab active', aria_current: 'page' %>
+        <%= link_to 'Visão Geral', patient_path(@patient), class: 'tab active', aria_current: 'page' %>
         <%= link_to 'Consultas', patient_medical_appointments_path(@patient), class: 'tab' %>
         <%= link_to 'Condições', patient_medical_conditions_path(@patient), class: 'tab' %>
         <%= link_to 'Medicamentos', patient_treatments_path(@patient), class: 'tab' %>
