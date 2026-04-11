@@ -33,7 +33,9 @@ input[type="checkbox"] {
 }
 
 input[type="submit"],
-button[type="submit"] {
+button[type="submit"],
+button
+{
   padding: 0.5em 1em;
   background: var(--background);
   border-radius: var(--margin-small);
