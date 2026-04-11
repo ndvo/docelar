@@ -73,4 +73,36 @@ document.addEventListener('keydown', function(e) {
     Turbo.router.navigate('<%= @photo.next || @photo.gallery.photos.order(:id).first&.id ? photo_path(@photo.next || @photo.gallery.photos.order(:id).first) : '#' %>');
   }
 });
+
+// Touch swipe navigation
+(function() {
+  let touchStartX = 0;
+  let touchStartY = 0;
+  const minSwipeDistance = 50;
+  const maxVerticalSwipe = 100;
+
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+    
+    // Only trigger if horizontal swipe is longer than vertical
+    if (Math.abs(deltaX) > minSwipeDistance && Math.abs(deltaY) < maxVerticalSwipe) {
+      if (deltaX > 0) {
+        // Swipe right - go to previous
+        Turbo.router.navigate('<%= @photo.previous || @photo.gallery.photos.order(:id).last&.id ? photo_path(@photo.previous || @photo.gallery.photos.order(:id).last) : '#' %>');
+      } else {
+        // Swipe left - go to next
+        Turbo.router.navigate('<%= @photo.next || @photo.gallery.photos.order(:id).first&.id ? photo_path(@photo.next || @photo.gallery.photos.order(:id).first) : '#' %>');
+      }
+    }
+  }, { passive: true });
+})();
 </script>
