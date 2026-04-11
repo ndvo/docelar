@@ -87,9 +87,17 @@
 ### Media Module
 - [x] Galleries - Photo organization
 - [x] Google Photos - Import integration
+- [x] Zip/Tar Upload - Import from compressed files
 - [x] Articles - Content management
 - [ ] Video support
 - [ ] Photo editing
+
+### Learning Module
+- [ ] Library - Family book collection
+- [ ] Reading Progress - Track current reads
+- [ ] Reading Goals - Monthly/yearly targets
+- [ ] Calibre Import - Import from Calibre library
+- [ ] Kindle Import - Import from Kindle/Goodreads
 
 ---
 
@@ -103,6 +111,9 @@
 6. **Dashboard** - Main dashboard with overview
 7. **Calendar View** - Payments due calendar
 8. **Statistics** - Spending analytics
+9. **Library** - Family book collection with reading tracking
+10. **Calibre Integration** - Import e-books from Calibre
+11. **Kindle/Goodreads** - Import reading data
 
 ## Design Improvements Needed
 

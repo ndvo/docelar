@@ -26,6 +26,12 @@ A comprehensive home management application for Brazilian families.
 - **Galleries** - Photo organization
 - **Articles** - Content management
 
+### Learning
+- **Library** - Family book collection
+- **Reading** - Track reading progress and goals
+- **Calibre** - Import from Calibre e-book library
+- **Kindle** - Import from Kindle/Goodreads
+
 ## Principles
 
 1. **Privacy First** - Your data stays yours
