@@ -136,3 +136,4 @@ Before adding any gem, npm package, or library:
 | `project-owner` | Planning, prioritization |
 | `devops` | CI/CD, deployment, automation |
 | `qa` | Test quality, code quality, accessibility |
+| `health` | Medical appointments, patient health records, conditions, exams |

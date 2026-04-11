@@ -1438,12 +1438,78 @@ No new tables needed - uses existing data.
 - [x] Add feature specs
 - [x] Performance review
 
-### Phase 8: Enhancements
-**Goal**: Nice-to-have features
-- [ ] Export to PDF
-- [ ] Timeline view
-- [ ] Reminders for follow-ups
-- [ ] Split appointment form into steps
+---
+
+### Phase 8: Enhancements Implementation Plan
+
+### Goal
+Nice-to-have features for improved user experience.
+
+### Features
+
+#### 1. Export to PDF
+- Generate PDF report of health data
+- Include appointments, conditions, treatments, exams
+- Use PDFKit or WickedPDF gem
+
+#### 2. Timeline View
+- Chronological view of all health events
+- Merge appointments, exams, conditions into single timeline
+- Filter by date range and category
+
+#### 3. Reminders for Follow-ups
+- Email/SMS notifications for upcoming appointments
+- Configurable reminder timing (1 day, 1 week before)
+- Use ActionMailer and sidekiq/background jobs
+
+#### 4. Multi-Step Forms
+- Split complex forms (new appointment, new exam) into steps
+- Use Turbo Frames for step navigation
+- Save progress between steps
+
+### Implementation Steps
+
+1. **PDF Export**
+   - Add gem (pdfkit or wicked_pdf)
+   - Create PDF template for health summary
+   - Add "Export PDF" button to Health Hub
+
+2. **Timeline View**
+   - Create TimelineController
+   - Aggregate all health events
+   - Create timeline view with filters
+
+3. **Reminders**
+   - Add reminder settings to Patient
+   - Create reminder job
+   - Schedule with whenever gem or sidekiq
+
+4. **Multi-Step Forms**
+   - Add Turbo Stream support
+   - Create wizard-style forms
+   - Add validation between steps
+
+### Checklist
+
+- [ ] Add PDF generation gem
+- [ ] Create PDF template for health summary
+- [ ] Add export button to Health Hub
+- [ ] Create TimelineController
+- [ ] Create timeline view
+- [ ] Add timeline filters
+- [ ] Add reminder settings
+- [ ] Create reminder background job
+- [ ] Add multi-step form for appointments
+- [ ] Add multi-step form for exams
+
+### Phase 9: Integration with External Systems
+
+### Goal
+Connect with external healthcare systems
+
+- [ ] FHIR API integration
+- [ ] Laboratory API integration
+- [ ] Pharmacy integration
 
 ---
 
