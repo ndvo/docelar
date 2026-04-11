@@ -4,23 +4,16 @@ class PatientsController < ApplicationController
   # GET /patients or /patients.json
   def index
     @patient_type = params[:type] || 'Person'
-    @patients = Patient.where(individual_type: @patient_type).order(created_at: :desc)
-    @active_treatments_count = Treatment.active.count
-    @today_doses_count = MedicationAdministration.where("DATE(scheduled_at) = ?", Date.today).count
+    set_patient_list
+    set_treatment_counts
   end
 
   # GET /medications/dashboard
   def dashboard
     @patient_type = 'Person'
-    @patients = Patient.where(individual_type: @patient_type).order(created_at: :desc)
-    @active_treatments_count = Treatment.active.count
-    @today_doses_count = MedicationAdministration.where("DATE(scheduled_at) = ?", Date.today).count
-    
-    @next_admin = MedicationAdministration.where("DATE(scheduled_at) = ?", Date.today)
-      .where("scheduled_at > ?", Time.current)
-      .order(:scheduled_at).first
-    @next_dose = @next_admin&.scheduled_at
-    @next_dose_medication = @next_admin&.medication&.name
+    set_patient_list
+    set_treatment_counts
+    set_next_dose
   end
 
   # GET /patients/1/medications
@@ -46,6 +39,7 @@ class PatientsController < ApplicationController
 
   # GET /patients/1/edit
   def edit
+    @patient_type = @patient.individual_type
   end
 
   # POST /patients or /patients.json
@@ -97,12 +91,38 @@ class PatientsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
     def set_patient
       @patient = Patient.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
+    def set_patient_list
+      @patients = Patient.where(individual_type: @patient_type).order(created_at: :desc)
+    end
+
+    def set_treatment_counts
+      today = Date.today
+      today_start = today.beginning_of_day
+      today_end = today.end_of_day
+
+      @active_treatments_count = Treatment.active.count
+      @today_doses_count = MedicationAdministration
+        .where(scheduled_at: today_start..today_end)
+        .count
+    end
+
+    def set_next_dose
+      @next_admin = MedicationAdministration
+        .includes(:medication)
+        .where(scheduled_at: Date.today.beginning_of_day..Date.today.end_of_day)
+        .where("scheduled_at > ?", Time.current)
+        .order(:scheduled_at)
+        .first
+
+      @next_dose = @next_admin&.scheduled_at
+      @next_dose_medication = @next_admin&.medication&.name
+    end
+
     def patient_params
       params.require(:patient).permit(:individual_id, :individual_type)
     end
