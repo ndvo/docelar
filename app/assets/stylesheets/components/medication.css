@@ -334,7 +334,35 @@
   margin-top: var(--margin-normal);
 }
 
+.person-show {
+  display: flex;
+  flex-direction: column;
+  gap: var(--margin-enourmous);
+}
+
+.person-show .person-profile-header {
+  margin-bottom: 0;
+}
+
+.person-show .person-nav {
+  padding-top: var(--margin-large);
+  border-top: 1px solid var(--med-border);
+}
+
 @media (max-width: 600px) {
+  .person-show {
+    gap: var(--margin-large);
+  }
+
+  .person-show .medication-dashboard h2,
+  .person-show .patient-administrations h2 {
+    font-size: 1.25rem;
+  }
+
+  .person-show .treatments-grid {
+    grid-template-columns: 1fr;
+  }
+}
   .medication-page {
     padding: var(--margin-normal);
   }
