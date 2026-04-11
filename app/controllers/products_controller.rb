@@ -8,6 +8,14 @@ class ProductsController < ApplicationController
 
   # GET /products/1 or /products/1.json
   def show
+    @recent_purchases = @product.purchases
+      .includes(:card)
+      .order(purchase_at: :desc)
+      .limit(10)
+
+    @avg_last_month = @product.average_price_last_month
+    @avg_last_year = @product.average_price_last_year
+    @avg_last_5_years = @product.average_price_last_5_years
   end
 
   # GET /products/new
