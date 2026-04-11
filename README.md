@@ -19,6 +19,7 @@ A comprehensive home management application for Brazilian families.
 
 ### Organization
 - **Tasks** - Task management
+- **Calendar** - Family calendar with unified events
 - **Tags** - Organization system
 - **Notes** - Personal notes
 

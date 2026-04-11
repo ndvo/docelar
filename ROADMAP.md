@@ -83,6 +83,10 @@
 - [x] Tasks - Task management
 - [x] Tags - Organization system
 - [x] Notes - Personal notes
+- [ ] Calendar - Family calendar with unified events
+  - [ ] Internal integration (tasks, payments, appointments)
+  - [ ] Google Calendar sync
+  - [ ] ICS import
 
 ### Media Module
 - [x] Galleries - Photo organization
@@ -105,15 +109,16 @@
 
 1. **Reports** - Financial reports (mentioned in nav: "Relatório de Gastos")
 2. **Budgets** - Monthly budget planning
-3. **Recurring Payments** - Automatic recurring payment tracking
+3. **Recurring Payments** - Automatic recurring payment detection
 4. **Import/Export** - CSV import for purchases
 5. **Notifications** - Due payment alerts
 6. **Dashboard** - Main dashboard with overview
-7. **Calendar View** - Payments due calendar
-8. **Statistics** - Spending analytics
-9. **Library** - Family book collection with reading tracking
-10. **Calibre Integration** - Import e-books from Calibre
-11. **Kindle/Goodreads** - Import reading data
+7. **Family Calendar** - Unified calendar with tasks, payments, appointments
+8. **Google Calendar Sync** - Two-way sync with Google Calendar
+9. **Statistics** - Spending analytics
+10. **Library** - Family book collection with reading tracking
+11. **Calibre Integration** - Import e-books from Calibre
+12. **Kindle/Goodreads** - Import reading data
 
 ## Design Improvements Needed
 
