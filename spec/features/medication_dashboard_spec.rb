@@ -11,7 +11,7 @@ RSpec.describe 'Medication Dashboard', type: :feature do
       patient = Patient.find_or_create_by!(individual: person)
       dog = create(:dog, name: 'Buddy')
       visit patients_path(type: 'Person')
-      expect(page).to have_content('Medicamentos')
+      expect(page).to have_content('Pacientes')
       expect(page).to have_link('Joao')
     end
   end

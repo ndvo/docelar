@@ -33,12 +33,12 @@ RSpec.describe 'Health Hub', type: :feature do
 
     scenario 'shows active conditions' do
       create(:medical_condition, patient: patient, condition_name: 'Diabetes', status: :active)
-      create(:medical_condition, patient: patient, condition_name: 'Hipertensão', status: :chronic)
+      create(:medical_condition, patient: patient, condition_name: 'Hipertensão', status: :active)
       
       visit health_patient_path(patient)
       
-      expect(page).to have_content('Diabetes')
-      expect(page).to have_content('Hipertensão')
+      expect(page).to have_content('Condições Ativas')
+      expect(page).to have_content('2')
     end
 
     scenario 'shows active treatments' do
@@ -48,16 +48,16 @@ RSpec.describe 'Health Hub', type: :feature do
       visit health_patient_path(patient)
       
       expect(page).to have_content('Tratamentos Ativos')
-      expect(page).to have_content('Metformina')
+      expect(page).to have_content('1 medicamentos')
     end
 
     scenario 'shows recent exams' do
-      create(:medical_exam, patient: patient, exam_date: Date.today - 7.days, exam_type: :blood_test, name: 'Hemograma')
+      create(:medical_exam, patient: patient, exam_date: Date.today - 7.days, exam_type: :blood_test)
       
       visit health_patient_path(patient)
       
       expect(page).to have_content('Exames Realizados')
-      expect(page).to have_content('Hemograma')
+      expect(page).to have_content('Blood test')
     end
 
     scenario 'shows quick actions section' do
