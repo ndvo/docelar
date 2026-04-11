@@ -11,8 +11,8 @@ jobs:
   rubocop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@eef6144
+      - uses: ruby/setup-ruby@3ff19f5
         with:
           bundler-cache: true
       - run: bundle exec rubocop --parallel
@@ -20,8 +20,8 @@ jobs:
   brakeman:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@eef6144
+      - uses: ruby/setup-ruby@3ff19f5
         with:
           bundler-cache: true
       - run: bundle exec brakeman --no-pager -w1
@@ -29,8 +29,8 @@ jobs:
   bundler-audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@eef6144
+      - uses: ruby/setup-ruby@3ff19f5
         with:
           bundler-cache: true
       - run: bundle exec bundle-audit check
