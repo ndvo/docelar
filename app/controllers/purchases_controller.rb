@@ -17,7 +17,11 @@ class PurchasesController < ApplicationController
   # GET /purchases/new
   def new
     @purchase = Purchase.new
-    @purchase.product = Product.new
+    if params[:product_id].present?
+      @purchase.product_id = params[:product_id]
+    else
+      @purchase.product = Product.new
+    end
     @purchase.number_of_installments = 1
     @purchase.quantity = 1
     @purchase.purchase_at = DateTime.now.to_date
@@ -83,8 +87,11 @@ class PurchasesController < ApplicationController
       end
     end
 
-    @purchase.save
-    redirect_to purchase_url(@purchase), notice: 'Pagamentos atualizados com sucesso.' 
+    if @purchase.save
+      redirect_to purchase_url(@purchase), notice: 'Pagamentos atualizados com sucesso.'
+    else
+      redirect_to purchase_url(@purchase), alert: 'Erro ao atualizar pagamentos.'
+    end
   end
 
   def installments
