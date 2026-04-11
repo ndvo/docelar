@@ -88,6 +88,79 @@ RSpec.describe TreatmentsController, type: :controller do
         expect(response).to be_unprocessable
       end
     end
+
+    context 'with nested pharmacotherapy' do
+      let(:new_med) { create(:medication) }
+
+      it 'creates a new pharmacotherapy' do
+        expect {
+          put :update, params: {
+            id: treatment.id,
+            treatment: {
+              pharmacotherapies_attributes: {
+                "0" => {
+                  medication_id: new_med.id,
+                  dosage: "50mg",
+                  frequency: "daily"
+                }
+              }
+            }
+          }
+        }.to change { treatment.reload.pharmacotherapies.count }.by(1)
+      end
+
+      it 'redirects after successful update' do
+        put :update, params: {
+          id: treatment.id,
+          treatment: {
+            pharmacotherapies_attributes: {
+              "0" => {
+                medication_id: new_med.id,
+                dosage: "50mg",
+                frequency: "daily"
+              }
+            }
+          }
+        }
+        expect(response).to redirect_to(treatment)
+      end
+
+      it 'returns validation error for duplicate medication' do
+        create(:pharmacotherapy, treatment: treatment, medication: new_med)
+
+        put :update, params: {
+          id: treatment.id,
+          treatment: {
+            pharmacotherapies_attributes: {
+              "0" => {
+                medication_id: new_med.id,
+                dosage: "100mg",
+                frequency: "daily"
+              }
+            }
+          }
+        }
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'allows removing pharmacotherapy via nested attributes' do
+        pharma = create(:pharmacotherapy, treatment: treatment, medication: new_med)
+
+        expect {
+          put :update, params: {
+            id: treatment.id,
+            treatment: {
+              pharmacotherapies_attributes: {
+                "0" => {
+                  id: pharma.id,
+                  _destroy: "1"
+                }
+              }
+            }
+          }
+        }.to change { treatment.reload.pharmacotherapies.count }.by(-1)
+      end
+    end
   end
 
   describe 'DELETE #destroy' do

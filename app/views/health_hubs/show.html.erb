@@ -78,55 +78,6 @@
       </div>
     </div>
 
-      <div class="summary-card conditions" role="article" aria-label="Condições ativas">
-        <div class="card-count"><%= @active_conditions.count %></div>
-        <div class="card-label">Condições Ativas</div>
-        <% if @active_conditions.any? %>
-          <ul class="card-list">
-            <% @active_conditions.first(3).each do |condition| %>
-              <li>
-                <strong><%= condition.condition_name %></strong>
-                <span class="status-badge status-<%= condition.status %>"><%= condition.status.humanize %></span>
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
-        <%= link_to 'Ver Todas', patient_medical_conditions_path(@patient), class: 'card-link' %>
-      </div>
-
-      <div class="summary-card treatments" role="article" aria-label="Tratamentos ativos">
-        <div class="card-count"><%= @active_treatments.count %></div>
-        <div class="card-label">Tratamentos Ativos</div>
-        <% if @active_treatments.any? %>
-          <ul class="card-list">
-            <% @active_treatments.first(3).each do |treatment| %>
-              <li>
-                <strong><%= treatment.pharmacotherapies.count %> medicamentos</strong>
-                <span>Iniciado em <%= l(treatment.start_date, format: :short) %></span>
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
-        <%= link_to 'Ver Todos', patient_treatments_path(@patient), class: 'card-link' %>
-      </div>
-
-      <div class="summary-card exams" role="article" aria-label="Exames realizados">
-        <div class="card-count"><%= @patient.medical_exams.count %></div>
-        <div class="card-label">Exames Realizados</div>
-        <% if @recent_exams.any? %>
-          <ul class="card-list">
-            <% @recent_exams.first(3).each do |exam| %>
-              <li>
-                <strong><%= exam.exam_type.humanize %></strong>
-                <span><%= l(exam.exam_date, format: :short) %></span>
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
-        <%= link_to 'Ver Todos', patient_medical_exams_path(@patient), class: 'card-link' %>
-      </div>
-    </div>
-
     <nav class="health-hub-tabs" role="navigation" aria-label="Navegação de seções">
       <div class="tabs-scroll">
         <%= link_to 'Visão Geral', patient_path(@patient), class: 'tab active', aria_current: 'page' %>

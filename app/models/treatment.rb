@@ -2,7 +2,7 @@ class Treatment < ApplicationRecord
   belongs_to :patient
   has_many :pharmacotherapies
 
-  accepts_nested_attributes_for :pharmacotherapies, allow_destroy: true, reject_if: lambda { |attrs| attrs['medication_id'].blank? && attrs['dosage'].blank? }
+  accepts_nested_attributes_for :pharmacotherapies, allow_destroy: true, reject_if: lambda { |attrs| attrs['medication_id'].blank? }
 
   enum :status, { active: 'active', completed: 'completed', paused: 'paused', cancelled: 'cancelled' }, default: :active
 

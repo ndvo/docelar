@@ -1,4 +1,4 @@
-<%= form_with(model: treatment, class: 'treatment-form', data: { controller: 'nested-form' }) do |form| %>
+<%= form_with(model: treatment, class: 'treatment-form', local: true, data: { controller: 'nested-form' }) do |form| %>
   <% if treatment.errors.any? %>
     <div id="error_explanation" role="alert" aria-labelledby="error-heading">
       <h2 id="error-heading"><%= pluralize(treatment.errors.count, "erro") %> impediu save:</h2>
@@ -15,12 +15,15 @@
 
     <div class="field">
       <%= form.label :patient_id, 'Paciente' %>
-      <%= form.select :patient_id, 
-          options_for_select(@patients&.collect { |p| [p.individual.name, p.id] }, treatment.patient_id || @patient&.id),
-          { include_blank: '-- selecione --' },
-          required: true,
-          disabled: @patient.present?
-        %>
+      <% if @patient.present? %>
+        <%= form.hidden_field :patient_id, value: @patient.id %>
+        <p class="patient-display"><%= @patient.individual.name %></p>
+      <% else %>
+        <%= form.select :patient_id,
+            options_for_select(@patients&.collect { |p| [p.individual.name, p.id] }, treatment.patient_id),
+            { include_blank: '-- selecione --' },
+            required: true %>
+      <% end %>
     </div>
 
     <div class="field">
@@ -89,23 +92,34 @@
       <% end %>
     </div>
 
-    <template data-nested-form-target="template">
-      <%= form.fields_for :pharmacotherapies, treatment.pharmacotherapies.build, child_index: 'NEW_RECORD' do |p_form| %>
-        <div class="pharmacotherapy-fields" data-new-record="true">
-          <div class="field">
-            <%= p_form.label :medication_id, 'Medicamento' %>
-            <%= p_form.select :medication_id,
-                options_for_select(@medications&.collect { |m| [m.name, m.id] }),
-                { include_blank: '-- selecione --' } %>
-          </div>
-          <div class="field">
-            <%= p_form.label :dosage, 'Dosagem' %>
-            <%= p_form.text_field :dosage, placeholder: 'ex: 10mg' %>
-          </div>
-          <button type="button" data-action="nested-form#removePharmacotherapy">Remover</button>
+    <% pharma_template = capture do %>
+      <div class="pharmacotherapy-fields" data-new-record="true">
+        <div class="field">
+          <%= form.label :medication_id, 'Medicamento' %>
+          <%= form.select :medication_id,
+              options_for_select(@medications&.collect { |m| [m.name, m.id] }),
+              { include_blank: '-- selecione --' }, name: 'treatment[pharmacotherapies_attributes][NEW_RECORD][medication_id]', id: nil %>
         </div>
-      <% end %>
-    </template>
+        <div class="field-row">
+          <div class="field">
+            <%= form.label :dosage, 'Dosagem' %>
+            <%= form.text_field :dosage, placeholder: 'ex: 10mg', name: 'treatment[pharmacotherapies_attributes][NEW_RECORD][dosage]', id: nil %>
+          </div>
+          <div class="field">
+            <%= form.label :frequency, 'Frequência' %>
+            <%= form.select :frequency,
+                options_for_select([['Diário', 'daily'], ['2x ao dia', 'twice_daily'], ['Semanal', 'weekly'], ['Se necessário', 'as_needed']]),
+                { include_blank: '-- selecione --' }, name: 'treatment[pharmacotherapies_attributes][NEW_RECORD][frequency]', id: nil %>
+          </div>
+        </div>
+        <div class="field">
+          <%= form.label :instructions, 'Instruções' %>
+          <%= form.text_area :instructions, rows: 2, placeholder: 'ex: Tomar com comida', name: 'treatment[pharmacotherapies_attributes][NEW_RECORD][instructions]', id: nil %>
+        </div>
+        <button type="button" data-action="nested-form#removePharmacotherapy">Remover</button>
+      </div>
+    <% end %>
+    <div id="pharma-template-placeholder" style="display: none;"><%= pharma_template %></div>
 
     <div class="actions">
     <button type="button" data-action="nested-form#addPharmacotherapy">+ Adicionar medicamento</button>
