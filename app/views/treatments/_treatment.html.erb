@@ -1,6 +1,6 @@
 <article class="treatment-card" id="<%= dom_id treatment %>">
   <header class="treatment-header">
-    <h3><%= link_to treatment.name, treatment %></h3>
+    <h3><%= link_to treatment.name, treatment, data: { turbo_frame: '_top' } %></h3>
     <span class="treatment-status status-<%= treatment.status %>"><%= t(".status.#{treatment.status}") %></span>
   </header>
   
