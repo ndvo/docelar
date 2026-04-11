@@ -50,7 +50,9 @@ Rails.application.routes.draw do
     post :payments_bulk_update, on: :collection
   end
   resources :people
-  resources :products
+  resources :products do
+    resources :purchases, only: [:new, :create]
+  end
   resources :purchases do
     post :payments_bulk_update, on: :member
     post :set_installments, on: :collection
