@@ -1,8 +1,61 @@
-<%= render @product %>
+<main id="main-content" class="product-show" role="main">
+  <%= render @product %>
 
-<div>
-  <%= link_to "Edit this product", edit_product_path(@product) %> |
-  <%= link_to "Back to products", products_path %>
+  <section class="product-stats card">
+    <h2>Histórico de Preços</h2>
+    <dl class="stats-grid">
+      <div class="stat-item">
+        <dt>Último Mês</dt>
+        <dd><%= @avg_last_month ? number_to_currency(@avg_last_month) : '-' %></dd>
+      </div>
+      <div class="stat-item">
+        <dt>Último Ano</dt>
+        <dd><%= @avg_last_year ? number_to_currency(@avg_last_year) : '-' %></dd>
+      </div>
+      <div class="stat-item">
+        <dt>Últimos 5 Anos</dt>
+        <dd><%= @avg_last_5_years ? number_to_currency(@avg_last_5_years) : '-' %></dd>
+      </div>
+    </dl>
+  </section>
 
-  <%= button_to "Destroy this product", @product, method: :delete %>
-</div>
+  <section class="recent-purchases">
+    <div class="section-header">
+      <h2>Últimas Compras</h2>
+      <%= link_to 'Nova Compra', new_product_purchase_path(@product), class: 'btn btn-primary' %>
+    </div>
+
+    <% if @recent_purchases.any? %>
+      <table class="purchases-table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Preço Unitário</th>
+            <th>Qtd</th>
+            <th>Total</th>
+            <th>Cartão</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @recent_purchases.each do |purchase| %>
+            <tr>
+              <td><%= I18n.l(purchase.purchase_at, format: "%A, %d/%m/%Y às %H:%M") %></td>
+              <td><%= number_to_currency(purchase.price) %></td>
+              <td><%= purchase.quantity %></td>
+              <td><%= number_to_currency(purchase.price * purchase.quantity) %></td>
+              <td><%= purchase.card&.name || '-' %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="empty-message">Nenhuma compra registrada.</p>
+    <% end %>
+  </section>
+
+  <div class="product-actions">
+    <%= link_to "Editar", edit_product_path(@product), class: 'btn btn-secondary' %>
+    <%= link_to "Voltar", products_path, class: 'cancel-link' %>
+    <%= button_to "Apagar", @product, method: :delete, class: 'btn btn-danger' %>
+  </div>
+</main>

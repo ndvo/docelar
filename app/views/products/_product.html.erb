@@ -1,22 +1,12 @@
-<div id="<%= dom_id product %>">
-  <p>
-    <strong>Name:</strong>
-    <%= product.name %>
-  </p>
+<header class="product-header">
+  <h1 id="product-name"><%= product.name %></h1>
+  <% if product.brand.present? || product.kind.present? %>
+    <span class="product-meta">
+      <%= [product.brand, product.kind].select(&:present?).join(' - ') %>
+    </span>
+  <% end %>
+</header>
 
-  <p>
-    <strong>Description:</strong>
-    <%= product.description %>
-  </p>
-
-  <p>
-    <strong>Brand:</strong>
-    <%= product.brand %>
-  </p>
-
-  <p>
-    <strong>Kind:</strong>
-    <%= product.kind %>
-  </p>
-
-</div>
+<% if product.description.present? %>
+  <p class="product-description"><%= product.description %></p>
+<% end %>
