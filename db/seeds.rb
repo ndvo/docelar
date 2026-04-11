@@ -257,4 +257,117 @@ Dog.all.each do |dog|
   Patient.find_or_create_by!(individual: dog) unless Patient.exists?(individual: dog)
 end
 
+# Medical Appointments
+puts "Creating medical appointments..."
+nelson = Person.find_by(name: "Nelson")
+maria = Person.find_by(name: "Maria")
+joao = Person.find_by(name: "João")
+nelson_patient = Patient.find_by(individual: nelson)
+maria_patient = Patient.find_by(individual: maria)
+joao_patient = Patient.find_by(individual: joao)
+
+prednisone = Medication.find_by(name: "Prednisone")
+amoxicillin = Medication.find_by(name: "Amoxicillin")
+
+if nelson_patient
+  appointments = [
+    { appointment_date: 7.days.from_now, appointment_type: :checkup, specialty: "Clínico Geral", professional_name: "Dr. Silva", location: "UBS Centro", status: :scheduled },
+    { appointment_date: 30.days.from_now, appointment_type: :specialist, specialty: "Cardiologia", professional_name: "Dra. Costa", location: "Hospital São Lucas", status: :scheduled },
+    { appointment_date: 60.days.ago, appointment_type: :checkup, specialty: "Clínico Geral", professional_name: "Dr. Silva", location: "UBS Centro", status: :completed },
+    { appointment_date: 120.days.ago, appointment_type: :follow_up, specialty: "Cardiologia", professional_name: "Dra. Costa", location: "Hospital São Lucas", status: :completed }
+  ]
+  appointments.each do |data|
+    nelson_patient.medical_appointments.find_or_create_by!(
+      appointment_date: data[:appointment_date],
+      appointment_type: data[:appointment_type],
+      specialty: data[:specialty],
+      professional_name: data[:professional_name],
+      location: data[:location],
+      status: data[:status]
+    )
+  end
+  puts "  - #{nelson.name}: #{appointments.size} appointments"
+end
+
+if maria_patient
+  appointments = [
+    { appointment_date: 14.days.from_now, appointment_type: :specialist, specialty: "Ginecologia", professional_name: "Dra. Santos", location: "Clínica Vida", status: :scheduled },
+    { appointment_date: 45.days.from_now, appointment_type: :exam, specialty: "Laboratório", professional_name: nil, location: "Labcenter", status: :scheduled }
+  ]
+  appointments.each do |data|
+    maria_patient.medical_appointments.find_or_create_by!(
+      appointment_date: data[:appointment_date],
+      appointment_type: data[:appointment_type],
+      specialty: data[:specialty],
+      professional_name: data[:professional_name],
+      location: data[:location],
+      status: data[:status]
+    )
+  end
+  puts "  - #{maria.name}: #{appointments.size} appointments"
+end
+
+# Treatments
+puts "Creating treatments..."
+
+if nelson_patient && prednisone
+  treatment = nelson_patient.treatments.create!(
+    name: "Tratamento Prednisona",
+    start_date: 30.days.ago.to_date,
+    status: :active
+  )
+
+  treatment.pharmacotherapies.find_or_create_by!(
+    medication: prednisone,
+    dosage: "20mg",
+    frequency: :daily
+  )
+  puts "  - #{treatment.name}"
+end
+
+if nelson_patient && amoxicillin
+  treatment = nelson_patient.treatments.create!(
+    name: "Antibiótico Amoxicilina",
+    start_date: 10.days.ago.to_date,
+    status: :active
+  )
+
+  treatment.pharmacotherapies.find_or_create_by!(
+    medication: amoxicillin,
+    dosage: "500mg",
+    frequency: :twice_daily
+  )
+  puts "  - #{treatment.name}"
+end
+
+if maria_patient
+  treatment = maria_patient.treatments.create!(
+    name: "Suplementação Vitamínica",
+    start_date: 60.days.ago.to_date,
+    status: :active
+  )
+  puts "  - #{treatment.name}"
+end
+
+# Medication Administrations (for today and upcoming days)
+puts "Creating medication administrations..."
+today = Date.today
+admin_count = 0
+
+Treatment.active.each do |treatment|
+  treatment.pharmacotherapies.each do |pharma|
+    (0..6).each do |day_offset|
+      admin_date = today + day_offset.days
+      [8, 12, 18, 22].each do |hour|
+        pharma.medication_administrations.find_or_create_by!(
+          scheduled_at: admin_date.change(hour: hour, min: 0),
+          status: :pending
+        )
+        admin_count += 1
+      end
+    end
+  end
+end
+puts "  - Created #{admin_count} administrations for #{Treatment.active.count} treatments"
+
 puts "Seeding complete!"
