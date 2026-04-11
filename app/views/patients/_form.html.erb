@@ -1,4 +1,4 @@
-<%= form_with(model: patient, data: { controller: 'patient-form-toggle' }) do |form| %>
+<%= form_with(model: patient, data: patient.persisted? ? {} : { controller: 'patient-form-toggle' }) do |form| %>
   <% if patient.errors.any? %>
     <div id="error_explanation" role="alert" aria-labelledby="error-heading">
       <h2 id="error-heading"><%= pluralize(patient.errors.count, "erro") %> impediu save:</h2>
@@ -12,13 +12,13 @@
 
   <fieldset>
     <legend>Tipo de Paciente</legend>
-    <div class="patient-type-selector" role="radiogroup" aria-label="Selecione o tipo de paciente">
-      <label class="patient-type-option <%= @patient_type == 'Dog' || @patient_type.nil? ? 'selected' : '' %>">
-        <%= form.radio_button :individual_type, 'Dog', checked: @patient_type == 'Dog' || @patient_type.nil?, data: { action: 'patient-form-toggle#selectType' } %>
+    <div class="patient-type-selector" role="radiogroup" aria-label="Tipo de paciente">
+      <label class="patient-type-option <%= (patient.individual_type || @patient_type) == 'Dog' ? 'selected' : '' %>">
+        <%= form.radio_button :individual_type, 'Dog', checked: (patient.individual_type || @patient_type) == 'Dog', disabled: patient.persisted?, data: patient.persisted? ? {} : { action: 'patient-form-toggle#selectType' } %>
         <span>Cachorro</span>
       </label>
-      <label class="patient-type-option <%= @patient_type == 'Person' ? 'selected' : '' %>">
-        <%= form.radio_button :individual_type, 'Person', checked: @patient_type == 'Person', data: { action: 'patient-form-toggle#selectType' } %>
+      <label class="patient-type-option <%= (patient.individual_type || @patient_type) == 'Person' ? 'selected' : '' %>">
+        <%= form.radio_button :individual_type, 'Person', checked: (patient.individual_type || @patient_type) == 'Person', disabled: patient.persisted?, data: patient.persisted? ? {} : { action: 'patient-form-toggle#selectType' } %>
         <span>Pessoa</span>
       </label>
     </div>
