@@ -70,7 +70,7 @@ class MedicalAppointmentsController < ApplicationController
   end
 
   def set_appointment
-    @appointment = MedicalAppointment.find(params[:id])
+    @appointment = MedicalAppointment.includes(:patient).find(params[:id])
   end
 
   def appointment_params

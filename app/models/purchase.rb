@@ -1,7 +1,7 @@
 class Purchase < ApplicationRecord
   belongs_to :product
   belongs_to :card, optional: true
-  has_many :payments, dependent: :destroy
+  has_many :payments, inverse_of: :purchase, dependent: :destroy
 
   include Datable
 

@@ -29,11 +29,7 @@ class PatientsController < ApplicationController
     @patient_type = params[:type] || 'Dog'
     existing_ids = Patient.where(individual_type: @patient_type).pluck(:individual_id)
     
-    @individuals = case @patient_type
-                   when 'Person' then Person.where.not(id: existing_ids)
-                   when 'Dog' then Dog.where.not(id: existing_ids)
-                   else []
-                   end
+    @individuals = individuals_for_patient_type(@patient_type, exclude_ids: existing_ids)
     @patient = Patient.new(individual_type: @patient_type)
   end
 
@@ -56,11 +52,7 @@ class PatientsController < ApplicationController
         format.html { redirect_to patient_url(@patient), notice: "Patient was successfully created." }
         format.json { render :show, status: :created, location: @patient }
       else
-        @individuals = case individual_type
-                       when 'Person' then Person.all
-                       when 'Dog' then Dog.all
-                       else []
-                       end
+        @individuals = individuals_for_patient_type(individual_type)
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @patient.errors, status: :unprocessable_entity }
       end
@@ -125,5 +117,14 @@ class PatientsController < ApplicationController
 
     def patient_params
       params.require(:patient).permit(:individual_id, :individual_type)
+    end
+
+    def individuals_for_patient_type(type, exclude_ids: [])
+      individuals = case type
+                   when 'Person' then Person.all
+                   when 'Dog' then Dog.all
+                   else []
+                   end
+      exclude_ids.present? ? individuals.where.not(id: exclude_ids) : individuals
     end
 end

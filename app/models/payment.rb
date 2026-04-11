@@ -1,5 +1,5 @@
 class Payment < ApplicationRecord
-  belongs_to :purchase
+  belongs_to :purchase, inverse_of: :payments
 
   include Datable
 

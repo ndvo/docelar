@@ -48,7 +48,7 @@ class MedicalExamsController < ApplicationController
   end
 
   def set_exam
-    @exam = MedicalExam.find(params[:id])
+    @exam = MedicalExam.includes(:patient).find(params[:id])
   end
 
   def exam_params

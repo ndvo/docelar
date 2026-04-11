@@ -4,7 +4,7 @@ class TreatmentsController < ApplicationController
 
   # GET /treatments or /treatments.json
   def index
-    @treatments = Treatment.all
+    @treatments = Treatment.includes(:patient, :pharmacotherapies).all
   end
 
   # GET /patients/1/treatments/new

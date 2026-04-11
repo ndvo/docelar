@@ -48,7 +48,7 @@ class MedicalConditionsController < ApplicationController
   end
 
   def set_condition
-    @condition = MedicalCondition.find(params[:id])
+    @condition = MedicalCondition.includes(:patient).find(params[:id])
   end
 
   def condition_params
