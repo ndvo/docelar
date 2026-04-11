@@ -64,6 +64,86 @@ products.each do |prod|
   Product.find_or_create_by!(name: prod[:name], brand: prod[:brand], kind: prod[:kind])
 end
 
+# Purchases (spread over 5 years)
+puts "Creating purchases..."
+rice = Product.find_by(name: "Arroz Integral")
+beans = Product.find_by(name: "Feijão Carijó")
+coffee = Product.find_by(name: "Café")
+nubank = Card.find_by(name: "Nubank")
+itau = Card.find_by(name: "Itaú")
+
+if rice && nubank
+  purchases_data = [
+    { months_ago: 1, price: 22.90, quantity: 1 },
+    { months_ago: 4, price: 21.50, quantity: 1 },
+    { months_ago: 8, price: 20.80, quantity: 1 },
+    { months_ago: 12, price: 19.90, quantity: 2 },
+    { months_ago: 18, price: 18.50, quantity: 1 },
+    { months_ago: 24, price: 17.90, quantity: 2 },
+    { months_ago: 30, price: 16.80, quantity: 1 },
+    { months_ago: 36, price: 15.90, quantity: 2 },
+    { months_ago: 42, price: 14.50, quantity: 1 },
+    { months_ago: 48, price: 13.90, quantity: 2 },
+    { months_ago: 54, price: 12.80, quantity: 1 },
+    { months_ago: 60, price: 11.90, quantity: 2 }
+  ]
+  purchases_data.each do |data|
+    rice.purchases.find_or_create_by!(
+      purchase_at: data[:months_ago].months.ago,
+      price: data[:price],
+      quantity: data[:quantity],
+      card: nubank
+    )
+  end
+  puts "  - #{rice.name}: #{purchases_data.size} purchases"
+end
+
+if beans && nubank
+  purchases_data = [
+    { months_ago: 2, price: 8.90, quantity: 2 },
+    { months_ago: 6, price: 8.50, quantity: 2 },
+    { months_ago: 10, price: 7.90, quantity: 3 },
+    { months_ago: 15, price: 7.50, quantity: 2 },
+    { months_ago: 20, price: 6.90, quantity: 3 },
+    { months_ago: 28, price: 6.50, quantity: 2 },
+    { months_ago: 35, price: 5.90, quantity: 3 },
+    { months_ago: 40, price: 5.50, quantity: 2 },
+    { months_ago: 48, price: 4.90, quantity: 3 },
+    { months_ago: 55, price: 4.50, quantity: 2 }
+  ]
+  purchases_data.each do |data|
+    beans.purchases.find_or_create_by!(
+      purchase_at: data[:months_ago].months.ago,
+      price: data[:price],
+      quantity: data[:quantity],
+      card: nubank
+    )
+  end
+  puts "  - #{beans.name}: #{purchases_data.size} purchases"
+end
+
+if coffee && itau
+  purchases_data = [
+    { months_ago: 3, price: 18.90, quantity: 1 },
+    { months_ago: 9, price: 17.50, quantity: 1 },
+    { months_ago: 16, price: 16.80, quantity: 1 },
+    { months_ago: 22, price: 15.90, quantity: 2 },
+    { months_ago: 30, price: 14.90, quantity: 1 },
+    { months_ago: 38, price: 13.80, quantity: 2 },
+    { months_ago: 45, price: 12.90, quantity: 1 },
+    { months_ago: 52, price: 11.90, quantity: 2 }
+  ]
+  purchases_data.each do |data|
+    coffee.purchases.find_or_create_by!(
+      purchase_at: data[:months_ago].months.ago,
+      price: data[:price],
+      quantity: data[:quantity],
+      card: itau
+    )
+  end
+  puts "  - #{coffee.name}: #{purchases_data.size} purchases"
+end
+
 # Tags
 puts "Creating tags..."
 tags = ["importante", "urgente", "lazer", "trabalho", "saúde"]
