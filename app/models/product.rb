@@ -6,8 +6,24 @@ class Product < ApplicationRecord
   before_destroy :prevent_destruction_with_purchases
 
   def prevent_destruction_with_purchases
-    return unless purchases.exists?
+    throw(:abort) if purchases.exists?
+  end
 
-    raise ActiveRecord::RecordNotDestroyed, I18n.t('errors.messages.cannot_destroy_with_purchases')
+  def average_price_in_period(days)
+    cutoff = days.days.ago
+    result = purchases.where('purchase_at >= ?', cutoff).pick(Arel.sql('AVG(price)'))
+    result&.to_f
+  end
+
+  def average_price_last_month
+    average_price_in_period(30)
+  end
+
+  def average_price_last_year
+    average_price_in_period(365)
+  end
+
+  def average_price_last_5_years
+    average_price_in_period(365 * 5)
   end
 end
