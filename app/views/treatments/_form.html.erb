@@ -18,7 +18,9 @@
       <%= form.select :patient_id, 
           options_for_select(@patients&.collect { |p| [p.individual.name, p.id] }, treatment.patient_id || @patient&.id),
           { include_blank: '-- selecione --' },
-          required: true %>
+          required: true,
+          disabled: @patient.present?
+        %>
     </div>
 
     <div class="field">
@@ -105,7 +107,9 @@
       <% end %>
     </template>
 
+    <div class="actions">
     <button type="button" data-action="nested-form#addPharmacotherapy">+ Adicionar medicamento</button>
+    </div>
   </fieldset>
 
   <div class="actions">
