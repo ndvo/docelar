@@ -8,6 +8,14 @@
   --margin-large: 0.8472em;
   --margin-enourmous: 1.3708em;
 
+  /* typography scale */
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.563rem;
+  --font-size-2xl: 1.953rem;
+  --font-size-3xl: 2.441rem;
+
   /* colors definition */
   --prussian-blue: hsla(209, 80%, 16%, 1);
   --blush: hsla(345, 65%, 60%, 1);
@@ -52,9 +60,16 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: Georgia, 'Times New Roman', serif;
   font-weight: normal;
   margin: 0;
 }
+
+h1 { font-size: var(--font-size-3xl); }
+h2 { font-size: var(--font-size-2xl); }
+h3 { font-size: var(--font-size-xl); }
+h4 { font-size: var(--font-size-lg); }
+h5, h6 { font-size: var(--font-size-base); }
 
 img {
   max-width: 100%;

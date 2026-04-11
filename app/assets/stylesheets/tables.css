@@ -50,13 +50,6 @@ nav.previous-next {
   margin-bottom: var(--margin-normal);
 }
 
-.product-header h1 {
-  font-family: var(--med-font-serif, Georgia, serif);
-  font-size: 2rem;
-  margin: 0;
-  color: var(--color-primary);
-}
-
 .product-meta {
   color: var(--link);
   opacity: 0.7;
@@ -73,11 +66,6 @@ nav.previous-next {
   padding: var(--margin-large);
   border-radius: var(--margin-small);
   box-shadow: var(--med-shadow-sm, 0 1px 3px rgba(0,0,0,0.1));
-}
-
-.product-stats h2 {
-  margin: 0 0 var(--margin-normal) 0;
-  font-size: 1.25rem;
 }
 
 .stats-grid {
@@ -116,11 +104,6 @@ nav.previous-next {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.section-header h2 {
-  margin: 0;
-  font-size: 1.25rem;
 }
 
 .purchases-table {

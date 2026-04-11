@@ -144,10 +144,6 @@ fieldset legend {
   margin-bottom: var(--margin-normal);
 }
 
-#error_explanation h2 {
-  margin: 0 0 var(--margin-small) 0;
-}
-
 #error_explanation ul {
   margin: 0;
   padding-left: var(--margin-large);
