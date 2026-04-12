@@ -58,7 +58,6 @@ Rails.application.routes.draw do
     post :set_installments, on: :collection
   end
   resources :quotes
-  resources :session
   resources :users
 
   resource :profile, only: [:show, :destroy] do
