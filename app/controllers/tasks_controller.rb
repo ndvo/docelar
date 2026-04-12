@@ -37,7 +37,7 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
-        destination = params[:data][:redirect_to] ? 'new_task_path' : task_url(@task)
+        destination = params.dig(:data, :redirect_to) ? 'new_task_path' : task_url(@task)
         format.html { redirect_to destination, notice: "Task was successfully created." and return}
         format.json { render :show, status: :created, location: @task }
       else
