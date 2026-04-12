@@ -18,7 +18,7 @@
       <%= render 'main_menu' %>
       <div id="user-status">
         <% if current_user %>
-          <%= current_user.email %>
+          <%= link_to current_user.email_address, profile_path %>
           <%= link_to 'Sair', logout_path %>
         <% else %>
           <%= link_to 'Entrar', login_path %>
