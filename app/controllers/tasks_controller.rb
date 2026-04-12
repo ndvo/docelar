@@ -11,7 +11,6 @@ class TasksController < ApplicationController
 
   # GET /tasks/1 or /tasks/1.json
   def show
-    @task = Task.find(params[:id])
     @tasks = tasks.where(task: @task)
   end
 
@@ -25,7 +24,6 @@ class TasksController < ApplicationController
 
   # GET /tasks/1/edit
   def edit
-    @task = Task.find(params[:id])
     @parent = @task.task
     @responsibles = Responsible.all
     @tasks = [@parent].concat(Task.pending.where(task: @parent).order(:name)).compact
@@ -38,7 +36,7 @@ class TasksController < ApplicationController
     respond_to do |format|
       if @task.save
         destination = params.dig(:data, :redirect_to) ? 'new_task_path' : task_url(@task)
-        format.html { redirect_to destination, notice: "Task was successfully created." and return}
+        format.html { redirect_to destination, notice: "Task was successfully created." and return }
         format.json { render :show, status: :created, location: @task }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -81,7 +79,7 @@ class TasksController < ApplicationController
   end
 
   def summary
-    responsible_id = params[responsible_id]
+    responsible_id = params[:responsible_id]
 
     query = Task.all
     query = query.where(responsible_id:) if responsible_id
