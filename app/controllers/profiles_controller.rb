@@ -7,7 +7,7 @@ class ProfilesController < ApplicationController
 
   def password
     @user = Current.user
-    if @user.authenticate(params.dig(:user, :current_password) || '')
+    if @user.authenticate(params.dig(:user, :current_password).to_s)
       if @user.update(password_update_params)
         redirect_to profile_path, notice: I18n.t('messages.saved')
       else
@@ -22,9 +22,9 @@ class ProfilesController < ApplicationController
 
   def destroy
     @user = Current.user
-    if @user.authenticate(params.dig(:user, :current_password) || '')
+    if @user.authenticate(params.dig(:user, :current_password).to_s)
       @user.destroy
-      Session.where(user_id: @user.id).destroy_all
+      @user.sessions.destroy_all
       cookies.delete(:session_id)
       redirect_to root_path, notice: 'Account deleted successfully.'
     else
