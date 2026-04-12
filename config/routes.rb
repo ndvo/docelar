@@ -61,6 +61,10 @@ Rails.application.routes.draw do
   resources :session
   resources :users
 
+  resource :profile, only: [:show, :destroy] do
+    patch :password, on: :member
+  end
+
   resources :galleries do
     post :find_new_galleries, on: :collection
     post :generate_photos, on: :member

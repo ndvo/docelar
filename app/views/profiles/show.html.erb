@@ -1,0 +1,55 @@
+<div class="profile-page">
+  <h1>My Profile</h1>
+
+  <section class="profile-info">
+    <h2>Account Information</h2>
+    <p><strong>Email:</strong> <%= @user.email_address %></p>
+    <p><strong>Member since:</strong> <%= l(@user.created_at, format: :long) %></p>
+  </section>
+
+  <section class="password-change">
+    <h2>Change Password</h2>
+
+    <%= form_with(url: password_profile_path, method: :patch) do %>
+      <% if @user.errors.any? %>
+        <div class="error-messages">
+          <% @user.errors.full_messages.each do |message| %>
+            <p><%= message %></p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if flash[:notice] && params[:action] == 'password' %>
+        <p class="notice"><%= flash[:notice] %></p>
+      <% end %>
+
+      <div class="field">
+        <%= label_tag 'user[current_password]', 'Current Password' %>
+        <%= password_field_tag 'user[current_password]' %>
+      </div>
+
+      <div class="field">
+        <%= label_tag 'user[password]', 'New Password' %>
+        <%= password_field_tag 'user[password]' %>
+      </div>
+
+      <div class="field">
+        <%= label_tag 'user[password_confirmation]', 'Confirm New Password' %>
+        <%= password_field_tag 'user[password_confirmation]' %>
+      </div>
+
+      <div class="actions">
+        <%= submit_tag 'Update Password' %>
+      </div>
+    <% end %>
+  </section>
+
+  <section class="danger-zone">
+    <h2>Danger Zone</h2>
+    <p>Once you delete your account, there is no going back.</p>
+
+    <%= button_to 'Delete Account', profile_path, method: :delete, 
+        data: { confirm: 'Are you sure? This action cannot be undone.' },
+        class: 'btn-danger' %>
+  </section>
+</div>
