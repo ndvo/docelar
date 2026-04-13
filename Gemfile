@@ -30,6 +30,9 @@ gem "jbuilder"
 # Pagination
 gem "pagy"
 
+# Solid Queue for background jobs
+gem "solid_queue"
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 

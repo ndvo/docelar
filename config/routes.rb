@@ -65,7 +65,15 @@ Rails.application.routes.draw do
   end
 
   resources :galleries do
-    post :find_new_galleries, on: :collection
+    member do
+      get :import
+      post :upload_photos
+    end
+    collection do
+      get :import
+      post :upload_photos
+      post :find_new_galleries
+    end
     post :generate_photos, on: :member
   end
 
