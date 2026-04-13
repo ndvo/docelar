@@ -6,4 +6,8 @@ module ApplicationHelper
   def br_date(day)
     day&.strftime("%d/%m/%Y")
   end
+
+  def google_photos_configured?
+    ENV["GOOGLE_CLIENT_ID"].present? && ENV["GOOGLE_CLIENT_SECRET"].present?
+  end
 end

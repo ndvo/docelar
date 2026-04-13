@@ -4,8 +4,7 @@
 </section>
 
 <div class="gallery-actions">
-  <%= render "google_photos_connect" %>
-  <%= button_to "Buscar novas galerias", action: "find_new_galleries", class: 'btn btn-secondary' %>
+  <%= link_to "Importar Fotos", import_galleries_path, class: 'btn btn-primary' %>
 </div>
 
 <% if @galleries.any? %>

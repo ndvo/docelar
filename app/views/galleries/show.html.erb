@@ -8,12 +8,11 @@
 </section>
 
 <div class="gallery-actions">
-  <% if session[:google_photos_access_token].present? %>
-    <%= link_to "Importar do Google Photos",
-        oauth_google_photos_albums_path(gallery_id: @gallery.id),
-        class: 'btn btn-primary' %>
-  <% end %>
+  <%= link_to "Importar Fotos", import_gallery_path(@gallery), class: 'btn btn-primary' %>
   <%= button_to "Gerar fotos", action: "generate_photos", class: 'btn btn-secondary' %>
+  <%= button_to "Excluir galeria", @gallery, method: :delete, 
+        data: { confirm: "ATENÇÃO: Todas as fotos serão descartadas! Esta ação não pode ser desfeita." }, 
+        class: 'btn btn-danger' %>
 </div>
 
 <% if @photos.any? %>
