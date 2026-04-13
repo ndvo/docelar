@@ -2,7 +2,9 @@ class Gallery < ActiveRecord::Base
   include Paginatable
 
   belongs_to :gallery, optional: true
-  has_many :photos
+  has_many :photos, dependent: :destroy
+
+  after_destroy :cleanup_thumbs_folder
 
   validates :folder_name, uniqueness: true
 
@@ -11,6 +13,8 @@ class Gallery < ActiveRecord::Base
   end
 
   def generate_photos
+    return [] unless File.directory?(fs_path)
+    
     available_image_files.each do |path|
       photo = Photo.new({ original_path: path, gallery: self })
       photo.file.attach(io: File.open(File.join(fs_path, path)), filename: File.basename(path))
@@ -52,6 +56,8 @@ class Gallery < ActiveRecord::Base
   end
 
   def available_image_files
+    return [] unless File.directory?(fs_path)
+    
     Dir.children(fs_path).filter do |folder_name|
       folder_name.match?(/\.(png|jpeg|jpg)/i)
     end
@@ -74,4 +80,12 @@ class Gallery < ActiveRecord::Base
   def self.gallery_folder = 'galleries'
 
   def self.thumbs_folder = 'galleries_thumbs'
+
+  private
+
+  def cleanup_thumbs_folder
+    thumbs_dir = File.dirname(fs_thumbs_path)
+    FileUtils.rm_rf(thumbs_dir) if Dir.exist?(thumbs_dir)
+  rescue Errno::ENOENT
+  end
 end
