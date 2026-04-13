@@ -27,7 +27,7 @@ RSpec.describe 'Galleries', type: :feature do
       visit galleries_path
 
       expect(page).to have_content('Nenhuma galeria encontrada')
-      expect(page).to have_button('Buscar novas galerias')
+      expect(page).to have_link('Importar Fotos')
     end
 
     it 'shows gallery card for each gallery' do
@@ -109,16 +109,16 @@ RSpec.describe 'Galleries', type: :feature do
   describe 'Google Photos Integration' do
     let(:gallery) { Gallery.create!(name: 'Test Gallery', folder_name: 'test_gallery') }
 
-    it 'shows connect button' do
-      visit galleries_path
+    it 'shows import page with Google Photos option' do
+      visit import_galleries_path
 
-      expect(page).to have_link('Conectar Google Photos')
+      expect(page).to have_content('Google Photos')
     end
 
     it 'shows import option on gallery page' do
       visit gallery_path(gallery)
 
-      expect(page).to have_content('Gerar fotos')
+      expect(page).to have_link('Importar Fotos')
     end
   end
 end

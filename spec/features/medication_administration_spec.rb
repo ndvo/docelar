@@ -6,27 +6,25 @@ RSpec.describe 'Medication Administration', type: :feature do
   before { login_as(user) }
 
   describe 'quick administration' do
-    scenario 'marks dose as given' do
+    let(:patient) do
       person = create(:person, name: 'Maria')
-      patient = Patient.find_or_create_by!(individual: person)
-      treatment = create(:treatment, patient: patient, start_date: Date.today)
-      pharmacotherapy = create(:pharmacotherapy, treatment: treatment)
-      administration = create(:medication_administration, pharmacotherapy: pharmacotherapy,
-                           scheduled_at: Time.current, status: 'pending')
-      
+      Patient.find_or_create_by!(individual: person)
+    end
+
+    let!(:treatment) { create(:treatment, patient: patient, start_date: Date.today) }
+    let!(:pharmacotherapy) { create(:pharmacotherapy, treatment: treatment) }
+    let!(:administration) do
+      create(:medication_administration, pharmacotherapy: pharmacotherapy,
+             scheduled_at: Date.today.to_time + 10.hours, status: 'pending')
+    end
+
+    scenario 'marks dose as given' do
       visit patient_path(patient)
       
       expect(page).to have_button('Marcar como dado')
     end
 
     scenario 'skips dose with reason' do
-      person = create(:person, name: 'Maria')
-      patient = Patient.find_or_create_by!(individual: person)
-      treatment = create(:treatment, patient: patient, start_date: Date.today)
-      pharmacotherapy = create(:pharmacotherapy, treatment: treatment)
-      administration = create(:medication_administration, pharmacotherapy: pharmacotherapy,
-                           scheduled_at: Time.current, status: 'pending')
-      
       visit patient_path(patient)
       
       expect(page).to have_button('Pular')

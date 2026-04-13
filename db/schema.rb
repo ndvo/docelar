@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_04_121158) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_13_132545) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -309,6 +309,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_04_121158) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["individual_type", "individual_id"], name: "index_patients_on_individual"
+    t.index ["individual_type", "individual_id"], name: "index_patients_on_individual_type_and_individual_id", unique: true
   end
 
   create_table "payments", force: :cascade do |t|
@@ -404,6 +405,55 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_04_121158) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "solid_queue_failed_exections", force: :cascade do |t|
+    t.integer "job_id", null: false
+    t.text "exception"
+    t.datetime "failed_at", null: false
+    t.index ["job_id"], name: "index_solid_queue_failed_exections_on_job_id", unique: true
+  end
+
+  create_table "solid_queue_jobs", force: :cascade do |t|
+    t.string "queue_name", null: false
+    t.string "class_name", null: false
+    t.text "arguments"
+    t.integer "priority", default: 0, null: false
+    t.string "active_job_id"
+    t.text "executions"
+    t.integer "attempt", default: 0
+    t.text "exception_backtrace"
+    t.datetime "locked_at"
+    t.datetime "locked_by"
+    t.datetime "available_at", null: false
+    t.datetime "created_at", null: false
+    t.index ["active_job_id"], name: "index_solid_queue_jobs_on_active_job_id"
+    t.index ["priority", "available_at"], name: "index_solid_queue_jobs_on_priority_and_available_at", order: { priority: :desc }
+    t.index ["queue_name", "available_at"], name: "index_solid_queue_jobs_on_queue_name_and_available_at"
+  end
+
+  create_table "solid_queue_processes", force: :cascade do |t|
+    t.string "hostname", null: false
+    t.integer "pid", null: false
+    t.string "kind", null: false
+    t.datetime "started_at", null: false
+    t.datetime "stopped_at"
+    t.json "metadata"
+    t.index ["hostname", "started_at"], name: "index_solid_queue_processes_on_hostname_and_started_at"
+  end
+
+  create_table "solid_queue_scheduled_jobs", force: :cascade do |t|
+    t.string "queue_name", null: false
+    t.string "class_name", null: false
+    t.text "arguments"
+    t.integer "priority", default: 0, null: false
+    t.string "active_job_id"
+    t.integer "attempt", default: 0
+    t.datetime "available_at", null: false
+    t.datetime "created_at", null: false
+    t.index ["available_at"], name: "index_solid_queue_scheduled_jobs_on_available_at"
+    t.index ["priority", "available_at"], name: "index_solid_queue_scheduled_jobs_on_priority_and_available_at", order: { priority: :desc }
+    t.index ["queue_name", "available_at"], name: "index_solid_queue_scheduled_jobs_on_queue_name_and_available_at"
   end
 
   create_table "tagged", force: :cascade do |t|

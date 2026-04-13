@@ -112,6 +112,10 @@ Before adding any gem, npm package, or library:
 - Update plan document if needed (add completed items, remove done)
 - Summarize work done for next session
 
+## Tools
+
+- Use `rg`. Use -F if the pattern has no regex. Use LC_ALL=C if no need for UTF-8
+
 ## Stop Points
 
 **Ask for clarification when:**
