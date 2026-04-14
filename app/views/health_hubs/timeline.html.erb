@@ -1,0 +1,44 @@
+<main id="main-content" role="main" aria-labelledby="timeline-title">
+  <nav class="breadcrumb" aria-label="Navegação">
+    <%= link_to '← Voltar', patient_health_path(@patient) %>
+  </nav>
+
+  <div class="timeline-page">
+    <header class="page-header">
+      <h1 id="timeline-title">Linha do Tempo</h1>
+      <p class="patient-name"><%= @patient.individual.name %></p>
+    </header>
+
+    <% if @events.any? %>
+      <ol class="timeline" role="list" aria-label="Histórico de saúde">
+        <% @events.each do |event| %>
+          <li class="timeline-item timeline-<%= event[:type] %>" role="listitem">
+            <time class="timeline-date" datetime="<%= event[:date].iso8601 %>">
+              <%= l(event[:date], format: :short) %>
+            </time>
+            <div class="timeline-content">
+              <span class="timeline-badge"><%= event[:type] %></span>
+              <h3 class="timeline-title"><%= event[:title] %></h3>
+              <p class="timeline-subtitle"><%= event[:subtitle] %></p>
+              <% case event[:type]
+                 when :appointment %>
+                <%= link_to 'Ver detalhes', patient_medical_appointment_path(@patient, event[:record]), class: 'timeline-link' %>
+              <% when :condition %>
+                <%= link_to 'Ver detalhes', patient_medical_condition_path(@patient, event[:record]), class: 'timeline-link' %>
+              <% when :exam %>
+                <%= link_to 'Ver detalhes', patient_medical_exam_path(@patient, event[:record]), class: 'timeline-link' %>
+              <% when :treatment %>
+                <%= link_to 'Ver detalhes', patient_treatment_path(@patient, event[:record]), class: 'timeline-link' %>
+              <% end %>
+            </div>
+          </li>
+        <% end %>
+      </ol>
+    <% else %>
+      <div class="empty-state">
+        <p>Nenhum registro de saúde encontrado.</p>
+        <%= link_to 'Adicionar Consulta', new_patient_medical_appointment_path(@patient), class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+</main>

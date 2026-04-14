@@ -13,3 +13,48 @@
 @import "components/common.css";
 @import "components/medication.css";
 @import "components/health_hub.css";
+
+/* Print styles for PDF export */
+@media print {
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  nav.breadcrumb,
+  .header-actions,
+  .btn,
+  footer,
+  .pagination {
+    display: none !important;
+  }
+  
+  .health-hub-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .health-summary-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .summary-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 1px solid #ccc;
+    padding: 1rem;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #000;
+  }
+  
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    color: #666;
+  }
+}

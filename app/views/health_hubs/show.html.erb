@@ -9,7 +9,13 @@
         <h1 id="health-hub-title">Resumo de Saúde</h1>
         <p class="patient-name"><%= @patient.individual.name %></p>
       </div>
-      <%= link_to 'Editar Perfil', edit_patient_path(@patient), class: 'btn btn-secondary' %>
+      <div class="header-actions">
+        <button onclick="window.print()" class="btn btn-secondary" aria-label="Exportar para PDF">
+          Exportar PDF
+        </button>
+        <%= link_to 'Linha do Tempo', timeline_patient_path(@patient), class: 'btn btn-secondary' %>
+        <%= link_to 'Editar Perfil', edit_patient_path(@patient), class: 'btn btn-secondary' %>
+      </div>
     </header>
 
     <div class="health-summary-cards" role="region" aria-label="Resumo de saúde">

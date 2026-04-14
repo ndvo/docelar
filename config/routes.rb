@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     member do
       get :medications
       get :health, to: 'health_hubs#show'
+      get :timeline
     end
     resources :treatments
     resources :medical_appointments do

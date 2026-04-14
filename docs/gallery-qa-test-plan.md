@@ -11,6 +11,7 @@
 - Empty state when no photos exist in gallery
 - Breadcrumb navigation back to galleries
 - Generate photos button exists
+- Photo detail page - navigation, tagging (17 tests)
 
 ### Helper Specs (spec/helpers/photos_helper_spec.rb)
 - Empty (pending)
@@ -23,20 +24,20 @@
 ## 2. Gaps Identified
 
 ### Feature Specs
-- [ ] **Photo detail page** - Show page with photo, navigation between photos
+- [x] **Photo detail page** - Show page with photo, navigation between photos
 - [ ] **Google Photos OAuth flow** - Connect, callback, disconnect
 - [ ] **Google Photos albums page** - Listing and selecting albums
 - [ ] **Photo import from Google Photos** - Import action and feedback
-- [ ] **Pagination** - Load more photos functionality
-- [ ] **Image variant display** - Picture element with srcset
-- [ ] **Photo rotation** - Left/right rotation buttons
-- [ ] **Tagging functionality** - Adding/removing tags to photos
+- [x] **Pagination** - Load more photos functionality
+- [x] **Image variant display** - Picture element with srcset
+- [ ] **Photo rotation** - Left/right rotation buttons (not in UI)
+- [x] **Tagging functionality** - Adding/removing tags to photos
 - [ ] **Error handling** - API failures, missing files
 
 ### Model Specs
-- [ ] **Gallery model** - Validations, associations, methods
-- [ ] **Photo model** - Validations, associations, variants
-- [ ] **Tag model** - If tags exist
+- [x] **Gallery model** - Validations, associations, methods
+- [x] **Photo model** - Validations, associations, variants
+- [x] **Tag model** - If tags exist
 
 ### Service Specs
 - [ ] **GooglePhotosService** - API methods (list_albums, list_photos, get_photo, download_url)
@@ -48,11 +49,11 @@
 - [ ] **OAuth::GooglePhotosAlbumsController** - Albums listing and import
 
 ### Performance
-- [ ] **N+1 queries** - Photo count on index, gallery cover images
-- [ ] **Image variant generation** - Medium and grid variants
+- [x] **N+1 queries** - Photo count on index, gallery cover images
+- [x] **Image variant generation** - Medium and grid variants
 
 ### Edge Cases
-- [ ] Missing image files
+- [x] **Missing image files** - Handled in views
 - [ ] Duplicate photo imports
 - [ ] OAuth token expiry and refresh
 - [ ] API rate limiting
