@@ -83,15 +83,16 @@ RSpec.describe 'Galleries', type: :feature do
 
   describe 'Photo Detail' do
     let(:gallery) { Gallery.create!(name: 'Test Gallery', folder_name: 'test_gallery') }
-    let(:photo) { Photo.create!(gallery: gallery, original_path: 'test.jpg', title: 'Test Photo') }
 
     it 'displays photo title' do
+      photo = Photo.create!(gallery: gallery, original_path: 'test.jpg', title: 'Test Photo')
       visit photo_path(photo)
 
       expect(page).to have_content('Test Photo')
     end
 
     it 'has breadcrumb link back to galleries' do
+      photo = Photo.create!(gallery: gallery, original_path: 'test.jpg', title: 'Test Photo')
       visit photo_path(photo)
 
       click_link '← Galeria'
@@ -100,9 +101,40 @@ RSpec.describe 'Galleries', type: :feature do
     end
 
     it 'shows navigation buttons' do
+      photo = Photo.create!(gallery: gallery, original_path: 'test.jpg', title: 'Test Photo')
       visit photo_path(photo)
 
       expect(page).to have_css('.photo-nav')
+    end
+
+    it 'shows position for single photo' do
+      photo = Photo.create!(gallery: gallery, original_path: 'test.jpg', title: 'Test Photo')
+      visit photo_path(photo)
+      
+      expect(page).to have_content('1 / 1')
+    end
+  end
+
+  describe 'Photo Tagging' do
+    let(:gallery) { Gallery.create!(name: 'Test Gallery', folder_name: 'test_gallery') }
+    let(:photo) { Photo.create!(gallery: gallery, original_path: 'test.jpg', title: 'Test Photo') }
+    let(:tag) { Tag.create!(name: 'Family') }
+
+    it 'shows existing tags on photo' do
+      TaggedPhoto.create!(photo: photo, tag: tag)
+      
+      visit photo_path(photo)
+      
+      expect(page).to have_content('Family')
+    end
+
+    it 'can add new tag to photo' do
+      visit photo_path(photo)
+      
+      fill_in 'tag_name', with: 'Vacation'
+      click_button '+'
+      
+      expect(page).to have_content('Vacation')
     end
   end
 
