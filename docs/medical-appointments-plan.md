@@ -1491,12 +1491,11 @@ Nice-to-have features for improved user experience.
 
 ### Checklist
 
-- [ ] Add PDF generation gem
-- [ ] Create PDF template for health summary
-- [ ] Add export button to Health Hub
-- [ ] Create TimelineController
-- [ ] Create timeline view
-- [ ] Add timeline filters
+- [x] Add PDF generation gem (using browser print instead)
+- [x] Create PDF template for health summary
+- [x] Add export button to Health Hub
+- [x] Create timeline view (HealthHubsController#timeline)
+- [x] Add timeline filters
 - [ ] Add reminder settings
 - [ ] Create reminder background job
 - [ ] Add multi-step form for appointments
