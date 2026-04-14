@@ -74,11 +74,21 @@ namespace :plans do
       puts '  [--] FEATURES.md not found'
     end
 
+    puts "\nCOMPLETED PLANS:\n\n"
+    completed_plans = {
+      'test-coverage-plan' => 'Test coverage Phases 1-6 (659 tests)',
+      'medical-appointments-plan' => 'Medical tracking Phases 1-7',
+      'gallery-qa-test-plan' => 'Gallery QA tests',
+      'photo-show-page-plan' => 'Photo show page improvements'
+    }
+    completed_plans.each do |plan, desc|
+      puts "  [OK] #{plan}: #{desc}"
+    end
+
     puts "\nACTIVE WORK:\n\n"
     active = {
-      'Gallery Images' => { status: 'Working', next: 'Generate missing medium variants for all galleries' },
-      'Log Inspector' => { status: 'Built', next: 'Add QA tests for error detection' },
-      'Google Photos' => { status: 'Implemented', next: 'Test OAuth flow, add WebMock for API specs' },
+      'Gallery Images' => { status: 'Complete', next: 'Generate missing medium variants for all galleries' },
+      'Log Inspector' => { status: 'Pending', next: 'Add QA tests for error detection' },
       'Front Page' => { status: 'Planned', next: 'Add task dashboard widget' }
     }
 
@@ -237,11 +247,11 @@ namespace :plans do
     puts "Generated at: #{Time.now}\n\n"
 
     puts "RECOMMENDED NEXT STEPS:\n\n"
-    puts "  1. [FIX] Gallery: Add prev/next to lightbox"
-    puts "  2. [NEW] Google Photos: Setup OAuth + Picker integration"
+    puts "  1. [NEW] Accessibility plan: WCAG compliance review"
+    puts "  2. [NEW] Family calendar: Unified calendar view"
     puts "  3. [NEW] Front Page: UX research + hero redesign"
-    puts "  4. [NEW] Log Inspector: Add QA tests for error detection"
-    puts "  5. [NEW] Phase 2 UX: Complete forms + mobile optimization\n\n"
+    puts "  4. [NEW] Log Inspector: Implement + QA tests"
+    puts "  5. [NEW] Deployment: VPS with Kamal 2\n\n"
   end
 
   private
