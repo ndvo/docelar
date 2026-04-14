@@ -11,12 +11,12 @@
 
 ## High Priority
 
-- [ ] 1. Add gallery breadcrumb/indication
-- [ ] 2. Make navigation circular (last → first, first → last)
-- [ ] 3. Add position indicator (e.g., "3 de 15")
-- [ ] 4. Fix tag input styling
-- [ ] 5. Add swipe gesture support for mobile
-- [ ] 6. Increase photo size on screen
+- [x] 1. Add gallery breadcrumb/indication
+- [x] 2. Make navigation circular (last → first, first → last)
+- [x] 3. Add position indicator (e.g., "3 de 15")
+- [x] 4. Fix tag input styling
+- [x] 5. Add swipe gesture support for mobile
+- [x] 6. Increase photo size on screen
 
 ## Implementation Notes
 

@@ -158,7 +158,7 @@
 
 .photo-full {
   margin: var(--margin-large) 0;
-  max-height: calc(100vh - 180px);
+  max-height: calc(100vh - 120px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -166,10 +166,10 @@
 
 .photo-full img {
   max-width: 100%;
-  max-height: calc(100vh - 180px);
+  max-height: calc(100vh - 120px);
   border-radius: var(--margin-normal);
   object-fit: contain;
-  width: auto;
+  width: 100%;
   height: auto;
 }
 
