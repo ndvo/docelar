@@ -5,13 +5,10 @@ namespace :plans do
 
     puts "PLAN DOCUMENTS:\n\n"
 
-    documents = {
-      'README.md' => { purpose: 'Landing page & overview', update: 'Monthly', next: 'Review and update if features changed' },
-      'ROADMAP.md' => { purpose: 'Vision, phases, features', update: 'Weekly', next: 'Update phase progress after completed features' },
-      'FEATURES.md' => { purpose: 'Feature status tracking', update: 'Weekly', next: 'Mark completed features as done' }
-    }
-
+    # Discover and analyze all plan documents dynamically
     docs_dir = 'docs'
+    plan_files = []
+    
     if Dir.exist?(docs_dir)
       plan_patterns = [
         "#{docs_dir}/*-plan*.md",
@@ -19,84 +16,78 @@ namespace :plans do
         "#{docs_dir}/*-implementation*.md"
       ]
       plan_files = plan_patterns.flat_map { |p| Dir.glob(p) }.uniq.sort
+    end
 
-      plan_files.each do |plan_file|
-        basename = File.basename(plan_file, '.md')
-        purpose = extract_purpose_from_plan(plan_file)
-        documents[plan_file] = {
-          purpose: purpose,
-          update: 'Per sprint',
-          next: 'Review and implement'
-        }
+    # Analyze each plan document
+    plan_summary = []
+    plan_files.each do |plan_file|
+      content = File.read(plan_file)
+      
+      # Extract title
+      title = content.match(/^#\s+(.+)$/)[1] rescue File.basename(plan_file, '.md')
+      
+      # Count checkboxes
+      completed = content.scan(/^- \[x\]/).count
+      pending = content.scan(/^- \[ \]/).count
+      total = completed + pending
+      
+      # Determine status based on completion
+      if total == 0
+        status = 'No tasks'
+        pct = 0
+      elsif completed == total
+        status = 'Complete'
+        pct = 100
+      elsif completed > 0
+        status = 'In Progress'
+        pct = ((completed.to_f / total) * 100).round
+      else
+        status = 'Not started'
+        pct = 0
       end
+      
+      plan_summary << {
+        file: plan_file,
+        name: File.basename(plan_file, '.md'),
+        title: title,
+        completed: completed,
+        pending: pending,
+        total: total,
+        status: status,
+        pct: pct
+      }
     end
 
-    documents.each do |doc, info|
-      exists = File.exist?(doc)
-      status = exists ? '[OK]' : '[--]'
-      puts "  #{status} #{doc.ljust(35)} - #{info[:purpose]}"
-      puts "      #{info[:update]} | Next: #{info[:next]}"
+    # Sort by completion percentage (highest first), then by name
+    plan_summary.sort_by! { |p| [-p[:pct], p[:name]] }
+
+    # Display plans
+    plan_summary.each do |plan|
+      status_icon = case plan[:status]
+                  when 'Complete' then '✅'
+                  when 'In Progress' then '🔄'
+                  else '⏳'
+                  end
+      
+      puts "  #{status_icon} #{plan[:name].ljust(35)} #{plan[:completed]}/#{plan[:total]} (#{plan[:pct]}%)"
+      puts "     #{plan[:status]}"
     end
+
+    puts "\nSUMMARY:\n"
+    total_completed = plan_summary.count { |p| p[:status] == 'Complete' }
+    total_in_progress = plan_summary.count { |p| p[:status] == 'In Progress' }
+    total_not_started = plan_summary.count { |p| p[:status] == 'Not started' }
+    total_no_tasks = plan_summary.count { |p| p[:status] == 'No tasks' }
+    
+    puts "  Complete:      #{total_completed}"
+    puts "  In Progress:  #{total_in_progress}"
+    puts "  Not Started: #{total_not_started}"
+    puts "  No Tasks:   #{total_no_tasks}"
+    puts "  Total:     #{plan_summary.count}"
 
     puts "\nTo view detailed progress of a specific plan, run:"
     puts "  rake plans:show[plan-name]"
-    puts "  Example: rake plans:show[medication-feature-plan]"
-
-    puts "\nFEATURE STATUS (from FEATURES.md):\n\n"
-
-    if File.exist?('FEATURES.md')
-      content = File.read('FEATURES.md')
-
-      existing = content.scan(/^- \[x\]/).count
-      planned = content.scan(/^- \[ \]/).count
-
-      puts "  Completed: #{existing} features"
-      puts "  Planned:   #{planned} features"
-
-      puts "\n  By Module:"
-      modules = {
-        'Finance' => ['Monthly reports', 'Budget limits', 'Recurring detection'],
-        'Health' => ['Health dashboard', 'Vaccination reminders', 'Export records'],
-        'Organization' => ['Calendar view', 'Recurring tasks', 'Task priorities'],
-        'Media' => ['Google Photos sync', 'Video support', 'Photo editing']
-      }
-
-      modules.each do |mod, next_steps|
-        mod_section = content[/### #{mod} Module.*?(?=###|\z)/m]
-        next unless mod_section
-
-        done = mod_section.scan(/^- \[x\]/).count
-        total = mod_section.scan(/^- \[/).count
-        puts "    #{mod}: #{done}/#{total} [OK]"
-        puts "      -> Next: #{next_steps.take(2).join(', ')}" if done == total && next_steps.any?
-      end
-    else
-      puts '  [--] FEATURES.md not found'
-    end
-
-    puts "\nCOMPLETED PLANS:\n\n"
-    completed_plans = {
-      'test-coverage-plan' => 'Test coverage Phases 1-6 (659 tests)',
-      'medical-appointments-plan' => 'Medical tracking Phases 1-7',
-      'gallery-qa-test-plan' => 'Gallery QA tests',
-      'photo-show-page-plan' => 'Photo show page improvements'
-    }
-    completed_plans.each do |plan, desc|
-      puts "  [OK] #{plan}: #{desc}"
-    end
-
-    puts "\nACTIVE WORK:\n\n"
-    active = {
-      'Gallery Images' => { status: 'Complete', next: 'Generate missing medium variants for all galleries' },
-      'Log Inspector' => { status: 'Pending', next: 'Add QA tests for error detection' },
-      'Front Page' => { status: 'Planned', next: 'Add task dashboard widget' }
-    }
-
-    active.each do |item, info|
-      puts "  [..] #{item}"
-      puts "     Status: #{info[:status]}"
-      puts "     Next: #{info[:next]}\n"
-    end
+    puts "  Example: rake plans:show[medical-appointments-plan]"
 
     puts "\nRECENT COMMITS:\n\n"
     commits = `git log --oneline -5 2>/dev/null`.strip
