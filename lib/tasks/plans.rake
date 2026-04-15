@@ -27,14 +27,65 @@ namespace :plans do
       title = content.match(/^#\s+(.+)$/)[1] rescue File.basename(plan_file, '.md')
       
       # Count checkboxes
-      completed = content.scan(/^- \[x\]/).count
-      pending = content.scan(/^- \[ \]/).count
+      completed = content.scan(/- \[x\]/).count
+      pending = content.scan(/- \[ \]/).count
       total = completed + pending
       
       # Determine status based on completion
       if total == 0
-        status = 'No tasks'
-        pct = 0
+        # Try to detect status from tables with Status column
+        if content.include?('Status') && content.include?('|')
+          # Find the table with Status column and count values in that column
+          lines = content.split("\n")
+          
+          header_idx = lines.index { |l| l.include?('Status') && l.include?('|') }
+          
+          if header_idx
+            done_count = 0
+            pending_count = 0
+            in_progress_count = 0
+            
+            (header_idx + 1).upto(lines.length - 1) do |i|
+              line = lines[i]
+              next if line =~ /\|[-:]+\|/
+              
+              # Count status keywords anywhere in the row (4th column heuristic)
+              parts = line.split('|')
+              # Status is typically in the last column for markdown tables
+              status_col = parts.last.to_s.strip if parts.length >= 2
+              
+              done_count += 1 if status_col =~ /\bDone\b/i || status_col =~ /\bComplete\b/i
+              pending_count += 1 if status_col =~ /\bPending\b/i || status_col =~ /\bNot Started\b/i || status_col =~ /\bTo Do\b/i
+              in_progress_count += 1 if status_col =~ /\bIn Progress\b/i || status_col =~ /\bOngoing\b/i
+            end
+            
+            task_total = done_count + pending_count + in_progress_count
+            
+            if task_total > 0
+              pct = ((done_count.to_f / task_total) * 100).round
+              status = if done_count > 0 && pending_count == 0 && in_progress_count == 0
+                'Complete'
+              elsif done_count > 0 || in_progress_count > 0
+                'In Progress'
+              else
+                'Not started'
+              end
+              # Override the checkbox counts with table detection
+              completed = done_count
+              pending = task_total - done_count
+            else
+              status = 'No tasks'
+              pct = 0
+              total = 0
+            end
+          else
+            status = 'No tasks'
+            pct = 0
+          end
+        else
+          status = 'No tasks'
+          pct = 0
+        end
       elsif completed == total
         status = 'Complete'
         pct = 100
@@ -52,7 +103,7 @@ namespace :plans do
         title: title,
         completed: completed,
         pending: pending,
-        total: total,
+        total: total > 0 ? total : (task_total || 0),
         status: status,
         pct: pct
       }
