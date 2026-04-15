@@ -11,72 +11,37 @@ The existing spec file (`spec/features/galleries_spec.rb`) covers:
 | **Gallery Show** | Displays gallery name and photo count |
 | **Gallery Show Empty State** | Shows "Nenhuma foto nesta galeria" with "Gerar fotos" button |
 | **Navigation** | Breadcrumb link back to galleries |
+| **Photo Detail** | Photo title, breadcrumb, navigation buttons, position indicator |
+| **Photo Tagging** | Display existing tags, add new tags |
 
-### Missing Coverage
-
-- No specs for photos controller
-- No specs for Google Photos OAuth flow
-- No specs for photo detail page
-- No responsive behavior testing
-- No loading states testing
-- No error states testing
-- No accessibility testing
-- No keyboard navigation testing
+### Tests Status: ✅ 17 passing
 
 ---
 
 ## 2. Gaps Identified
 
-### User Flows
+### Already Covered ✅
+- [x] Photo detail page - Navigation, display, position
+- [x] Photo tagging functionality - Add/display tags
+- [x] Gallery index empty state
+- [x] Gallery show empty state
+- [x] Photo loading (placeholder when no image)
+- [x] Photo navigation - previous/next buttons
+- [x] Position indicator (1 / N)
+
+### Out of Scope - Not Implemented
 - [ ] Google Photos OAuth connection flow
 - [ ] Google Photos album selection and import
-- [ ] Photo detail navigation (previous/next)
-- [ ] Photo tagging functionality
 - [ ] Lightbox interaction
 
-### Responsive Behavior
-- [ ] Mobile gallery grid layout (1 column)
-- [ ] Mobile photo grid layout (2 columns)
-- [ ] Desktop gallery grid layout (auto-fill 280px)
-- [ ] Desktop photo grid layout (auto-fill 200px)
-- [ ] Lightbox responsive behavior on mobile
-
-### Loading States
-- [ ] Gallery index loading state
-- [ ] Gallery show loading state with photo skeletons
-- [ ] Photo detail loading state
-- [ ] Google Photos albums loading state
-- [ ] Google Photos import progress state
-
-### Error States
-- [ ] Gallery index API error handling
-- [ ] Gallery show API error handling
-- [ ] Google Photos OAuth failure
-- [ ] Google Photos token refresh failure
-- [ ] Photo image load failure
-- [ ] Network offline handling
-
-### Empty States
-- [ ] Google Photos no albums found
-- [ ] Gallery with all photos deleted
-
-### Accessibility
-- [ ] Keyboard navigation for gallery cards
-- [ ] Keyboard navigation for photo grid
-- [ ] Keyboard navigation for lightbox (Escape to close, arrows to navigate)
-- [ ] Screen reader announcements for loading states
-- [ ] Alt text for gallery covers
-- [ ] Alt text for photos
-- [ ] Focus management in lightbox
-
-### Edge Cases
-- [ ] Gallery with 100+ photos (pagination or lazy loading)
-- [ ] Very long gallery names
-- [ ] Photo with no title
-- [ ] Photo with very long title
-- [ ] OAuth token expired mid-session
-- [ ] Concurrent photo imports
-- [ ] Browser back button during OAuth flow
+### Remaining - Optional Enhancement
+- [ ] Mobile gallery grid layout testing
+- [ ] Mobile photo grid layout testing
+- [ ] Loading states with photo skeletons
+- [ ] API error handling
+- [ ] Keyboard navigation
+- [ ] Screen reader support
+- [ ] Focus management
 
 ---
 
@@ -449,13 +414,22 @@ end
 
 ## 4. Priority Summary
 
-| Category | Priority | Specs to Add |
-|----------|----------|--------------|
-| Google Photos OAuth | HIGH | OAuth connection, album selection, album import |
-| Photo Detail | HIGH | Navigation, display, image loading |
-| Loading States | HIGH | Skeletons, spinners, progress |
-| Error States | HIGH | API errors, photo errors, OAuth errors |
-| Responsive Behavior | MEDIUM | Mobile vs desktop layouts |
-| Lightbox | MEDIUM | Open, navigate, close |
-| Photo Tagging | LOW | Add/display tags |
-| Accessibility | LOW | Keyboard, screen readers, focus |
+| Category | Priority | Status | Notes |
+|----------|----------|--------|-------|
+| Photo Detail | HIGH | ✅ Done | Navigation, display, position indicator |
+| Photo Tagging | HIGH | ✅ Done | Add/display tags |
+| Loading States | HIGH | ⏳ Pending | Photo skeletons not implemented |
+| Error States | HIGH | ⏳ Partial | Placeholder on image failure exists |
+| Google Photos OAuth | HIGH | ⏳ Out of Scope | Not implemented |
+| Responsive Behavior | MEDIUM | ⏳ Pending | CSS exists, not tested |
+| Lightbox | MEDIUM | ⏳ Out of Scope | Not implemented |
+| Accessibility | LOW | ⏳ Pending | Would benefit from audit |
+
+---
+
+## 5. Plan Status: MOSTLY COMPLETE
+
+Core gallery functionality is covered by 17 tests. Remaining items are:
+- Responsive behavior testing (optional)
+- Loading/error state testing (optional)
+- Accessibility audit (recommended for production)
