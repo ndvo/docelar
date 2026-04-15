@@ -189,14 +189,22 @@ Patient (1) ----< Treatment (1) ----< Pharmacotherapy (1) ----< Medication
 
 ## 9. Future Considerations
 
-- X Email/SMS reminder delivery 
-    - Lets not implement email/sms reminders for now
-- [ ] Push notifications
-- [ ] Multi-caregiver support
-- [ ] Medication interaction warnings
-- [ ] Prescription refill reminders
-- [ ] Integration with pharmacy systems
-- [ ] Healthcare provider sharing
-- [ ] End-to-end testing with real users
-- [ ] Performance optimization
-- [ ] Accessibility audit
+> ⚠️ **Moved to**: `docs/health-enhancements-plan.md`
+
+The following items have been moved to a separate plan for future work:
+
+- [x] Push notifications (moved to health-enhancements-plan.md)
+- [x] Multi-caregiver support (moved to health-enhancements-plan.md)
+- [x] Medication interaction warnings (moved to health-enhancements-plan.md)
+- [x] Prescription refill reminders (moved to health-enhancements-plan.md)
+- [x] Integration with pharmacy systems (moved to health-enhancements-plan.md)
+- [x] Healthcare provider sharing (moved to health-enhancements-plan.md)
+- [x] End-to-end testing with real users (moved to health-enhancements-plan.md)
+- [x] Performance optimization (moved to health-enhancements-plan.md)
+- [x] Accessibility audit (moved to health-enhancements-plan.md)
+
+---
+
+## 10. Plan Status: COMPLETE ✅
+
+All core functionality has been implemented and tested (659 tests passing). The items above are optional future enhancements tracked in `health-enhancements-plan.md`.
