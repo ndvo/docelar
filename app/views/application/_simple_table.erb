@@ -1,9 +1,9 @@
 <% optional ||= [] %>
-<table>
+<table class="data-table">
   <thead>
   <tr>
     <% keys.each_with_index do |k, index| %>
-      <th <%= optional.include?(index) ? 'class=optional' : '' %>><%= k %></th>
+      <th scope="col"<%= optional.include?(index) ? ' class=optional' : '' %>><%= k %></th>
     <% end %>
   </tr>
   </thead>
@@ -12,7 +12,7 @@
     <% rows.each do |row| %>
       <tr>
         <% row.each_with_index do |cell, index| %>
-          <td <%= optional.include?(index) ? 'class=optional' : '' %>><%= cell %></td>
+          <td<%= optional.include?(index) ? ' class=optional' : '' %>><%= cell %></td>
         <% end %>
       </tr>
     <% end %>
