@@ -1,9 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
-    <title>Doce Lar</title>
+    <title><%= yield(:title).presence || "Doce Lar" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="Doce Lar - Sua gestão financeira e cuidados em um só lugar">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="<%= yield(:title).presence || "Doce Lar" %>">
+    <meta property="og:description" content="Doce Lar - Sua gestão financeira e cuidados em um só lugar">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:site_name" content="Doce Lar">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="<%= yield(:title).presence || "Doce Lar" %>">
+    <meta name="twitter:description" content="Doce Lar - Sua gestão financeira e cuidados em um só lugar">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="/icon.png">
+    <link rel="apple-touch-icon" href="/icon.png">
+    
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Doce Lar",
+      "description": "Aplicação de gestão financeira e de saúde para famílias",
+      "url": "<%= request.original_url %>",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "BRL"
+      }
+    }
+    </script>
+    
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
