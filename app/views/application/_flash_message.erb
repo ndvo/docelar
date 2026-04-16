@@ -1,13 +1,13 @@
 <% if flash.present? %>
-<div id="flash-messages" data-controller="flash_message">
+<div id="flash-messages" role="status" aria-live="polite" data-controller="flash_message">
   <div class="messages">
   <% flash.each do |name, msg| %>
-    <div id="flash_<%= name %>">
+    <div id="flash_<%= name %>" class="flash flash_<%= name %>">
       <%= msg %>
     </div>
   <% end %>
   </div>
-  <button type="button" class="dismiss" aria-label="Fechar mensagem" onclick="this.parentElement.remove();">
+  <button type="button" class="dismiss" aria-label="Fechar mensagem" onclick="this.closest('#flash-messages').remove();">
     x
   </button>
 </div>

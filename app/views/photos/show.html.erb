@@ -1,7 +1,8 @@
-<nav class="breadcrumb">
-  <%= link_to '← Galerias', galleries_path, data: { turbo_preload: true } %>
-  <span class="separator">/</span>
-  <%= link_to @photo.gallery.name, @photo.gallery, data: { turbo_preload: true } %>
+<nav class="breadcrumb" aria-label="Navegação">
+  <ol>
+    <li><%= link_to '← Galerias', galleries_path, data: { turbo_preload: true } %></li>
+    <li><%= link_to @photo.gallery.name, @photo.gallery, data: { turbo_preload: true } %></li>
+  </ol>
 </nav>
 
 <div class="photo-detail" role="article" aria-label="Foto: <%= @photo.title %>">
