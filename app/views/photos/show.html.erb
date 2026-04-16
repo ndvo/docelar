@@ -4,7 +4,7 @@
   <%= link_to @photo.gallery.name, @photo.gallery, data: { turbo_preload: true } %>
 </nav>
 
-<div class="photo-detail">
+<div class="photo-detail" role="article" aria-label="Foto: <%= @photo.title %>">
   <article class="photo">
     <h1><%= @photo.title %></h1>
     <% if @photo.file.attached? %>
@@ -66,13 +66,29 @@
 </div>
 
 <script>
+let previousFocus = null;
+
 document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowLeft') {
     Turbo.router.navigate('<%= @photo.previous || @photo.gallery.photos.order(:id).last&.id ? photo_path(@photo.previous || @photo.gallery.photos.order(:id).last) : '#' %>');
   } else if (e.key === 'ArrowRight') {
     Turbo.router.navigate('<%= @photo.next || @photo.gallery.photos.order(:id).first&.id ? photo_path(@photo.next || @photo.gallery.photos.order(:id).first) : '#' %>');
+  } else if (e.key === 'Escape') {
+    // Go back to gallery on escape
+    Turbo.router.navigate('<%= gallery_path(@photo.gallery) %>');
   }
 });
+
+// Store focus on page load for accessibility
+document.addEventListener('turbo:load', function() {
+  previousFocus = document.activeElement;
+});
+
+function restoreFocus() {
+  if (previousFocus) {
+    previousFocus.focus();
+  }
+}
 
 // Touch swipe navigation
 (function() {
