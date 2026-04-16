@@ -266,13 +266,12 @@ spec/
 
 | Task | Priority | Status |
 |------|----------|--------|
-| Create migration | High | Pending |
-| Add merchant/location to model | High | Pending |
-| Add popular_merchants scope | High | Pending |
-| Update strong parameters | High | Pending |
-| Update purchase form | High | Pending |
-| Update purchases index view | Medium | Pending |
-| Update product show view | Medium | Pending |
-| Update factory | Medium | Pending |
-| Add model specs | Medium | Pending |
-| Add seeds with merchants | Low | Pending |
+| - [x] Create migration | High | Done |
+| - [x] Add merchant/location to model | High | Done |
+| - [x] Add popular_merchants scope | High | Done |
+| - [x] Update strong parameters | High | Done |
+| - [x] Update purchase form | High | Done |
+| - [x] Update purchases index view | Medium | Done |
+| - [x] Update purchase show view | Medium | Done |
+| - [ ] Update product show view | Medium | N/A - not used |
+| - [x] Add model specs | Medium | Done |

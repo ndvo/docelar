@@ -6,6 +6,7 @@ class Purchase < ApplicationRecord
   include Datable
 
   scope :month, ->(m) { at_month m, 'purchase_at' }
+  scope :by_merchant, ->(merchant) { where(merchant: merchant) }
 
   accepts_nested_attributes_for :payments,
                                 reject_if: :all_blank,
@@ -69,5 +70,14 @@ class Purchase < ApplicationRecord
 
   def value_total
     price * quantity
+  end
+
+  def self.popular_merchants(limit: 10)
+    select(:merchant)
+      .where.not(merchant: [nil, ''])
+      .group(:merchant)
+      .order(Arel.sql('COUNT(*) DESC'))
+      .limit(limit)
+      .pluck(:merchant)
   end
 end

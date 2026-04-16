@@ -3,6 +3,14 @@
 </h1>
 <div>
   <dl>
+    <% if purchase.merchant.present? %>
+      <dt>Estabelecimento:</dt>
+      <dd><%= purchase.merchant %></dd>
+    <% end %>
+    <% if purchase.location.present? %>
+      <dt>Localidade:</dt>
+      <dd><%= purchase.location %></dd>
+    <% end %>
     <% if purchase.card.present? %>
       <dt>Compra feita no Cartão:</dt>
       <dd><%= purchase.card&.name || '' %></dd>

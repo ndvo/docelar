@@ -16,6 +16,21 @@
       <%= f.label :purchase_at, 'Data' %>
       <%= f.date_field :purchase_at %>
     </div>
+    <div class="field">
+      <%= f.label :merchant, 'Estabelecimento' %>
+      <%= f.text_field :merchant, 
+          list: 'merchant-suggestions',
+          placeholder: 'Ex: Supermercado Extra' %>
+      <datalist id="merchant-suggestions">
+        <% Purchase.popular_merchants.each do |merchant| %>
+          <option value="<%= merchant %>">
+        <% end %>
+      </datalist>
+    </div>
+    <div class="field">
+      <%= f.label :location, 'Localidade' %>
+      <%= f.text_field :location, placeholder: 'Opcional (bairro, endereço)' %>
+    </div>
   </fieldset>
 
   <fieldset>

@@ -132,6 +132,8 @@ class PurchasesController < ApplicationController
         :number_of_installments,
         :quantity,
         :card_id,
+        :merchant,
+        :location,
         payments_attributes: %i[purchase_id due_amount due_at _destroy])
   end
 
