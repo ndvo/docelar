@@ -17,6 +17,17 @@ Based on typical parent priorities:
 5. **Financial Planning** - Planning for school costs
 6. **Behavior/Social** - Being aware of issues at school
 
+## What Students Consider Most Important
+
+Based on typical student priorities:
+
+1. **Grades & Progress** - Knowing their current standing, seeing improvements
+2. **Organization** - Tracking homework, assignments, deadlines
+3. **Time Management** - Balancing school, activities, free time
+4. **Future Planning** - College prep, career goals
+5. **Social** - Friends, group projects, extracurriculars
+6. **Support** - Knowing who to ask for help
+
 ## User Stories
 
 | Role | User Story | Priority |
@@ -54,6 +65,8 @@ Based on typical parent priorities:
 - **Grade calculations** - Weighted averages, semester grades
 - **Transcripts** - Exportable grade reports
 - **Progress reports** - Generate PDF reports
+- **Homework tracker** - Assignments due, completion status
+- **Study goals** - Reading time, practice problems
 
 ### 4. Incidents & Behavior
 
@@ -126,12 +139,14 @@ Subject
 # Grade - individual grade entries
 Grade
   ├── subject_id (FK)
-  ├── grade_type (enum: test, homework, quiz, project, participation, exam)
+  ├── grade_type (enum: test, homework, quiz, project, participation, exam, assignment)
   ├── name (string) - e.g., "Chapter 3 Test"
   ├── score (decimal)
   ├── max_score (decimal)
   ├── weight (decimal) - weight in grade calculation
   ├── date (date)
+  ├── due_date (date, optional) - for assignments
+  ├── completed (boolean) - for homework tracking
   └── notes (text)
 
 # Incident - behavioral/academic incidents
