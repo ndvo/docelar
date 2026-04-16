@@ -1,6 +1,6 @@
-<%= form_with(model: task) do |form| %>
+<%= form_with(model: task, id: 'task-form') do |form| %>
   <% if task.errors.any? %>
-    <div style="color: red">
+    <div id="task-errors" role="alert" aria-live="assertive" style="color: red">
       <h2><%= pluralize(task.errors.count, "problema") %> impediram salvar a tarefa:</h2>
 
       <ul>

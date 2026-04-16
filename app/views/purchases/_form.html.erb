@@ -1,6 +1,6 @@
-<%= form_with model: purchase, class: 'purchase-form', data: { controller: 'purchase-form form' } do |f| %>
+<%= form_with model: purchase, class: 'purchase-form', data: { controller: 'purchase-form form' }, aria: { describedby: 'error_explanation' } do |f| %>
   <% if purchase.errors.any? %>
-    <div id="error_explanation" role="alert">
+    <div id="error_explanation" role="alert" aria-live="assertive">
       <h2><%= pluralize(purchase.errors.count, "error") %> prohibited this purchase from being saved:</h2>
       <ul>
         <% purchase.errors.each do |error| %>
