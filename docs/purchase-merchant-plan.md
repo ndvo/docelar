@@ -273,5 +273,7 @@ spec/
 | - [x] Update purchase form | High | Done |
 | - [x] Update purchases index view | Medium | Done |
 | - [x] Update purchase show view | Medium | Done |
-| - [ ] Update product show view | Medium | N/A - not used |
-| - [x] Add model specs | Medium | Done |
+| - [x] Product show view | Medium | N/A - not needed |
+| - [x] Model specs | Medium | Done |
+
+## Plan Status: COMPLETE ✅
