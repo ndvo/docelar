@@ -41,6 +41,10 @@ namespace :plans do
           header_idx = lines.index { |l| l.include?('Status') && l.include?('|') }
           
           if header_idx
+            # Find which column index has Status
+            header_parts = lines[header_idx].split('|').map(&:strip)
+            status_col_idx = header_parts.index('Status')
+            
             done_count = 0
             pending_count = 0
             in_progress_count = 0
@@ -49,14 +53,12 @@ namespace :plans do
               line = lines[i]
               next if line =~ /\|[-:]+\|/
               
-              # Count status keywords anywhere in the row (4th column heuristic)
-              parts = line.split('|')
-              # Status is typically in the last column for markdown tables
-              status_col = parts.last.to_s.strip if parts.length >= 2
+              parts = line.split('|').map(&:strip)
+              status_col = parts[status_col_idx] if status_col_idx && parts[status_col_idx]
               
-              done_count += 1 if status_col =~ /\bDone\b/i || status_col =~ /\bComplete\b/i
-              pending_count += 1 if status_col =~ /\bPending\b/i || status_col =~ /\bNot Started\b/i || status_col =~ /\bTo Do\b/i
-              in_progress_count += 1 if status_col =~ /\bIn Progress\b/i || status_col =~ /\bOngoing\b/i
+              done_count += 1 if status_col =~ /\bDone\b/i || status_col =~ /\bComplete\b/i || status_col =~ /✅/
+              pending_count += 1 if status_col =~ /\bPending\b/i || status_col =~ /\bNot Started\b/i || status_col =~ /\bTo Do\b/i || status_col =~ /⏳/
+              in_progress_count += 1 if status_col =~ /\bIn Progress\b/i || status_col =~ /\bOngoing\b/i || status_col =~ /🔄/
             end
             
             task_total = done_count + pending_count + in_progress_count
