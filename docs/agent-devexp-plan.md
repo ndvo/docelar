@@ -4,11 +4,13 @@ Tools and improvements to make the agent work easier and faster.
 
 ## Current Problems
 
-1. **Session tracking** - No automatic way to summarize what was done in a session
-2. **Spec running** - Running full suite or manually specifying files is slow
-3. **Context retrieval** - Hard to find all files related to a feature across codebase
-4. **Plan documents** - Agent doesn't automatically read plan at session start
+~~1. **Session tracking** - No automatic way to summarize what was done in a session~~
+~~2. **Spec running** - Running full suite or manually specifying files is slow~~
+~~3. **Context retrieval** - Hard to find all files related to a feature across codebase~~
+~~4. **Plan documents** - Agent doesn't automatically read plan at session start~~
 5. **Guard monitoring** - Agent can't watch continuous output in real-time
+6. **Code quality** - No unified lint/typecheck command
+7. **Database resets** - No quick way to reset test database
 
 ## Proposed Tools
 
@@ -91,6 +93,65 @@ At session start, parse plan document and suggest first action.
 - Could be part of session initialization
 - Read plan, show "in progress" and "pending" items
 
+## Implemented Tools
+
+### 1. Session Tracker (`bin/dev-session`)
+
+```bash
+bin/dev-session start        # Start tracking a new session
+bin/dev-session track        # Track current file changes
+bin/dev-session summary      # Show what was done in session
+bin/dev-session spec "5 examples, 0 failures"  # Track spec results
+bin/dev-session commit abc123  # Track a commit
+```
+
+### 2. Smart Spec Runner (`bin/dev-spec`)
+
+```bash
+bin/dev-spec app/models/dog.rb          # → runs spec/models/dog_spec.rb
+bin/dev-spec app/controllers/dogs_controller.rb  # → runs spec/requests/dogs_spec.rb
+bin/dev-spec app/views/dogs/show.html.erb  # → runs spec/features/dogs_spec.rb
+```
+
+### 3. Context Retriever (`bin/dev-context`)
+
+```bash
+bin/dev-context patient   # Find all patient-related files
+bin/dev-context dog       # Find all dog-related files
+bin/dev-context payment   # Find all payment-related files
+```
+
+### 4. Commit Planner (`bin/dev-commit`)
+
+```bash
+bin/dev-commit  # Shows staged/unstaged changes and suggests commit groupings
+```
+
+### 5. Plan Document Reader (`bin/dev-plan`)
+
+```bash
+bin/dev-plan                 # List all plans with status
+bin/dev-plan agent-devexp    # Show specific plan details
+```
+
+---
+
+## Proposed New Tools
+
+### 6. Guard Monitor
+
+Watch guard output in real-time during development.
+
+### 7. Code Quality Runner
+
+Unified command for lint and typecheck.
+
+### 8. Database Reset
+
+Quick reset for test database.
+
+---
+
 ## Implementation Status
 
 | Tool | Status | File |
@@ -105,13 +166,16 @@ At session start, parse plan document and suggest first action.
 
 ## Implementation Priority
 
-| Tool | Priority | Notes |
-|------|----------|-------|
-| Smart Spec Runner | High | Most frequently needed |
-| Context Retriever | High | Helps navigate codebase |
-| Commit Planner | Medium | Nice to have for commits |
-| Session Tracker | Medium | Useful for long sessions |
-| Plan Document Reader | Low | Could be manual |
+| Tool | Priority | Status |
+|------|----------|--------|
+| Smart Spec Runner | High | ✅ Complete |
+| Context Retriever | High | ✅ Complete |
+| Commit Planner | Medium | ✅ Complete |
+| Session Tracker | Medium | ✅ Complete |
+| Plan Document Reader | Low | ✅ Complete |
+| Guard Monitor | Low | ⏳ Pending |
+| Code Quality Runner | Medium | ⏳ Pending |
+| Database Reset | Low | ⏳ Pending |
 
 ## Design Principles
 
