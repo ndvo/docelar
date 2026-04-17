@@ -8,7 +8,7 @@ Tools and improvements to make the agent work easier and faster.
 ~~2. **Spec running** - Running full suite or manually specifying files is slow~~
 ~~3. **Context retrieval** - Hard to find all files related to a feature across codebase~~
 ~~4. **Plan documents** - Agent doesn't automatically read plan at session start~~
-5. **Guard monitoring** - Agent can't watch continuous output in real-time
+~~5. **Guard monitoring** - Agent can't watch continuous output in real-time~~
 6. **Code quality** - No unified lint/typecheck command
 7. **Database resets** - No quick way to reset test database
 
@@ -127,18 +127,23 @@ bin/dev-context payment   # Find all payment-related files
 bin/dev-commit  # Shows staged/unstaged changes and suggests commit groupings
 ```
 
-### 5. Plan Document Reader (`bin/dev-plan`)
+### 5. Guard Monitor (`bin/dev-guard`)
 
 ```bash
-bin/dev-plan                 # List all plans with status
-bin/dev-plan agent-devexp    # Show specific plan details
+dev:guard start   # Start guard with log output
+dev:guard log    # Tail guard log in real-time
+dev:guard stop   # Stop guard
+dev:guard status # Check if guard is running
+dev:guard run spec/models/dog_spec.rb  # Run single spec
 ```
 
 ---
 
 ## Proposed New Tools
 
-### 6. Guard Monitor
+~~### 6. Guard Monitor~~ ✅ Complete
+
+### 7. Code Quality Runner
 
 Watch guard output in real-time during development.
 
@@ -161,6 +166,7 @@ Quick reset for test database.
 | Commit Planner | ✅ Complete | bin/dev-commit |
 | Session Tracker | ✅ Complete | bin/dev-session |
 | Plan Document Reader | ✅ Complete | bin/dev-plan |
+| Guard Monitor | ✅ Complete | bin/dev-guard |
 
 ---
 
@@ -173,7 +179,7 @@ Quick reset for test database.
 | Commit Planner | Medium | ✅ Complete |
 | Session Tracker | Medium | ✅ Complete |
 | Plan Document Reader | Low | ✅ Complete |
-| Guard Monitor | Low | ⏳ Pending |
+| Guard Monitor | Low | ✅ Complete |
 | Code Quality Runner | Medium | ⏳ Pending |
 | Database Reset | Low | ⏳ Pending |
 

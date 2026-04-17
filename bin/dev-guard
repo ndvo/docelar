@@ -1,0 +1,120 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+
+class GuardRunner
+  LOG_FILE = "log/guard.log"
+
+  def self.run(args)
+    new(args).run
+  end
+
+  def initialize(args)
+    @args = args
+  end
+
+  def run
+    if @args.empty?
+      show_help
+      return
+    end
+
+    case @args.first
+    when "start"
+      start_guard
+    when "stop"
+      stop_guard
+    when "log", "tail"
+      tail_log
+    when "run"
+      run_spec
+    when "status"
+      check_status
+    else
+      show_help
+    end
+  end
+
+  private
+
+  def show_help
+    puts "Guard Runner - Watch guard output in real-time"
+    puts
+    puts "Usage: dev:guard <command>"
+    puts
+    puts "Commands:"
+    puts "  start        Start guard with log output"
+    puts "  stop         Stop guard"
+    puts "  log          Tail guard log (real-time output)"
+    puts "  run <file>   Run single spec file"
+    puts "  status       Show guard status"
+    puts
+    puts "Examples:"
+    puts "  dev:guard start   # Start guard, logs to log/guard.log"
+    puts "  dev:guard log     # Watch guard output in real-time"
+  end
+
+  def start_guard
+    FileUtils.mkdir_p("log")
+    log = File.open(LOG_FILE, "w")
+    log.sync = true
+    
+    puts "Starting guard..."
+    pid = spawn("bundle", "exec", "guard", "-p", :out => log, :err => log)
+    
+    File.write(".guard.pid", pid)
+    puts "Guard started (PID: #{pid})"
+    puts "Log: #{LOG_FILE}"
+    puts "Run 'dev:guard log' to watch output"
+  end
+
+  def stop_guard
+    pid_file = ".guard.pid"
+    if File.exist?(pid_file)
+      pid = File.read(pid_file).to_i
+      begin
+        Process.kill("TERM", pid)
+        File.delete(pid_file)
+        puts "Sent TERM to #{pid}"
+      rescue Errno::ESRCH
+        puts "Process not found"
+      end
+    else
+      puts "No PID file. Try: pkill -f 'guard'"
+    end
+  end
+
+  def tail_log
+    unless File.exist?(LOG_FILE)
+      puts "No log file. Run 'dev:guard start' first."
+      exit 1
+    end
+    puts "Tailing #{LOG_FILE}... (Ctrl+C to stop)"
+    exec("tail -f #{LOG_FILE}")
+  end
+
+  def run_spec
+    file = @args[1]
+    unless file
+      puts "Usage: dev:guard run <spec-file>"
+      exit 1
+    end
+    exec("bundle exec rspec #{file}")
+  end
+
+  def check_status
+    guard_pids = `pgrep -f "guard"`.split("\n")
+    if guard_pids.empty?
+      puts "Guard is not running"
+    else
+      puts "Guard running (PIDs: #{guard_pids.join(', ')})"
+    end
+    
+    if File.exist?(LOG_FILE)
+      puts "Log: #{LOG_FILE} (#{File.size(LOG_FILE)} bytes)"
+    end
+  end
+end
+
+GuardRunner.run(ARGV)
