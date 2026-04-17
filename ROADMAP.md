@@ -10,7 +10,7 @@ The Doce Lar application is built around **11 pillars** organized into **4 major
 
 ---
 
-### GROUP 1: Finance
+### GROUP 1: Finance, Legal & Estate
 
 #### 1. Budget Control
 **Why:** Financial clarity leads to better decisions. Every family deserves to understand their spending.
@@ -29,11 +29,19 @@ The Doce Lar application is built around **11 pillars** organized into **4 major
 - Understand real costs (effective interest rates)
 - Data portability - own your data
 
+#### 3. Legal & Estate
+**Why:** Protecting family interests requires planning for the unexpected.
+
+- Will and testament
+- Power of attorney
+- Legal document vault
+- Emergency information
+
 ---
 
 ### GROUP 2: Wellness
 
-#### 3. Health
+#### 4. Health
 **Why:** Health is the foundation of everything. Preventive care leads to better outcomes.
 
 - Monitor family members health (both human and pets)
@@ -42,7 +50,7 @@ The Doce Lar application is built around **11 pillars** organized into **4 major
 - Medication schedules
 - Health history
 
-#### 4. Nutrition & Meal Planning
+#### 5. Nutrition & Meal Planning
 **Why:** Good nutrition is foundational to family health. Planning reduces stress and saves money.
 
 - Meal planning and weekly menus
@@ -55,14 +63,14 @@ The Doce Lar application is built around **11 pillars** organized into **4 major
 
 ### GROUP 3: Growth & Routine
 
-#### 5. Family Goals
+#### 6. Family Goals
 **Why:** Families work better together when aligned on objectives.
 
 - Track progress toward objectives
 - Collaborative task management
 - Goal visualization
 
-#### 6. Education
+#### 7. Education
 **Why:** Supporting family members' learning journeys creates opportunities for growth.
 
 - Monitor education progress
@@ -70,34 +78,14 @@ The Doce Lar application is built around **11 pillars** organized into **4 major
 - Grade tracking
 - Teacher communication
 
-#### 7. Routine Management
+#### 8. Routine Management
 **Why:** Families thrive on routines. Knowing what needs to be done reduces stress.
 
 - Task tracking and delegation
 - Schedule and calendar management  
 - Reminders and notifications
 
----
-
-### GROUP 4: Home & Life
-
-#### 8. Culture, Multimedia and Entertainment
-**Why:** Families that create and share experiences together build stronger bonds.
-
-- Family photos management
-- Video library
-- Book library and reading
-- Vacation planning
-
-#### 9. Social & Relationships
-**Why:** Relationships require intentional effort. Never forget important moments.
-
-- Events planning
-- Family relationship tools
-- Important dates reminders
-- Communication log
-
-#### 10. Home & Property
+#### 9. Home & Property
 **Why:** A home is a family's biggest investment. Protecting it requires systematic management.
 
 - Maintenance schedules
@@ -105,13 +93,26 @@ The Doce Lar application is built around **11 pillars** organized into **4 major
 - Insurance policies
 - Utility tracking
 
-#### 11. Legal & Estate
-**Why:** Protecting family interests requires planning for the unexpected.
 
-- Will and testament
-- Power of attorney
-- Legal document vault
-- Emergency information
+---
+
+### GROUP 4: Family Life
+
+#### 10. Culture, Multimedia and Entertainment
+**Why:** Families that create and share experiences together build stronger bonds.
+
+- Family photos management
+- Video library
+- Book library and reading
+- Vacation planning
+
+#### 11. Social & Relationships
+**Why:** Relationships require intentional effort. Never forget important moments.
+
+- Events planning
+- Family relationship tools
+- Important dates reminders
+- Communication log
 
 ---
 
