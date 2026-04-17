@@ -48,14 +48,51 @@ bin/dev-guard status # Check if running
 bin/dev-guard stop   # Stop guard
 ```
 
+### 7. Code Quality
+```bash
+bin/dev-quality check    # Run all code quality checks
+bin/dev-quality lint    # Quick syntax check
+bin/dev-quality rails   # Rails best practices
+```
+
+### 8. Verify Pages
+```bash
+bin/dev-curl /patients    # Check if page loads (requires server)
+bin/dev-curl /dogs/new
+bin/dev-curl list         # Show available routes
+```
+
+### 9. Rails Shortcuts
+```bash
+bin/dev-rails console   # Open console (alias: c)
+bin/dev-rails routes   # List routes (alias: r)
+bin/dev-rails g model Dog name  # Generate model
+bin/dev-rails migrate  # Run migrations
+bin/dev-rails test     # Run tests
+bin/dev-rails log     # Tail log
+```
+
 ## Workflow Recommendations
 
 1. **Before starting work**: Run `bin/dev-plan` to see current plans
 2. **When working on a file**: Use `bin/dev-spec <file>` to run related tests
 3. **Finding related code**: Use `bin/dev-context <feature>`
 4. **During development**: Use `bin/dev-guard start` + `bin/dev-guard log`
-5. **Before committing**: Run `bin/dev-commit` to plan atomic commits
-6. **At session end**: Run `bin/dev-session summary`
+5. **After making changes**: Use `bin/dev-curl <path>` to verify page loads
+6. **Before committing**: Run `bin/dev-quality check` then `bin/dev-commit`
+7. **At session end**: Run `bin/dev-session summary`
+
+## After Saying "Done"
+
+**Always verify the feature works** before telling the user it's done:
+1. Run `bin/dev-curl <path>` to check the page loads without errors
+2. Or start server and check manually
+
+Example workflow after implementing a feature:
+```bash
+bin/dev-curl /patients    # Verify patients page loads
+# If 200 - all good
+# If 500 - there's an error to fix
 
 ## Test Commands
 
