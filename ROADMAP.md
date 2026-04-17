@@ -100,6 +100,43 @@ The Doce Lar application is built around **8 interconnected pillars** that work 
 
 ---
 
+### 9. Home & Property
+**Why:** A home is a family's biggest investment. Protecting it requires systematic management.
+
+- Home maintenance schedules and reminders
+- Appliance tracking and warranties
+- Home insurance policies
+- Security systems and monitoring
+- Property documents and records
+- Utility tracking (water, electricity, gas)
+
+---
+
+### 10. Legal & Estate
+**Why:** Protecting family interests requires planning for the unexpected.
+
+- Will and testament storage
+- Power of attorney documents
+- Insurance policies (life, health, auto, home)
+- Legal document vault
+- Important contacts (lawyers, accountants)
+- Emergency information access
+
+---
+
+### 11. Nutrition & Meal Planning
+**Why:** Good nutrition is foundational to family health. Planning reduces stress and saves money.
+
+- Meal planning and weekly menus
+- Grocery list generation
+- Recipe management and organization
+- Nutritional tracking
+- Special dietary requirements
+- Family favorites and preferences
+- Bulk meal preparation scheduling
+
+---
+
 ## Roadmap
 
 ### Phase 1: Foundation ✅
