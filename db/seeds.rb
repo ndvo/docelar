@@ -192,6 +192,22 @@ galleries.each do |name|
   Gallery.find_or_create_by!(name: name, folder_name: name.parameterize)
 end
 
+# Sample Photos for Galleries
+puts "Creating sample photos..."
+sample_dir = Rails.root.join("tmp", "sample_photos")
+if Dir.exist?(sample_dir)
+  Gallery.all.each do |gallery|
+    Dir.glob("#{sample_dir}/*.jpg").each do |photo_path|
+      filename = File.basename(photo_path)
+      unless Photo.exists?(gallery: gallery, original_path: filename)
+        photo = Photo.create!(gallery: gallery, original_path: filename)
+        photo.file.attach(io: File.open(photo_path), filename: filename)
+        puts "  - Added #{filename} to #{gallery.name}"
+      end
+    end
+  end
+end
+
 # Tasks
 puts "Creating tasks..."
 tasks = [
