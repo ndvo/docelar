@@ -148,6 +148,32 @@ dev:guard run spec/models/dog_spec.rb  # Run single spec
 
 Quick reset for test database.
 
+### 9. Web Page Checker
+
+Verify pages load without errors after changes.
+
+**Features:**
+- Input: URL or path (e.g., `/patients`, `/dogs/1`)
+- Check if page returns 200, no errors
+- Useful for catching errors before telling user "it's done"
+
+**Examples:**
+```
+dev:curl /patients          # Check patients index
+dev:curl /dogs/new          # Check new dog form
+dev:curl /health_hub/1      # Check health hub
+```
+
+### 10. Rails Shortcuts
+
+Quick Rails commands.
+
+**Commands:**
+- `dev:rails console` - Open console
+- `dev:rails routes` - List routes
+- `dev:rails gen model Foo` - Generate model
+- `dev:rails migrate` - Run migrations
+
 ---
 
 ## Implementation Status
@@ -161,7 +187,9 @@ Quick reset for test database.
 | Plan Document Reader | ✅ Complete | bin/dev-plan |
 | Guard Monitor | ✅ Complete | bin/dev-guard |
 | Code Quality Runner | ✅ Complete | bin/dev-quality |
+| Web Page Checker | ✅ Complete | bin/dev-curl |
 | Database Reset | ⏳ Pending | - |
+| Rails Shortcuts | ⏳ Pending | - |
 
 ## Design Principles
 

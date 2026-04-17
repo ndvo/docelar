@@ -1,0 +1,111 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "net/http"
+require "uri"
+
+class WebChecker
+  def self.run(args)
+    new(args).run
+  end
+
+  def initialize(args)
+    @args = args
+    @host = "http://localhost:3000"
+  end
+
+  def run
+    if @args.empty?
+      show_help
+      return
+    end
+
+    path = @args.first
+
+    case path
+    when "help", "-h", "--help"
+      show_help
+    when "list"
+      list_routes
+    else
+      check_page(path)
+    end
+  end
+
+  private
+
+  def show_help
+    puts "Web Page Checker - Verify pages load without errors"
+    puts
+    puts "Usage: dev:curl <path>"
+    puts
+    puts "Examples:"
+    puts "  dev:curl /                    # Check homepage"
+    puts "  dev:curl /patients            # Check patients index"
+    puts "  dev:curl /dogs/new            # Check new dog form"
+    puts "  dev:curl /health_hub/1        # Check health hub"
+    puts "  dev:curl list                 # List available routes"
+    puts
+    puts "Notes:"
+    puts "  - Requires Rails server running on localhost:3000"
+    puts "  - Uses test environment by default"
+    puts "  - Shows response code and any errors"
+  end
+
+  def check_page(path)
+    path = "/#{path}" unless path.start_with?("/")
+    url = "#{@host}#{path}"
+    
+    puts "Checking: #{url}"
+    puts "-" * 50
+    
+    begin
+      uri = URI.parse(url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.open_timeout = 5
+      http.read_timeout = 10
+      
+      response = http.get(uri.path)
+      
+      puts "Status: #{response.code} #{response.message}"
+      
+      if response.code == "200"
+        puts "✓ Page loads successfully"
+        
+        body = response.body
+        if body.include?("Error") || body.include?("exception") || body.include?("RuntimeError")
+          puts "⚠ Warning: Page contains error keywords"
+        end
+        if body.include?("ActiveRecord::RecordNotFound")
+          puts "⚠ Warning: Page contains RecordNotFound"
+        end
+      elsif response.code == "302"
+        puts "→ Redirect to: #{response['Location']}"
+      elsif response.code == "404"
+        puts "✗ Page not found"
+      elsif response.code == "500"
+        puts "✗ Server error"
+      else
+        puts "? Unexpected status"
+      end
+    rescue Errno::ECONNREFUSED
+      puts "✗ Cannot connect to localhost:3000"
+      puts "  Is Rails server running? Try: bin/rails server"
+    rescue Net::OpenTimeout
+      puts "✗ Connection timed out"
+    rescue => e
+      puts "✗ Error: #{e.message}"
+    end
+  end
+
+  def list_routes
+    puts "Available routes (sample):"
+    routes = `bin/rails routes 2>/dev/null`.lines.take(30)
+    routes.each do |r|
+      puts "  #{r.strip}"
+    end
+    puts "  ... (run 'bin/rails routes' for full list)"
+  end
+end
+
+WebChecker.run(ARGV)
