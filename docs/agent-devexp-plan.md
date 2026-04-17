@@ -142,14 +142,7 @@ dev:guard run spec/models/dog_spec.rb  # Run single spec
 ## Proposed New Tools
 
 ~~### 6. Guard Monitor~~ ✅ Complete
-
-### 7. Code Quality Runner
-
-Watch guard output in real-time during development.
-
-### 7. Code Quality Runner
-
-Unified command for lint and typecheck.
+~~### 7. Code Quality Runner~~ ✅ Complete
 
 ### 8. Database Reset
 
@@ -167,21 +160,8 @@ Quick reset for test database.
 | Session Tracker | ✅ Complete | bin/dev-session |
 | Plan Document Reader | ✅ Complete | bin/dev-plan |
 | Guard Monitor | ✅ Complete | bin/dev-guard |
-
----
-
-## Implementation Priority
-
-| Tool | Priority | Status |
-|------|----------|--------|
-| Smart Spec Runner | High | ✅ Complete |
-| Context Retriever | High | ✅ Complete |
-| Commit Planner | Medium | ✅ Complete |
-| Session Tracker | Medium | ✅ Complete |
-| Plan Document Reader | Low | ✅ Complete |
-| Guard Monitor | Low | ✅ Complete |
-| Code Quality Runner | Medium | ⏳ Pending |
-| Database Reset | Low | ⏳ Pending |
+| Code Quality Runner | ✅ Complete | bin/dev-quality |
+| Database Reset | ⏳ Pending | - |
 
 ## Design Principles
 

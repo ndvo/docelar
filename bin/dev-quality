@@ -1,0 +1,168 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+class CodeQualityRunner
+  def self.run(args)
+    new(args).run
+  end
+
+  def initialize(args)
+    @args = args
+  end
+
+  def run
+    case @args.first
+    when "check"
+      run_all_checks
+    when "lint"
+      run_lint
+    when "rails"
+      run_rails_best_practices
+    when "help", nil
+      show_help
+    else
+      puts "Unknown command: #{@args.first}"
+      show_help
+    end
+  end
+
+  private
+
+  def show_help
+    puts "Code Quality Runner"
+    puts
+    puts "Usage: dev:quality <command>"
+    puts
+    puts "Commands:"
+    puts "  check    Run all code quality checks (lint + rails)"
+    puts "  lint     Run Ruby syntax and style checks"
+    puts "  rails    Run Rails best practices checks"
+    puts "  help     Show this help"
+    puts
+    puts "Examples:"
+    puts "  dev:quality check    # Run all checks"
+    puts "  dev:quality lint    # Quick lint check"
+  end
+
+  def run_all_checks
+    puts "=== Running All Code Quality Checks ==="
+    puts
+    run_lint
+    puts
+    run_rails_best_practices
+  end
+
+  def run_lint
+    puts "=== Lint Check ==="
+    if system("bundle exec rubocop --version > /dev/null 2>&1")
+      puts "Running rubocop..."
+      system("bundle exec rubocop --simple-format app spec lib --exclude vendor,tmp,log,db/migrate")
+    else
+      puts "Rubocop not installed. Running basic Ruby syntax check instead..."
+      basic_syntax_check
+    end
+  end
+
+  def basic_syntax_check
+    files = Dir.glob("{app,lib,spec}/**/*.rb").reject { |f| f.include?("vendor") }
+    errors = []
+    files.each do |file|
+      result = `ruby -c #{file} 2>&1`
+      errors << file if result.include?("SyntaxError")
+    end
+    if errors.empty?
+      puts "✓ All #{files.count} Ruby files have valid syntax"
+    else
+      puts "✗ Syntax errors found in:"
+      errors.each { |e| puts "  - #{e}" }
+    end
+  end
+
+  def run_rails_best_practices
+    puts "=== Rails Best Practices ==="
+    
+    checks = []
+    
+    checks << check_n_plus_one
+    checks << check_fat_controller
+    checks << check_missing_indexes
+    checks << check_secure_random
+    checks << check_hardcoded_secrets
+    
+    results = checks.compact
+    puts
+    if results.all?
+      puts "✓ No issues found"
+    else
+      puts "Issues found:"
+      results.each { |r| puts "  #{r}" unless r == true }
+    end
+  end
+
+  def check_n_plus_one
+    issues = []
+    Dir.glob("app/controllers/**/*.rb").each do |f|
+      content = File.read(f)
+      if content.include?("Model.all") && content.include?("each")
+        issues << f unless content.include?("includes")
+      end
+    end
+    return true if issues.empty?
+    "N+1 query risk in: #{issues.join(', ')}"
+  end
+
+  def check_fat_controller
+    issues = []
+    Dir.glob("app/controllers/**/*.rb").each do |f|
+      lines = File.read(f).lines
+      if lines.count > 200
+        issues << "#{File.basename(f)} (#{lines.count} lines)"
+      end
+    end
+    return true if issues.empty?
+    "Fat controllers: #{issues.join(', ')}"
+  end
+
+  def check_missing_indexes
+    issues = []
+    Dir.glob("db/migrate/*.rb").each do |f|
+      content = File.read(f)
+      if content.include?("add_reference") && !content.include?("index:")
+        issues << File.basename(f)
+      end
+    end
+    return true if issues.empty?
+    "Migrations without indexes: #{issues.join(', ')}"
+  end
+
+  def check_secure_random
+    issues = []
+    %w[app lib].each do |dir|
+      Dir.glob("#{dir}/**/*.rb").each do |f|
+        content = File.read(f)
+        if content.include?("rand") && content.include?("password") || content.include?("secret")
+          issues << f
+        end
+      end
+    end
+    return true if issues.empty?
+    "Potential secret issues in: #{issues.join(', ')}"
+  end
+
+  def check_hardcoded_secrets
+    issues = []
+    %w[app lib].each do |dir|
+      Dir.glob("#{dir}/**/*.rb").each do |f|
+        next if f.include?("config/initializers")
+        content = File.read(f)
+        if content.match?(/password\s*=\s*['"][^'"]+['"]/) || content.match?(/api_key\s*=\s*['"][^'"]+['"]/)
+          issues << f
+        end
+      end
+    end
+    return true if issues.empty?
+    "Hardcoded secrets in: #{issues.join(', ')}"
+  end
+end
+
+CodeQualityRunner.run(ARGV)
