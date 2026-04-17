@@ -91,6 +91,18 @@ At session start, parse plan document and suggest first action.
 - Could be part of session initialization
 - Read plan, show "in progress" and "pending" items
 
+## Implementation Status
+
+| Tool | Status | File |
+|------|--------|------|
+| Smart Spec Runner | ✅ Complete | bin/dev-spec |
+| Context Retriever | ✅ Complete | bin/dev-context |
+| Commit Planner | ✅ Complete | bin/dev-commit |
+| Session Tracker | ⏳ Pending | - |
+| Plan Document Reader | ⏳ Pending | - |
+
+---
+
 ## Implementation Priority
 
 | Tool | Priority | Notes |

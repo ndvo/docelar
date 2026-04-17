@@ -1,0 +1,67 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "pathname"
+
+class SmartSpecRunner
+  SPEC_DIR = Pathname.new("spec")
+
+  def self.run(file_path)
+    new(file_path).run
+  end
+
+  def initialize(file_path)
+    @file_path = Pathname.new(file_path)
+  end
+
+  def run
+    spec_path = find_spec_path
+    if spec_path
+      puts "Running: #{spec_path}"
+      exec "bundle exec rspec #{spec_path}"
+    else
+      puts "No spec found for: #{@file_path}"
+      exit 1
+    end
+  end
+
+  private
+
+  def find_spec_path
+    case @file_path.dirname.to_s
+    when /app\/models/
+      model_name = @file_path.basename.to_s.gsub(/\.rb$/, "")
+      SPEC_DIR.join("models", "#{model_name}_spec.rb")
+    when /app\/controllers/
+      controller_name = @file_path.basename.to_s.gsub(/_controller\.rb$/, "")
+      SPEC_DIR.join("requests", "#{controller_name}_spec.rb")
+    when /app\/views/
+      view_folder = @file_path.dirname.basename.to_s
+      SPEC_DIR.join("features", "#{view_folder}_spec.rb")
+    when /app\/services/
+      service_name = @file_path.basename.to_s.gsub(/\.rb$/, "")
+      SPEC_DIR.join("services", "#{service_name}_spec.rb")
+    when /app\/helpers/
+      helper_name = @file_path.basename.to_s.gsub(/_helper\.rb$/, "")
+      SPEC_DIR.join("helpers", "#{helper_name}_spec.rb")
+    when /app\/mailers/
+      mailer_name = @file_path.basename.to_s.gsub(/_mailer\.rb$/, "")
+      SPEC_DIR.join("mailers", "#{mailer_name}_spec.rb")
+    when /lib/
+      lib_name = @file_path.basename.to_s.gsub(/\.rb$/, "")
+      SPEC_DIR.join("lib", "#{lib_name}_spec.rb")
+    else
+      folder_name = @file_path.dirname.basename.to_s.singularize
+      candidate = SPEC_DIR.join("features", "#{folder_name}_spec.rb")
+      candidate if candidate.exist?
+    end
+  end
+end
+
+if ARGV.empty?
+  puts "Usage: dev:spec <file-path>"
+  puts "Example: dev:spec app/models/dog.rb"
+  exit 1
+end
+
+SmartSpecRunner.run(ARGV[0])

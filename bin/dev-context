@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "pathname"
+
+class ContextRetriever
+  SEARCH_DIRS = %w[app/models app/controllers app/views app/services app/helpers spec/models spec/requests spec/features spec/services].freeze
+
+  def self.run(query)
+    new(query).run
+  end
+
+  def initialize(query)
+    @query = query.downcase
+  end
+
+  def run
+    results = find_files
+    if results.empty?
+      puts "No files found matching: #{@query}"
+      exit 1
+    end
+    results.each { |f| puts f }
+  end
+
+  private
+
+  def find_files
+    results = []
+    SEARCH_DIRS.each do |dir|
+      dir_path = Pathname.new(dir)
+      next unless dir_path.exist?
+
+      dir_path.glob("**/*").each do |file|
+        next unless file.file?
+        name = file.basename.to_s.downcase
+        if name.include?(@query) || file.dirname.to_s.downcase.include?(@query)
+          results << file.to_s
+        end
+      end
+    end
+    results.sort
+  end
+end
+
+if ARGV.empty?
+  puts "Usage: dev:context <feature-name>"
+  puts "Example: dev:context patient"
+  exit 1
+end
+
+ContextRetriever.run(ARGV[0])

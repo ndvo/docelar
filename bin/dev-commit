@@ -1,0 +1,95 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "open3"
+
+class CommitPlanner
+  TYPES = {
+    "app/models" => "feat",
+    "app/controllers" => "feat",
+    "app/views" => "feat",
+    "app/services" => "feat",
+    "app/helpers" => "feat",
+    "app/mailers" => "feat",
+    "db/migrate" => "db",
+    "db/schema" => "db",
+    "db/seeds" => "chore",
+    "config/" => "chore",
+    "spec/" => "test",
+    "test/" => "test",
+    "lib/" => "chore",
+    "Gemfile" => "chore",
+    "package.json" => "chore",
+    "README" => "docs",
+    "docs/" => "docs"
+  }.freeze
+
+  def self.run
+    new.run
+  end
+
+  def run
+    staged = git_status("staged")
+    unstaged = git_status("unstaged")
+
+    puts "=== STAGED CHANGES ==="
+    groups = group_by_type(staged)
+    print_groups(groups)
+
+    puts "\n=== UNSTAGED CHANGES ==="
+    groups = group_by_type(unstaged)
+    print_groups(groups)
+
+    puts "\n=== SUGGESTED COMMITS ==="
+    suggest_commits(staged, unstaged)
+  end
+
+  private
+
+  def git_status(type)
+    output, _err, _status = Open3.capture3("git diff --#{type == 'staged' ? 'cached' : 'name-only'} --stat")
+    output.lines.map(&:strip).reject(&:empty?).map do |line|
+      file = line.split("|").first&.strip
+      file if file && !file.include?("diff --")
+    end.compact
+  end
+
+  def group_by_type(files)
+    grouped = Hash.new { |h, k| h[k] = [] }
+    files.each do |file|
+      type = detect_type(file)
+      grouped[type] << file
+    end
+    grouped
+  end
+
+  def detect_type(file)
+    TYPES.each do |pattern, type|
+      return type if file.include?(pattern)
+    end
+    "other"
+  end
+
+  def print_groups(groups)
+    groups.each do |type, files|
+      puts "  #{type}: #{files.count} files"
+    end
+  end
+
+  def suggest_commits(staged, unstaged)
+    groups = group_by_type(staged)
+    groups.each do |type, files|
+      next if files.empty?
+      puts "  git add #{files.join(' ')}"
+      puts "  git commit -m '#{type}: #{summary(files)}'"
+      puts
+    end
+  end
+
+  def summary(files)
+    names = files.map { |f| File.basename(f) }.first(3)
+    names.join(", ") + (files.count > 3 ? "..." : "")
+  end
+end
+
+CommitPlanner.run
