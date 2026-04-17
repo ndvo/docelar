@@ -6,21 +6,13 @@
 
 ## Core Pillars
 
-The Doce Lar application is built around **8 interconnected pillars** that work together to help families manage their daily lives:
+The Doce Lar application is built around **11 pillars** organized into **4 major groups** that work together to help families manage their daily lives:
 
 ---
 
-### 1. Routine Management
-**Why:** Families thrive on routines. Knowing what needs to be done and by when reduces stress.
+### GROUP 1: Finance
 
-- Task tracking and delegation
-- Schedule and calendar management  
-- Reminders and notifications
-- Recurring task automation
-
----
-
-### 2. Budget Control
+#### 1. Budget Control
 **Why:** Financial clarity leads to better decisions. Every family deserves to understand their spending.
 
 - Expense tracking with installments
@@ -29,111 +21,97 @@ The Doce Lar application is built around **8 interconnected pillars** that work 
 - Spending categories and analysis
 - Visual dashboards
 
----
-
-### 3. Financial Independence  
+#### 2. Financial Independence  
 **Why:** Families should own their financial data and understand the true cost of purchases.
 
 - Escape predatory business practices
 - Track contracts and subscriptions
 - Understand real costs (effective interest rates)
 - Data portability - own your data
-- No lock-in with exportable data
 
 ---
 
-### 4. Family Goals
-**Why:** Families work better together when aligned on objectives.
+### GROUP 2: Wellness
 
-- Track progress toward objectives
-- Collaborative task management
-- Shared responsibility across family members
-- Goal visualization and celebration
-
----
-
-### 5. Health
+#### 3. Health
 **Why:** Health is the foundation of everything. Preventive care leads to better outcomes.
 
 - Monitor family members health (both human and pets)
 - Tools to aid maintaining good health
-- Tools to aid providing health care to family members
 - Medical appointment tracking
 - Medication schedules
-- Health history and records
+- Health history
 
----
-
-### 6. Education
-**Why:** Supporting family members' learning journeys creates opportunities for growth.
-
-- Monitor family members education
-- Tools to aid learning
-- Tools to aid school tasks
-- Tools to manage educational resources
-- Grade tracking and progress
-- Teacher communication
-
----
-
-### 7. Culture, Multimedia and Entertainment
-**Why:** Families that create and share experiences together build stronger bonds.
-
-- Vacation planning feature
-- Family photos management and viewing
-- Video library management and home streaming service
-- Book library and reading tracking
-- Reading planning and progress
-- Reading and note taking tools
-
----
-
-### 8. Social
-**Why:** Relationships require intentional effort. Never forget important moments.
-
-- Big family events planning
-- Small family events planning
-- Tools to help the family keep good relationships
-- Tools for managing/tracking letters, cards, invitations, thank you notes
-- Tools to remember and act on important dates (birthdays, anniversaries)
-- Communication log with family and friends
-
----
-
-### 9. Home & Property
-**Why:** A home is a family's biggest investment. Protecting it requires systematic management.
-
-- Home maintenance schedules and reminders
-- Appliance tracking and warranties
-- Home insurance policies
-- Security systems and monitoring
-- Property documents and records
-- Utility tracking (water, electricity, gas)
-
----
-
-### 10. Legal & Estate
-**Why:** Protecting family interests requires planning for the unexpected.
-
-- Will and testament storage
-- Power of attorney documents
-- Insurance policies (life, health, auto, home)
-- Legal document vault
-- Important contacts (lawyers, accountants)
-- Emergency information access
-
----
-
-### 11. Nutrition & Meal Planning
+#### 4. Nutrition & Meal Planning
 **Why:** Good nutrition is foundational to family health. Planning reduces stress and saves money.
 
 - Meal planning and weekly menus
 - Grocery list generation
-- Recipe management and organization
+- Recipe management
 - Nutritional tracking
 - Special dietary requirements
-- Family favorites and preferences
-- Bulk meal preparation scheduling
+
+---
+
+### GROUP 3: Growth & Routine
+
+#### 5. Family Goals
+**Why:** Families work better together when aligned on objectives.
+
+- Track progress toward objectives
+- Collaborative task management
+- Goal visualization
+
+#### 6. Education
+**Why:** Supporting family members' learning journeys creates opportunities for growth.
+
+- Monitor education progress
+- School task tools
+- Grade tracking
+- Teacher communication
+
+#### 7. Routine Management
+**Why:** Families thrive on routines. Knowing what needs to be done reduces stress.
+
+- Task tracking and delegation
+- Schedule and calendar management  
+- Reminders and notifications
+
+---
+
+### GROUP 4: Home & Life
+
+#### 8. Culture, Multimedia and Entertainment
+**Why:** Families that create and share experiences together build stronger bonds.
+
+- Family photos management
+- Video library
+- Book library and reading
+- Vacation planning
+
+#### 9. Social & Relationships
+**Why:** Relationships require intentional effort. Never forget important moments.
+
+- Events planning
+- Family relationship tools
+- Important dates reminders
+- Communication log
+
+#### 10. Home & Property
+**Why:** A home is a family's biggest investment. Protecting it requires systematic management.
+
+- Maintenance schedules
+- Appliance tracking
+- Insurance policies
+- Utility tracking
+
+#### 11. Legal & Estate
+**Why:** Protecting family interests requires planning for the unexpected.
+
+- Will and testament
+- Power of attorney
+- Legal document vault
+- Emergency information
 
 ---
 
