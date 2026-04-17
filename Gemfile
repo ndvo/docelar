@@ -33,6 +33,9 @@ gem "pagy"
 # Solid Queue for background jobs
 gem "solid_queue"
 
+# Rubyzip for zip file handling
+gem "rubyzip"
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 
