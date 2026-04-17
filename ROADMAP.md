@@ -28,6 +28,32 @@
 - Collaborative task management
 - Shared responsibility
 
+### 5. Health
+- Monitor family members health
+- Tools to aid maintaining good health
+- Tools to aid providing health care to family members
+
+### 6. Education
+- Monitor family members education
+- Tools to aid learning
+- Tools to aid school tasks
+- Tools to manage educational resources
+
+### 7. Culture, Multimedia and Entertainment
+- Vacation plannig feature
+- Family photos management and viewing
+- Video library management and home streaming service
+- Book library
+- Readings planning/tracking
+- Reading and note taking tools
+
+### 8. Social
+- Big family events planning
+- Small family events planning
+- Tools to help the family keep good relationships
+- Tools to help managing/tracking and creating letters, cards, invitations, thank you notes
+- Tools to remember and act on important dates related to family and friends
+
 ---
 
 ## Roadmap
