@@ -6,53 +6,97 @@
 
 ## Core Pillars
 
+The Doce Lar application is built around **8 interconnected pillars** that work together to help families manage their daily lives:
+
+---
+
 ### 1. Routine Management
+**Why:** Families thrive on routines. Knowing what needs to be done and by when reduces stress.
+
 - Task tracking and delegation
-- Schedule and calendar management
+- Schedule and calendar management  
 - Reminders and notifications
+- Recurring task automation
+
+---
 
 ### 2. Budget Control
+**Why:** Financial clarity leads to better decisions. Every family deserves to understand their spending.
+
 - Expense tracking with installments
 - Multiple payment methods (cards, cash)
 - Monthly/yearly reports
 - Spending categories and analysis
+- Visual dashboards
 
-### 3. Financial Independence
+---
+
+### 3. Financial Independence  
+**Why:** Families should own their financial data and understand the true cost of purchases.
+
 - Escape predatory business practices
 - Track contracts and subscriptions
 - Understand real costs (effective interest rates)
 - Data portability - own your data
+- No lock-in with exportable data
+
+---
 
 ### 4. Family Goals
+**Why:** Families work better together when aligned on objectives.
+
 - Track progress toward objectives
 - Collaborative task management
-- Shared responsibility
+- Shared responsibility across family members
+- Goal visualization and celebration
+
+---
 
 ### 5. Health
-- Monitor family members health
+**Why:** Health is the foundation of everything. Preventive care leads to better outcomes.
+
+- Monitor family members health (both human and pets)
 - Tools to aid maintaining good health
 - Tools to aid providing health care to family members
+- Medical appointment tracking
+- Medication schedules
+- Health history and records
+
+---
 
 ### 6. Education
+**Why:** Supporting family members' learning journeys creates opportunities for growth.
+
 - Monitor family members education
 - Tools to aid learning
 - Tools to aid school tasks
 - Tools to manage educational resources
+- Grade tracking and progress
+- Teacher communication
+
+---
 
 ### 7. Culture, Multimedia and Entertainment
-- Vacation plannig feature
+**Why:** Families that create and share experiences together build stronger bonds.
+
+- Vacation planning feature
 - Family photos management and viewing
 - Video library management and home streaming service
-- Book library
-- Readings planning/tracking
+- Book library and reading tracking
+- Reading planning and progress
 - Reading and note taking tools
 
+---
+
 ### 8. Social
+**Why:** Relationships require intentional effort. Never forget important moments.
+
 - Big family events planning
 - Small family events planning
 - Tools to help the family keep good relationships
-- Tools to help managing/tracking and creating letters, cards, invitations, thank you notes
-- Tools to remember and act on important dates related to family and friends
+- Tools for managing/tracking letters, cards, invitations, thank you notes
+- Tools to remember and act on important dates (birthdays, anniversaries)
+- Communication log with family and friends
 
 ---
 
