@@ -1,3 +1,5 @@
+require "zip"
+
 class ZipImportService
   SUPPORTED_EXTENSIONS = %w[.zip .tar.gz .tgz].freeze
   MAX_FILE_SIZE = 5.gigabytes
@@ -77,7 +79,17 @@ class ZipImportService
     case ext
     when '.zip'
       Zip::File.open(file_path) do |zip|
-        zip.each { |entry| entry.extract(dest_dir) if entry.file? }
+        zip.each do |entry|
+          next unless entry.file?
+          
+          entry_path = File.join(dest_dir, entry.name)
+          parent_dir = File.dirname(entry_path)
+          FileUtils.mkdir_p(parent_dir) unless Dir.exist?(parent_dir)
+          
+          File.open(entry_path, "wb") do |f|
+            f.write(entry.get_input_stream.read)
+          end
+        end
       end
     when '.tar.gz', '.tgz'
       system("tar", "-xzf", file_path, "-C", dest_dir)
