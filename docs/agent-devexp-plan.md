@@ -188,8 +188,8 @@ Quick Rails commands.
 | Guard Monitor | ✅ Complete | bin/dev-guard |
 | Code Quality Runner | ✅ Complete | bin/dev-quality |
 | Web Page Checker | ✅ Complete | bin/dev-curl |
+| Rails Shortcuts | ✅ Complete | bin/dev-rails |
 | Database Reset | ⏳ Pending | - |
-| Rails Shortcuts | ⏳ Pending | - |
 
 ## Design Principles
 

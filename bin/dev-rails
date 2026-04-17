@@ -1,0 +1,112 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+
+class RailsShortcuts
+  COMMANDS = {
+    "console" => "Open Rails console (alias: c)",
+    "routes" => "List all routes (alias: r)",
+    "server" => "Start Rails server (alias: s)",
+    "dbconsole" => "Open database console (alias: db)",
+    "generate" => "Run Rails generator (alias: g)",
+    "destroy" => "Destroy generated files (alias: d)",
+    "migrate" => "Run migrations (alias: m)",
+    "rollback" => "Rollback last migration",
+    "seed" => "Run seeds.rb",
+    "test" => "Run tests",
+    "stats" => "Show code statistics",
+    "log" => "Tail development log",
+    "tmp:clear" => "Clear tmp files",
+    "tmp:create" => "Create tmp directories"
+  }.freeze
+
+  ALIASES = {
+    "c" => "console",
+    "s" => "server",
+    "r" => "routes",
+    "db" => "dbconsole",
+    "g" => "generate",
+    "d" => "destroy",
+    "m" => "migrate"
+  }.freeze
+
+  def self.run(args)
+    new(args).run
+  end
+
+  def initialize(args)
+    @args = args
+  end
+
+  def run
+    command = @args.shift
+    
+    if command.nil? || command == "help" || command == "-h"
+      show_help
+      return
+    end
+
+    command = ALIASES[command] || command
+    
+    case command
+    when "console"
+      exec("bundle exec rails console")
+    when "routes"
+      exec("bundle exec rails routes | head -50")
+    when "server"
+      exec("bundle exec rails server")
+    when "dbconsole"
+      exec("bundle exec rails dbconsole")
+    when "generate"
+      exec("bundle exec rails generate #{@args.join(' ')}")
+    when "destroy"
+      exec("bundle exec rails destroy #{@args.join(' ')}")
+    when "migrate"
+      exec("bundle exec rails db:migrate")
+    when "rollback"
+      exec("bundle exec rails db:rollback")
+    when "seed"
+      exec("bundle exec rails db:seed")
+    when "test"
+      if @args.any?
+        exec("bundle exec rspec #{@args.join(' ')}")
+      else
+        exec("bundle exec rspec")
+      end
+    when "stats"
+      exec("bundle exec rails stats")
+    when "log"
+      exec("tail -f log/development.log")
+    when "tmp:clear"
+      exec("bundle exec rails tmp:clear")
+    when "tmp:create"
+      exec("bundle exec rails tmp:create")
+    else
+      puts "Unknown command: #{command}"
+      show_help
+    end
+  end
+
+  def show_help
+    puts "Rails Shortcuts - Quick Rails commands"
+    puts
+    puts "Usage: dev:rails <command> [options]"
+    puts
+    puts "Commands:"
+    COMMANDS.each do |cmd, desc|
+      puts "  #{cmd.ljust(15)} #{desc}"
+    end
+    puts
+    puts "Examples:"
+    puts "  dev:rails console              # Open console"
+    puts "  dev:rails c                    # Same (alias)"
+    puts "  dev:rails routes              # List routes"
+    puts "  dev:rails g model Dog name     # Generate model"
+    puts "  dev:rails migrate             # Run migrations"
+    puts "  dev:rails test                # Run tests"
+    puts "  dev:rails log                 # Tail log"
+  end
+end
+
+RailsShortcuts.run(ARGV)
