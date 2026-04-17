@@ -98,8 +98,8 @@ At session start, parse plan document and suggest first action.
 | Smart Spec Runner | ✅ Complete | bin/dev-spec |
 | Context Retriever | ✅ Complete | bin/dev-context |
 | Commit Planner | ✅ Complete | bin/dev-commit |
-| Session Tracker | ⏳ Pending | - |
-| Plan Document Reader | ⏳ Pending | - |
+| Session Tracker | ✅ Complete | bin/dev-session |
+| Plan Document Reader | ✅ Complete | bin/dev-plan |
 
 ---
 

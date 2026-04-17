@@ -1,0 +1,79 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "pathname"
+
+class PlanReader
+  PLAN_DIR = Pathname.new("docs")
+
+  def self.run(plan_name = nil)
+    new(plan_name).run
+  end
+
+  def initialize(plan_name)
+    @plan_name = plan_name
+  end
+
+  def run
+    if @plan_name
+      show_plan(@plan_name)
+    else
+      list_plans
+    end
+  end
+
+  private
+
+  def list_plans
+    puts "=== AVAILABLE PLANS ==="
+    plans = PLAN_DIR.glob("*-plan.md").sort
+    plans.each do |plan|
+      content = File.read(plan)
+      status = extract_status(content)
+      name = plan.basename.to_s.sub(/\.md$/, "")
+      puts "  #{name} [#{status}]"
+    end
+  end
+
+  def show_plan(name)
+    plan_file = PLAN_DIR.glob("*#{name}*-plan.md").first
+    unless plan_file
+      puts "Plan not found: #{name}"
+      exit 1
+    end
+
+    content = File.read(plan_file)
+    puts "=== #{plan_file.basename.to_s.sub(/\.md$/, '').upcase} ==="
+    puts
+
+    puts "SUMMARY:"
+    content.lines.take(15).each { |l| puts "  #{l}" unless l.strip.empty? }
+    puts
+
+    puts "PENDING TASKS:"
+    content.lines.each do |line|
+      if line.match?(/^- \[ \]/)
+        puts "  #{line.strip}"
+      end
+    end
+
+    puts "\nIN PROGRESS:"
+    content.lines.each do |line|
+      if line.match?(/^- \[.*\]/) && !line.match?(/^- \[x\]/)
+        puts "  #{line.strip}"
+      end
+    end
+  end
+
+  def extract_status(content)
+    if content.include?("✅ Complete")
+      "complete"
+    elsif content.include?("🔄 In Progress")
+      "in_progress"
+    else
+      "not_started"
+    end
+  end
+end
+
+PlanReader.run(ARGV[0])

@@ -1,0 +1,106 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "json"
+require "time"
+
+class SessionTracker
+  SESSION_FILE = ".session.json"
+
+  def self.run(command = nil)
+    new(command).run
+  end
+
+  def initialize(command)
+    @command = command
+    @session = load_session
+  end
+
+  def run
+    case @command
+    when "start"
+      start_session
+    when "track"
+      track_changes
+    when "summary"
+      show_summary
+    when "spec"
+      track_spec(ARGV[2..].join(" "))
+    when "commit"
+      track_commit(ARGV[2])
+    else
+      show_summary
+    end
+  end
+
+  private
+
+  def load_session
+    if File.exist?(SESSION_FILE)
+      JSON.parse(File.read(SESSION_FILE))
+    else
+      { "started_at" => Time.now.iso8601, "files" => [], "specs" => [], "commits" => [] }
+    end
+  end
+
+  def save_session
+    File.write(SESSION_FILE, JSON.pretty_generate(@session))
+  end
+
+  def start_session
+    @session["started_at"] = Time.now.iso8601
+    @session["files"] = []
+    @session["specs"] = []
+    @session["commits"] = []
+    save_session
+    puts "Session started at #{@session['started_at']}"
+  end
+
+  def track_changes
+    files = `git status --porcelain`.lines.map(&:strip).reject(&:empty?)
+    @session["files"] ||= []
+    @session["files"] << { "at" => Time.now.iso8601, "changed" => files.map { |f| f.sub(/^[AMD?]/, "").strip } }
+    save_session
+    puts "Tracked #{files.count} file changes"
+  end
+
+  def track_spec(spec_result)
+    @session["specs"] ||= []
+    @session["specs"] << { "at" => Time.now.iso8601, "result" => spec_result }
+    save_session
+    puts "Tracked spec result"
+  end
+
+  def track_commit(commit_sha)
+    @session["commits"] ||= []
+    message = `git log -1 --pretty=format:'%s' #{commit_sha}`
+    @session["commits"] << { "sha" => commit_sha[0..7], "message" => message }
+    save_session
+    puts "Tracked commit #{commit_sha[0..7]}"
+  end
+
+  def show_summary
+    puts "=== SESSION SUMMARY ==="
+    puts "Started: #{@session['started_at']}"
+    puts
+    
+    files = @session["files"].flat_map { |f| f["changed"] }.uniq
+    puts "Files changed: #{files.count}"
+    files.first(5).each { |f| puts "  - #{f}" }
+    puts "  ..." if files.count > 5
+    puts
+    
+    puts "Specs run: #{@session['specs'].count}"
+    @session["specs"].last(3).each do |s|
+      puts "  - #{s['result']}"
+    end
+    puts
+    
+    puts "Commits: #{@session['commits'].count}"
+    @session["commits"].each do |c|
+      puts "  - #{c['sha']}: #{c['message']}"
+    end
+  end
+end
+
+SessionTracker.run(ARGV[0])
