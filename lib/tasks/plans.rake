@@ -117,29 +117,32 @@ namespace :plans do
     # Sort by completion percentage (highest first), then by name
     plan_summary.sort_by! { |p| [-p[:pct], p[:name]] }
 
-    # Display plans
+    # Display plans - one per line with priority
     plan_summary.each do |plan|
       status_icon = case plan[:status]
-                  when 'Complete' then '✅'
-                  when 'In Progress' then '🔄'
-                  else '⏳'
+                  when 'Complete' then '[DONE]'
+                  when 'In Progress' then '[...]'
+                  else '[...]'
                   end
       
-      puts "  #{status_icon} #{plan[:name].ljust(35)} #{plan[:completed]}/#{plan[:total]} (#{plan[:pct]}%)"
-      puts "     #{plan[:status]}"
+      # Extract priority from plan name (e.g., "01-budget" -> "P1", "health" -> "P4")
+      priority = extract_priority(plan[:name])
+      
+      puts "  #{status_icon} [#{priority}] #{plan[:name].ljust(40)} #{plan[:completed]}/#{plan[:total]} (#{plan[:pct]}%)"
     end
 
-    puts "\nSUMMARY:\n"
     total_completed = plan_summary.count { |p| p[:status] == 'Complete' }
     total_in_progress = plan_summary.count { |p| p[:status] == 'In Progress' }
     total_not_started = plan_summary.count { |p| p[:status] == 'Not started' }
     total_no_tasks = plan_summary.count { |p| p[:status] == 'No tasks' }
     
-    puts "  Complete:      #{total_completed}"
-    puts "  In Progress:  #{total_in_progress}"
-    puts "  Not Started: #{total_not_started}"
-    puts "  No Tasks:   #{total_no_tasks}"
-    puts "  Total:     #{plan_summary.count}"
+    puts "\nSUMMARY:\n"
+    puts "  [DONE] Complete:      #{total_completed}"
+    puts "  [...] In Progress:  #{total_in_progress}"
+    puts "  [---] Not Started: #{total_not_started}"
+    puts "  [---] No Tasks:   #{total_no_tasks}"
+    puts "  ---------------------"
+    puts "  Total: #{plan_summary.count}"
 
     puts "\nTo view detailed progress of a specific plan, run:"
     puts "  rake plans:show[plan-name]"
@@ -302,6 +305,33 @@ namespace :plans do
   end
 
   private
+
+  def self.extract_priority(plan_name)
+    # Extract priority from plan name
+    # Pillar plans: 01-budget -> P1, 02-financial -> P2, etc.
+    if plan_name.match?(/^(\d+)-/)
+      num = $1.to_i
+      return "P#{num}" if num <= 9
+    end
+    
+    # Core plans get higher priority
+    case plan_name.downcase
+    when /accessibility|a11y/
+      'P2'
+    when /test-coverage|test_coverage/
+      'P2'
+    when /medical|health/
+      'P3'
+    when /gallery|photo/
+      'P3'
+    when /education|family-calendar/
+      'P4'
+    when /deployment/
+      'P5'
+    else
+      'P4'
+    end
+  end
 
   def self.extract_purpose_from_plan(plan_file)
     content = File.read(plan_file)
