@@ -1,13 +1,18 @@
 <div class="video-show">
   <div class="video-player">
-    <% if @video.is_external && @video.external_url.present? %>
+    <% if @video.file.attached? %>
+      <video controls crossorigin="anonymous" playsinline data-video-id="<%= @video.id %>">
+        <source src="<%= url_for(@video.file) %>" type="<%= @video.file.content_type %>">
+        Your browser does not support video playback.
+      </video>
+    <% elsif @video.is_external && @video.external_url.present? %>
       <video controls crossorigin="anonymous" playsinline>
         <source src="<%= @video.external_url %>" type="video/mp4">
         Your browser does not support video playback.
       </video>
     <% elsif @video.file_path.present? %>
       <video controls crossorigin="anonymous" playsinline data-video-id="<%= @video.id %>">
-        <source src="<%= videos_path(@video) %>/play" type="video/mp4">
+        <source src="<%= videos_path(@video) %>/stream" type="video/mp4">
         Your browser does not support video playback.
       </video>
     <% else %>

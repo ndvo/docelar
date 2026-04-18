@@ -87,6 +87,6 @@ class VideosController < ApplicationController
   def video_params
     params.require(:video).permit(:title, :description, :file_path, :external_url, :is_external,
                                    :duration_seconds, :video_format, :resolution, :release_year,
-                                   :genre, :plot_summary, :poster_url, :video_category_id, :tag_names)
+                                   :genre, :plot_summary, :poster_url, :video_category_id, :tag_names, :file)
   end
 end

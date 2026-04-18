@@ -2,6 +2,7 @@ class Video < ApplicationRecord
   belongs_to :category, class_name: 'VideoCategory', optional: true
   belongs_to :user, optional: true
 
+  has_one_attached :file
   has_many :playlist_items, dependent: :destroy
   has_many :playlists, through: :playlist_items
   has_many :taggings, dependent: :destroy
@@ -10,6 +11,7 @@ class Video < ApplicationRecord
   has_many :notes, dependent: :destroy, class_name: 'VideoNote'
 
   validates :title, presence: true
+  validates :file, content_type: { in: %w[video/mp4 video/webm video/ogg video/quicktime video/x-msvideo], message: "must be a video file" }, if: -> { file.attached? }
 
   scope :recent, -> { order(created_at: :desc) }
   scope :watched, -> { where(watched: true) }
@@ -27,5 +29,15 @@ class Video < ApplicationRecord
   def progress_percentage
     return 0 unless duration_seconds && duration_seconds > 0
     ((playback_position.to_f / duration_seconds) * 100).round
+  end
+
+  def file_path_or_url
+    if file.attached?
+      Rails.application.routes.url_helpers.rails_blob_url(file, only_path: true)
+    elsif file_path.present?
+      file_path
+    elsif external_url.present?
+      external_url
+    end
   end
 end

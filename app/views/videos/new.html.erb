@@ -1,0 +1,88 @@
+<h1>Novo Vídeo</h1>
+
+<%= form_with(model: @video, local: true, html: { multipart: true }) do |form| %>
+  <% if @video.errors.any? %>
+    <div class="error-messages">
+      <h2><%= pluralize(@video.errors.count, "error") %> prohibited this video from being saved:</h2>
+      <ul>
+        <% @video.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title, required: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :file, "Arquivo de Vídeo" %>
+    <%= form.file_field :file, accept: "video/*" %>
+    <p class="help">MP4, WebM, MOV, AVI (max 4GB)</p>
+  </div>
+
+  <div class="field">
+    <%= form.label :external_url, "URL Externa (Archive.org, YouTube, etc.)" %>
+    <%= form.url_field :external_url, placeholder: "https://archive.org/..." %>
+    <p class="help">Ou faça upload de um arquivo acima</p>
+  </div>
+
+  <div class="field">
+    <%= form.check_box :is_external %>
+    <%= form.label :is_external, "Vídeo externo (não fazer stream do servidor)" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :video_category_id, "Categoria" %>
+    <%= form.select :video_category_id, nested_options(@categories, nested_select: true), include_blank: "Selecione..." %>
+  </div>
+
+  <div class="field">
+    <%= form.label :genre %>
+    <%= form.text_field :genre %>
+  </div>
+
+  <div class="field">
+    <%= form.label :release_year, "Ano de Lançamento" %>
+    <%= form.number_field :release_year, min: 1900, max: Date.today.year + 5 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :plot_summary, "Sinopse" %>
+    <%= form.text_area :plot_summary %>
+  </div>
+
+  <div class="field">
+    <%= form.label :poster_url, "URL do Pôster" %>
+    <%= form.url_field :poster_url, placeholder: "https://..." %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Criar Vídeo", class: "btn btn-primary" %>
+    <%= link_to "Cancelar", videos_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>
+
+<%= javascript_tag do %>
+  // Toggle between file upload and external URL
+  document.addEventListener('DOMContentLoaded', function() {
+    var fileInput = document.getElementById('video_file');
+    var urlInput = document.getElementById('video_external_url');
+    var externalCheckbox = document.getElementById('video_is_external');
+    
+    function updateVisibility() {
+      if (fileInput.value || !urlInput.value) {
+        fileInput.parentElement.style.display = 'block';
+      }
+    }
+    
+    fileInput.addEventListener('change', updateVisibility);
+  });
+<% end %>
