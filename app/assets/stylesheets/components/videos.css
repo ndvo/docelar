@@ -942,3 +942,39 @@
     aspect-ratio: 16/9;
   }
 }
+
+/* Audio Enhancement Status */
+.video-show .audio-status {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--med-text-secondary);
+  margin-top: 0.25em;
+}
+
+.video-show .audio-status .btn-link {
+  color: var(--video-accent);
+  text-decoration: underline;
+}
+
+.video-show .btn-success {
+  background: #22c55e;
+  color: white;
+}
+
+.video-show .audio-notice {
+  padding: var(--margin-normal);
+  background: var(--video-warm-bg);
+  border-radius: 0.5em;
+  border-left: 3px solid var(--video-oak);
+  margin-bottom: var(--margin-normal);
+}
+
+.video-show .audio-notice p {
+  margin: 0;
+  color: var(--med-text-primary);
+}
+
+.video-show .audio-notice a {
+  color: var(--video-accent);
+  font-weight: 500;
+}
