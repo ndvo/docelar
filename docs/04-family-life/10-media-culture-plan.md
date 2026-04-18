@@ -71,7 +71,7 @@ Manage family media and cultural consumption with intentionality - balancing ent
 
 #### 1. Video Sources
 
-**Server Folder Import**
+**Local Videos**
 - [ ] Configure server folder path in settings (admin)
 - [ ] Scan folder for video files (mp4, mkv, avi, mov, webm)
 - [ ] Background import job for large libraries
@@ -86,6 +86,21 @@ Manage family media and cultural consumption with intentionality - balancing ent
 - [ ] Support large files (chunked upload)
 - [ ] Convert to web-compatible format (ffmpeg)
 - [ ] Preserve original option
+
+**External Streaming Sources**
+- [ ] **Archive.org integration** - Stream videos from archive.org
+  - [ ] Search archive.org video collection
+  - [ ] Add external videos to library (links, not downloads)
+  - [ ] Unified player interface (local + archive.org)
+  - [ ] Resume watching across sessions
+  - [ ] Progress tracking for external streams
+  - [ ] Custom metadata association (add notes as if local)
+  - [ ] Categories and tags for external videos
+  - [ ] "Watch together" for external streams
+- [ ] **YouTube links** (future consideration)
+  - [ ] Add YouTube video links to library
+  - [ ] Embedded playback
+- [ ] **其他 public domain sources** (future)
 
 #### 2. Video Metadata
 
