@@ -13,6 +13,7 @@
 @import "components/common.css";
 @import "components/medication.css";
 @import "components/health_hub.css";
+@import "components/videos.css";
 
 /* Print styles for PDF export */
 @media print {

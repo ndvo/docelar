@@ -1,22 +1,24 @@
+<% content_for :title, @video.title %>
+
 <div class="video-show">
   <div class="video-player">
     <% if @video.file.attached? %>
       <video controls crossorigin="anonymous" playsinline data-video-id="<%= @video.id %>">
         <source src="<%= url_for(@video.file) %>" type="<%= @video.file.content_type %>">
-        Your browser does not support video playback.
+        Seu navegador não suporta reprodução de vídeo.
       </video>
     <% elsif @video.is_external && @video.external_url.present? %>
       <video controls crossorigin="anonymous" playsinline>
         <source src="<%= @video.external_url %>" type="video/mp4">
-        Your browser does not support video playback.
+        Seu navegador não suporta reprodução de vídeo.
       </video>
     <% elsif @video.file_path.present? %>
       <video controls crossorigin="anonymous" playsinline data-video-id="<%= @video.id %>">
         <source src="<%= videos_path(@video) %>/stream" type="video/mp4">
-        Your browser does not support video playback.
+        Seu navegador não suporta reprodução de vídeo.
       </video>
     <% else %>
-      <div class="no-video">No video file available</div>
+      <div class="no-video">Nenhum arquivo de vídeo disponível</div>
     <% end %>
   </div>
 
@@ -32,21 +34,22 @@
 
     <% if @video.plot_summary.present? %>
       <div class="plot-summary">
-        <h3>Summary</h3>
+        <h3>Sinopse</h3>
         <p><%= @video.plot_summary %></p>
       </div>
     <% end %>
 
     <div class="video-actions">
-      <%= button_to "Mark as Watched", mark_watched_video_path(@video), method: :post unless @video.watched %>
-      <%= link_to "Edit", edit_video_path(@video), class: "btn btn-small" %>
-      <%= link_to "Delete", @video, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-small btn-danger" %>
+      <%= button_to "Marcar como Assistido", mark_watched_video_path(@video), method: :post unless @video.watched %>
+      <%= link_to "Editar", edit_video_path(@video), class: "btn btn-small" %>
+      <%= link_to "Voltar", videos_path, class: "btn btn-small" %>
+      <%= link_to "Excluir", @video, method: :delete, data: { confirm: "Tem certeza?" }, class: "btn btn-small btn-danger" %>
     </div>
   </div>
 
   <div class="video-sections">
     <div class="section">
-      <h2>Notes</h2>
+      <h2>Anotações</h2>
       <% if @notes.any? %>
         <ul class="notes-list">
           <% @notes.each do |note| %>
@@ -57,23 +60,23 @@
           <% end %>
         </ul>
       <% else %>
-        <p class="empty">No notes yet.</p>
+        <p class="empty">Nenhuma anotação ainda.</p>
       <% end %>
     </div>
 
     <div class="section">
-      <h2>Discussion</h2>
+      <h2>Discussão</h2>
       <% if @comments.any? %>
         <ul class="comments-list">
           <% @comments.each do |comment| %>
             <li>
-              <span class="author"><%= comment.user&.name || "User" %></span>
+              <span class="author"><%= comment.user&.name || "Usuário" %></span>
               <span class="content"><%= comment.content %></span>
             </li>
           <% end %>
         </ul>
       <% else %>
-        <p class="empty">No comments yet.</p>
+        <p class="empty">Nenhum comentário ainda.</p>
       <% end %>
     </div>
   </div>
