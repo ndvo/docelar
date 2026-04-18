@@ -18,6 +18,48 @@
   overflow-x: hidden;
 }
 
+/* Video Header - Title above player */
+.video-header {
+  background: white;
+  border-radius: 0.5em;
+  padding: var(--margin-normal);
+  box-shadow: 2px 4px 8px rgba(26, 61, 18, 0.15);
+  border: 1px solid var(--video-highlight);
+}
+
+.video-header h1 {
+  font-family: Georgia, serif;
+  color: var(--video-accent);
+  font-size: var(--font-size-xl);
+  margin: 0 0 var(--margin-small) 0;
+}
+
+.video-meta-row {
+  display: flex;
+  gap: var(--margin-normal);
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: var(--margin-small);
+  font-size: var(--font-size-sm);
+  color: var(--med-text-secondary);
+}
+
+.video-meta-row .video-duration {
+  font-family: monospace;
+  color: var(--video-oak);
+}
+
+.video-meta-row .video-watched {
+  color: #22c55e;
+  font-weight: 500;
+}
+
+.video-actions-row {
+  display: flex;
+  gap: var(--margin-small);
+  flex-wrap: wrap;
+}
+
 .video-player {
   position: relative;
   width: 100%;
@@ -119,13 +161,45 @@
   border: 1px solid var(--video-highlight);
 }
 
-.video-sections h2 {
+.video-sections .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--margin-normal);
+  padding-bottom: var(--margin-small);
+  border-bottom: 2px solid var(--video-highlight);
+}
+
+.video-sections .section-header h2 {
   font-family: Georgia, serif;
   color: var(--video-accent);
   font-size: var(--font-size-lg);
-  margin: 0 0 var(--margin-normal) 0;
-  padding-bottom: var(--margin-small);
-  border-bottom: 2px solid var(--video-highlight);
+  margin: 0;
+}
+
+.new-form {
+  background: var(--video-warm-bg);
+  padding: var(--margin-normal);
+  border-radius: 0.3em;
+  margin-bottom: var(--margin-normal);
+  border: 1px solid var(--video-highlight);
+}
+
+.new-form .field {
+  margin-bottom: var(--margin-small);
+}
+
+.new-form .form-control {
+  width: 100%;
+  padding: 0.5em;
+  border: 1px solid var(--video-highlight);
+  border-radius: 0.3em;
+  font-family: inherit;
+}
+
+.new-form .actions {
+  display: flex;
+  gap: var(--margin-small);
 }
 
 .notes-list, .comments-list {
@@ -163,6 +237,12 @@
   font-weight: 500;
   color: var(--video-accent);
   min-width: 80px;
+}
+
+.comments-list .date {
+  font-size: var(--font-size-sm);
+  color: var(--med-text-secondary);
+  margin-left: auto;
 }
 
 .empty {

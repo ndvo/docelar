@@ -87,6 +87,8 @@ Rails.application.routes.draw do
   resources :photos
 
   resources :videos do
+    resources :notes, only: [:create], module: 'video'
+    resources :comments, only: [:create], module: 'video'
     member do
       get :play
       get :stream

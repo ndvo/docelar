@@ -1,6 +1,33 @@
 <% content_for :title, @video.title %>
 
 <div class="video-show">
+  <%# Video Header - Title and metadata above video %>
+  <div class="video-header">
+    <h1><%= @video.title %></h1>
+    <div class="video-meta-row">
+      <% if @video.genre || @video.release_year || @video.category %>
+        <span class="video-meta">
+          <%= @video.release_year if @video.release_year %>
+          <%= " • " + @video.genre if @video.genre %>
+          <%= " • " + @video.category.name if @video.category %>
+        </span>
+      <% end %>
+      <% if @video.duration_seconds %>
+        <span class="video-duration">⏱️ <%= @video.formatted_duration %></span>
+      <% end %>
+      <% if @video.watched %>
+        <span class="video-watched">✅ Assistido</span>
+      <% end %>
+    </div>
+    <div class="video-actions-row">
+      <%= button_to "Marcar como Assistido", mark_watched_video_path(@video), method: :post, class: "btn btn-small" unless @video.watched %>
+      <%= link_to "Editar", edit_video_path(@video), class: "btn btn-small" %>
+      <%= link_to "Voltar", videos_path, class: "btn btn-small" %>
+      <%= link_to "Excluir", @video, method: :delete, data: { confirm: "Tem certeza?" }, class: "btn btn-small btn-danger" %>
+    </div>
+  </div>
+
+  <%# Video Player %>
   <div class="video-player" style="max-height: 80vh;">
     <% if @video.file.attached? || @video.file_path.present? || @video.external_url.present? %>
       <video 
@@ -23,7 +50,6 @@
           <source src="<%= videos_path(@video) %>/stream" type="video/mp4">
         <% end %>
         
-        <track kind="captions" label="Português" src="/captions.vtt" srclang="pt" default>
         Seu navegador não suporta reprodução de vídeo.
       </video>
     <% else %>
@@ -31,34 +57,41 @@
     <% end %>
   </div>
 
-  <div class="video-details">
-    <h1><%= @video.title %></h1>
-    
-    <% if @video.genre || @video.release_year %>
-      <p class="video-meta">
-        <%= @video.release_year if @video.release_year %>
-        <%= " • " + @video.genre if @video.genre %>
-      </p>
-    <% end %>
-
-    <% if @video.plot_summary.present? %>
-      <div class="plot-summary">
-        <h3>Sinopse</h3>
-        <p><%= @video.plot_summary %></p>
-      </div>
-    <% end %>
-
-    <div class="video-actions">
-      <%= button_to "Marcar como Assistido", mark_watched_video_path(@video), method: :post unless @video.watched %>
-      <%= link_to "Editar", edit_video_path(@video), class: "btn btn-small" %>
-      <%= link_to "Voltar", videos_path, class: "btn btn-small" %>
-      <%= link_to "Excluir", @video, method: :delete, data: { confirm: "Tem certeza?" }, class: "btn btn-small btn-danger" %>
+  <%# Plot Summary %>
+  <% if @video.plot_summary.present? %>
+    <div class="plot-summary">
+      <h3>Sinopse</h3>
+      <p><%= @video.plot_summary %></p>
     </div>
-  </div>
+  <% end %>
 
+  <%# Interactive Sections - Notes and Discussion %>
   <div class="video-sections">
-    <div class="section">
-      <h2>Anotações</h2>
+    <div class="section notes-section">
+      <div class="section-header">
+        <h2>Anotações</h2>
+        <button type="button" class="btn btn-small btn-primary" onclick="document.getElementById('new-note-form').style.display='block'">
+          + Nova Anotação
+        </button>
+      </div>
+      
+      <div id="new-note-form" style="display: none;" class="new-form">
+        <%= form_with(model: VideoNote.new, url: video_notes_path(@video), local: true) do |f| %>
+          <div class="field">
+            <%= f.label :timestamp_seconds, "Timestamp (opcional)" %>
+            <%= f.number_field :timestamp_seconds, min: 0, placeholder: "Segundos", class: "form-control" %>
+          </div>
+          <div class="field">
+            <%= f.label :content, "Anotação" %>
+            <%= f.text_area :content, rows: 3, required: true, placeholder: "Sua anotação...", class: "form-control" %>
+          </div>
+          <div class="actions">
+            <%= f.submit "Salvar", class: "btn btn-primary" %>
+            <button type="button" class="btn btn-small" onclick="document.getElementById('new-note-form').style.display='none'">Cancelar</button>
+          </div>
+        <% end %>
+      </div>
+      
       <% if @notes.any? %>
         <ul class="notes-list">
           <% @notes.each do |note| %>
@@ -69,23 +102,43 @@
           <% end %>
         </ul>
       <% else %>
-        <p class="empty">Nenhuma anotação ainda.</p>
+        <p class="empty">Nenhuma anotação ainda. Clique em "+ Nova Anotação" para adicionar.</p>
       <% end %>
     </div>
 
-    <div class="section">
-      <h2>Discussão</h2>
+    <div class="section discussion-section">
+      <div class="section-header">
+        <h2>Discussão</h2>
+        <button type="button" class="btn btn-small btn-primary" onclick="document.getElementById('new-comment-form').style.display='block'">
+          + Novo Comentário
+        </button>
+      </div>
+      
+      <div id="new-comment-form" style="display: none;" class="new-form">
+        <%= form_with(model: VideoComment.new, url: video_comments_path(@video), local: true) do |f| %>
+          <div class="field">
+            <%= f.label :content, "Comentário" %>
+            <%= f.text_area :content, rows: 3, required: true, placeholder: "Seu comentário...", class: "form-control" %>
+          </div>
+          <div class="actions">
+            <%= f.submit "Postar", class: "btn btn-primary" %>
+            <button type="button" class="btn btn-small" onclick="document.getElementById('new-comment-form').style.display='none'">Cancelar</button>
+          </div>
+        <% end %>
+      </div>
+      
       <% if @comments.any? %>
         <ul class="comments-list">
           <% @comments.each do |comment| %>
             <li>
               <span class="author"><%= comment.user&.name || "Usuário" %></span>
               <span class="content"><%= comment.content %></span>
+              <span class="date"><%= comment.created_at.strftime("%d/%m/%Y") %></span>
             </li>
           <% end %>
         </ul>
-      <% else %>
-        <p class="empty">Nenhum comentário ainda.</p>
+      <% else %}
+        <p class="empty">Nenhum comentário ainda. Clique em "+ Novo Comentário" para iniciar.</p>
       <% end %>
     </div>
   </div>
