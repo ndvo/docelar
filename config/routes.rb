@@ -95,6 +95,7 @@ Rails.application.routes.draw do
       get :position
       post :update_position
       post :mark_watched
+      post :reprocess_audio
     end
     collection do
       post :import

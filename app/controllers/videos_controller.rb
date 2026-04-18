@@ -30,6 +30,9 @@ class VideosController < ApplicationController
 
     @video = Video.new(video_params)
     if @video.save
+      if @video.enhance_audio && @video.file.attached?
+        AudioEnhancementJob.perform_later(@video.id)
+      end
       redirect_to @video, notice: 'Video was successfully created.'
     else
       @categories = VideoCategory.all
@@ -43,6 +46,9 @@ class VideosController < ApplicationController
 
   def update
     if @video.update(video_params)
+      if @video.enhance_audio && @video.file.attached? && !@video.audio_completed? && !@video.audio_processing?
+        AudioEnhancementJob.perform_later(@video.id)
+      end
       redirect_to @video, notice: 'Video was successfully updated.'
     else
       @categories = VideoCategory.all
@@ -81,8 +87,10 @@ class VideosController < ApplicationController
   end
 
   def update_position
-    @video.update(playback_position: params[:position].to_i)
-    render json: { success: true }
+    @video.update!(playback_position: params[:position].to_i)
+    render json: { success: true }, status: :ok
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   def position
@@ -93,6 +101,18 @@ class VideosController < ApplicationController
     @video = Video.find(params[:id])
     @video.update(watched: true, watched_at: Time.current)
     redirect_to @video, notice: 'Video marked as watched.'
+  end
+
+  def reprocess_audio
+    @video = Video.find(params[:id])
+    if @video.file.attached? && @video.enhance_audio
+      @video.update(enhance_audio_status: :pending)
+      @video.enhanced_file.purge if @video.enhanced_file.attached?
+      AudioEnhancementJob.perform_later(@video.id)
+      redirect_to @video, notice: 'Áudio está sendo reprocessado.'
+    else
+      redirect_to @video, alert: 'Vídeo precisa de arquivo e增强 áudio marcado.'
+    end
   end
 
   def import
@@ -109,6 +129,7 @@ class VideosController < ApplicationController
   def video_params
     params.require(:video).permit(:title, :description, :file_path, :external_url, :is_external,
                                    :duration_seconds, :video_format, :resolution, :release_year,
-                                   :genre, :plot_summary, :poster_url, :video_category_id, :tag_names, :file)
+                                   :genre, :plot_summary, :poster_url, :video_category_id, :tag_names, :file,
+                                   :enhance_audio)
   end
 end
