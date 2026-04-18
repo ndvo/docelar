@@ -1,43 +1,120 @@
 <div class="videos-index">
-  <h1>Vídeos</h1>
-
-  <div class="video-actions">
-    <%= link_to "Adicionar Vídeo", new_video_path, class: "btn btn-primary" %>
-  </div>
-
-  <% if @categories.any? %>
-    <div class="categories">
-      <%= link_to "Todos", videos_path, class: "btn btn-small" %>
-      <% @categories.each do |category| %>
-        <%= link_to category.name, videos_path(category: category.id), class: "btn btn-small" %>
+  <header class="videos-header">
+    <div class="header-content">
+      <h1>🎬 Biblioteca de Vídeos</h1>
+      <p class="header-subtitle">Suas películas, séries e vídeos familiares</p>
+    </div>
+    <div class="header-actions">
+      <%= link_to new_video_path, class: "btn btn-primary btn-lg" do %>
+        <span>+</span> Adicionar Vídeo
       <% end %>
     </div>
-  <% end %>
+  </header>
 
-  <div class="video-grid">
-    <% @videos.each do |video| %>
-      <div class="video-card">
-        <% if video.poster_url.present? %>
-          <%= image_tag video.poster_url, alt: video.title, class: "video-thumbnail" %>
-        <% else %>
-          <div class="video-placeholder">🎬</div>
-        <% end %>
-        <div class="video-info">
-          <h3><%= link_to video.title, video %></h3>
-          <% if video.duration_seconds %>
-            <span class="duration"><%= video.formatted_duration %></span>
-          <% end %>
-          <% if video.progress_percentage > 0 && video.progress_percentage < 100 %>
-            <div class="progress-bar">
-              <div class="progress" style="width: <%= video.progress_percentage %>%"></div>
+  <% if @videos.any? { |v| v.progress_percentage.positive? && v.progress_percentage < 100 } %>
+    <section class="continue-watching">
+      <h2><span class="icon">⏯️</span> Continuar Assistindo</h2>
+      <div class="continue-grid">
+        <% @videos.select { |v| v.progress_percentage.positive? && v.progress_percentage < 100 }.first(4).each do |video| %>
+          <%= link_to video, class: "continue-card" do %>
+            <div class="continue-thumbnail">
+              <% if video.has_thumbnail? %>
+                <% if video.poster_url.present? %>
+                  <%= image_tag video.poster_url, alt: video.title %>
+                <% elsif video.file.attached? && video.file.previewable? %>
+                  <%= image_tag video.file.preview(resize: '400x225'), alt: video.title %>
+                <% end %>
+              <% else %>
+                <div class="continue-placeholder">🎬</div>
+              <% end %>
+              <div class="continue-progress">
+                <div class="progress-fill" style="width: <%= video.progress_percentage %>%"></div>
+              </div>
+            </div>
+            <div class="continue-info">
+              <h4><%= video.title %></h4>
+              <span class="continue-meta">
+                <%= video.progress_percentage %>% • <%= video.formatted_duration %>
+              </span>
             </div>
           <% end %>
-        </div>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <section class="videos-section">
+    <div class="section-header">
+      <h2>Todos os Vídeos</h2>
+      <% if @categories.any? %>
+        <nav class="categories-nav">
+          <%= link_to "Todos", videos_path, class: "category-pill #{params[:category].blank? ? 'active' : ''}" %>
+          <% @categories.each do |category| %>
+            <%= link_to category.name, videos_path(category: category.id), class: "category-pill #{params[:category].to_s == category.id.to_s ? 'active' : ''}" %>
+          <% end %>
+        </nav>
+      <% end %>
+    </div>
+
+    <% if @videos.any? %>
+      <div class="media-gallery">
+        <% @videos.each do |video| %>
+          <article class="media-card video-card">
+            <%= link_to video, class: "card-link", title: video.title do %>
+              <div class="card-thumbnail">
+                <% if video.has_thumbnail? %>
+                  <% if video.poster_url.present? %>
+                    <%= image_tag video.poster_url, alt: video.title, loading: "lazy" %>
+                  <% elsif video.file.attached? && video.file.previewable? %>
+                    <%= image_tag video.file.preview(resize: '400x225'), alt: video.title, loading: "lazy" %>
+                  <% end %>
+                <% else %>
+                  <div class="card-placeholder">
+                    <span class="placeholder-icon">🎬</span>
+                    <span class="placeholder-text">Sem capa</span>
+                  </div>
+                <% end %>
+                <div class="card-overlay">
+                  <button class="play-button" aria-label="Reproduzir">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  </button>
+                </div>
+                <% if video.duration_seconds %>
+                  <span class="card-duration"><%= video.formatted_duration %></span>
+                <% end %>
+                <% if video.watched %>
+                  <span class="card-badge watched">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    Assistido
+                  </span>
+                <% elsif video.progress_percentage > 0 %>
+                  <span class="card-badge in-progress"><%= video.progress_percentage %>%</span>
+                <% end %>
+                <% if video.progress_percentage > 0 && video.progress_percentage < 100 %>
+                  <div class="card-progress">
+                    <div class="progress-fill" style="width: <%= video.progress_percentage %>%"></div>
+                  </div>
+                <% end %>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title"><%= video.title %></h3>
+                <div class="card-meta">
+                  <% if video.release_year %><span class="meta-year"><%= video.release_year %></span><% end %>
+                  <% if video.genre %><span class="meta-genre"><%= video.genre %></span><% end %>
+                </div>
+                <% if video.category %><span class="card-category"><%= video.category.name %></span><% end %>
+              </div>
+            <% end %>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <div class="empty-icon">🎥</div>
+        <h3>Nenhum vídeo encontrado</h3>
+        <p>Comece adicionando seus vídeos favoritos</p>
+        <%= link_to "Adicionar Primeiro Vídeo", new_video_path, class: "btn btn-primary" %>
       </div>
     <% end %>
-  </div>
-
-  <% if @videos.empty? %>
-    <p class="empty-state">Nenhum vídeo ainda. <%= link_to "Adicione seu primeiro vídeo", new_video_path %>.</p>
-  <% end %>
+  </section>
 </div>

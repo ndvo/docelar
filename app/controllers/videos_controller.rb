@@ -2,8 +2,12 @@ class VideosController < ApplicationController
   before_action :set_video, only: [:show, :edit, :update, :destroy, :play, :update_position]
 
   def index
-    @videos = Video.recent
     @categories = VideoCategory.all
+    if params[:category].present?
+      @videos = Video.by_category(params[:category].to_i).recent
+    else
+      @videos = Video.recent
+    end
   end
 
   def show
@@ -60,11 +64,18 @@ class VideosController < ApplicationController
   end
 
   def stream
-    return redirect_to @video.external_url if @video.is_external && @video.external_url.present?
+    if @video.external_url.present? && @video.is_external
+      redirect_to @video.external_url and return
+    end
+    
+    if @video.file.attached?
+      redirect_to rails_blob_url(@video.file, only_path: true) and return
+    end
     
     if @video.file_path.present? && File.exist?(@video.file_path)
       send_file @video.file_path, type: 'video/mp4', disposition: :inline
     else
+      Rails.logger.warn "Video #{@video.id} stream failed: no valid source (file: #{@video.file.attached?}, external: #{@video.external_url}, path: #{@video.file_path} exists: #{@video.file_path.present? && File.exist?(@video.file_path)})"
       head :not_found
     end
   end
