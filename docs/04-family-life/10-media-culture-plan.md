@@ -67,6 +67,170 @@ Manage family media and cultural consumption with intentionality - balancing ent
 - [ ] Video library
 - [ ] Reading tracking
 
+### Video Library Detailed Plan
+
+#### 1. Video Sources
+
+**Server Folder Import**
+- [ ] Configure server folder path in settings (admin)
+- [ ] Scan folder for video files (mp4, mkv, avi, mov, webm)
+- [ ] Background import job for large libraries
+- [ ] Watch folder for new files (auto-import)
+- [ ] Support nested folder structures as categories
+- [ ] Manual refresh trigger
+
+**Direct Upload**
+- [ ] Drag-and-drop upload interface
+- [ ] Multi-file upload support
+- [ ] Upload progress indicator
+- [ ] Support large files (chunked upload)
+- [ ] Convert to web-compatible format (ffmpeg)
+- [ ] Preserve original option
+
+#### 2. Video Metadata
+
+**Automatic Extraction**
+- [ ] Extract duration, resolution, codec
+- [ ] Generate video thumbnails
+- [ ] Extract creation date from file
+- [ ] Detect video quality (SD/HD/4K)
+- [ ] Audio track info (language, channels)
+
+**Manual Metadata**
+- [ ] Title and description editing
+- [ ] Custom thumbnails upload
+- [ ] Tags and categories
+- [ ] Cast/crew information
+- [ ] Year and genre
+
+#### 3. Organization
+
+**Categories & Tags**
+- [ ] Hierarchical categories (e.g., Movies > Action, TV > Series)
+- [ ] Multi-tag support
+- [ ] Color-coded tags
+- [ ] Smart collections (auto-filter by criteria)
+- [ ] Favorites and watchlist
+
+**Playlists**
+- [ ] Create/edit/delete playlists
+- [ ] Add videos to multiple playlists
+- [ ] Reorder videos in playlist
+- [ ] Share playlists with family
+- [ ] Auto-generated playlists (recent, unwatched)
+
+#### 4. User Experience
+
+**Watching**
+- [ ] Built-in video player
+- [ ] Resume from last position
+- [ ] Continue watching section
+- [ ] Progress bar with preview
+- [ ] Volume and playback controls
+- [ ] Full-screen mode
+- [ ] Subtitles support (SRT, VTT)
+- [ ] Multiple audio tracks
+
+**Discovery**
+- [ ] Search by title, tags, categories
+- [ ] Filter by genre, year, duration
+- [ ] Sort by date added, name, duration
+- [ ] Grid and list views
+- [ ] Recently added section
+
+#### 5. Family Features (Philosophy-Aligned)
+
+**Profiles**
+- [ ] Per-child user profiles
+- [ ] Age-appropriate content filters
+- [ ] Watch history per profile
+- [ ] Parental controls per profile
+
+**Family Sharing**
+- [ ] Shared family library
+- [ ] Family recommendations
+- [ ] "Watch together" feature (sync playback)
+- [ ] Discussion threads on videos
+
+**Progress Tracking**
+- [ ] Watch history
+- [ ] Watch progress (percentage)
+- [ ] "Watched" vs "In Progress" status
+- [ ] Completion tracking for series
+
+#### 6. Notes & Discussions
+
+**User Annotations**
+- [ ] Add notes to specific timestamps
+- [ ] Personal bookmarks in videos
+- [ ] Timestamp-linked notes
+
+**Family Discussions**
+- [ ] Comment threads per video
+- [ ] Discussion boards by category
+- [ ] Share thoughts after watching
+- [ ] Spoiler tags for discussions
+
+#### 7. Technical Requirements
+
+**Storage**
+- [ ] Local file system storage
+- [ ] External storage support (future: S3, etc.)
+- [ ] Storage usage dashboard
+
+**Processing**
+- [ ] Background video processing
+- [ ] Thumbnail generation
+- [ ] Transcoding for web playback
+- [ ] Queue management for imports
+
+#### 8. Additional Features (Future)
+
+- [ ] Offline viewing (download to device)
+- [ ] Continue on another device
+- [ ] Streaming to TV (Chromecast, AirPlay)
+- [ ] Import from streaming services (future)
+- [ ] Media server integration (Plex/Jellyfin)
+
+### Reading Tracking Detailed Plan
+
+#### 1. Book Library (Existing)
+
+- [x] Book library - basic book catalog
+
+#### 2. Reading Tracking
+
+**Progress**
+- [ ] Current book tracking
+- [ ] Page progress
+- [ ] Percentage complete
+- [ ] Time spent reading
+- [ ] Reading streaks/gamification
+
+**Catalog Enhancement**
+- [ ] Import from ISBN/barcode
+- [ ] Cover images
+- [ ] Author and series tracking
+- [ ] Genre and tags
+
+**Family Features**
+- [ ] Family reading challenges
+- [ ] Reading goals per child
+- [ ] Book recommendations by age
+- [ ] Shared family reading list
+
+**Discussion**
+- [ ] Per-book discussion threads
+- [ ] Spoiler-free reviews
+- [ ] Family book ratings
+
+#### 3. Educational Content
+
+- [ ] Educational resource library
+- [ ] Subject-based organization
+- [ ] Learning progress tracking
+- [ ] Recommended reading by age/subject
+
 ### Planned Features
 
 #### Media Management
