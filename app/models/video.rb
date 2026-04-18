@@ -11,7 +11,15 @@ class Video < ApplicationRecord
   has_many :notes, dependent: :destroy, class_name: 'VideoNote'
 
   validates :title, presence: true
-  validates :file, content_type: { in: %w[video/mp4 video/webm video/ogg video/quicktime video/x-msvideo], message: "must be a video file" }, if: -> { file.attached? }
+  validate :file_type_validation, if: -> { file.attached? }
+
+  def file_type_validation
+    return unless file.attached?
+    allowed_types = %w[video/mp4 video/webm video/ogg video/quicktime video/x-msvideo]
+    if file.blob.content_type.present? && !allowed_types.include?(file.blob.content_type)
+      errors.add(:file, "must be a video file")
+    end
+  end
 
   scope :recent, -> { order(created_at: :desc) }
   scope :watched, -> { where(watched: true) }
