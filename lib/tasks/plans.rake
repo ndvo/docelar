@@ -10,10 +10,13 @@ namespace :plans do
     plan_files = []
     
     if Dir.exist?(docs_dir)
+      # Search both in docs/ root and in pillar subdirectories
       plan_patterns = [
         "#{docs_dir}/*-plan*.md",
         "#{docs_dir}/*-photos*.md",
-        "#{docs_dir}/*-implementation*.md"
+        "#{docs_dir}/*-implementation*.md",
+        "#{docs_dir}/**/*-plan.md",
+        "#{docs_dir}/**/*-plan*.md"
       ]
       plan_files = plan_patterns.flat_map { |p| Dir.glob(p) }.uniq.sort
     end
