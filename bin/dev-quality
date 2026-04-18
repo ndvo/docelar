@@ -18,6 +18,10 @@ class CodeQualityRunner
       run_lint
     when "rails"
       run_rails_best_practices
+    when "validate"
+      run_w3c_validation
+    when "a11y"
+      run_accessibility_check
     when "help", nil
       show_help
     else
@@ -28,20 +32,24 @@ class CodeQualityRunner
 
   private
 
-  def show_help
+def show_help
     puts "Code Quality Runner"
     puts
     puts "Usage: dev:quality <command>"
     puts
     puts "Commands:"
-    puts "  check    Run all code quality checks (lint + rails)"
-    puts "  lint     Run Ruby syntax and style checks"
-    puts "  rails    Run Rails best practices checks"
-    puts "  help     Show this help"
+    puts "  check     Run all code quality checks (lint + rails + validate)"
+    puts "  lint      Run Ruby syntax and style checks"
+    puts "  rails     Run Rails best practices checks"
+    puts "  validate  Run W3C HTML validation"
+    puts "  a11y      Run accessibility tests"
+    puts "  help      Show this help"
     puts
     puts "Examples:"
-    puts "  dev:quality check    # Run all checks"
-    puts "  dev:quality lint    # Quick lint check"
+    puts "  dev:quality check     # Run all checks"
+    puts "  dev:quality lint     # Quick syntax check"
+    puts "  dev:quality validate # Validate HTML"
+    puts "  dev:quality a11y     # Run accessibility tests"
   end
 
   def run_all_checks
@@ -50,6 +58,38 @@ class CodeQualityRunner
     run_lint
     puts
     run_rails_best_practices
+    puts
+    run_w3c_validation
+  end
+
+  def run_w3c_validation
+    puts "=== W3C HTML Validation ==="
+    begin
+      require 'w3c_validators'
+      validator = W3CValidators::NuValidator.new
+      
+      # Check homepage
+      require 'net/http'
+      html = Net::HTTP.get(URI('http://localhost:3000/'))
+      results = validator.validate_text(html)
+      
+      if results.errors.empty?
+        puts "✓ Homepage HTML validates successfully"
+      else
+        puts "⚠ HTML validation errors found:"
+        results.errors.first(5).each do |err|
+          puts "  - #{err.message[0..100]}"
+        end
+      end
+    rescue => e
+      puts "⚠ W3C validation skipped: #{e.message}"
+      puts "  (Start server with: bin/rails server)"
+    end
+  end
+
+  def run_accessibility_check
+    puts "=== Accessibility Tests ==="
+    system("bundle exec rspec spec/features/accessibility_spec.rb --format documentation")
   end
 
   def run_lint

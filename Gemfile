@@ -81,4 +81,12 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "faker"
   gem "capybara"
+  gem "selenium-webdriver"
+  
+  # Accessibility testing
+  gem "axe-core-capybara"
+  gem "axe-core-rspec"
+  
+  # W3C HTML validation
+  gem "w3c_validators"
 end
