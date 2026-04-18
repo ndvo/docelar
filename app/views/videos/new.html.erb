@@ -41,7 +41,7 @@
 
   <div class="field">
     <%= form.label :video_category_id, "Categoria" %>
-    <%= form.select :video_category_id, nested_options(@categories, nested_select: true), include_blank: "Selecione..." %>
+    <%= form.select :video_category_id, options_from_collection_for_select(@categories, :id, :name), include_blank: "Selecione..." %>
   </div>
 
   <div class="field">
