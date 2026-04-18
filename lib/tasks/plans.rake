@@ -56,9 +56,9 @@ namespace :plans do
               parts = line.split('|').map(&:strip)
               status_col = parts[status_col_idx] if status_col_idx && parts[status_col_idx]
               
-              done_count += 1 if status_col =~ /\bDone\b/i || status_col =~ /\bComplete\b/i || status_col =~ /✅/
-              pending_count += 1 if status_col =~ /\bPending\b/i || status_col =~ /\bNot Started\b/i || status_col =~ /\bTo Do\b/i || status_col =~ /⏳/
-              in_progress_count += 1 if status_col =~ /\bIn Progress\b/i || status_col =~ /\bOngoing\b/i || status_col =~ /🔄/
+              done_count += 1 if status_col =~ /\bDone\b/i || status_col =~ /\bComplete\b/i || status_col =~ /✅/ || status_col =~ /Present\b/i
+              pending_count += 1 if status_col =~ /\bPending\b/i || status_col =~ /\bNot Started\b/i || status_col =~ /\bTo Do\b/i || status_col =~ /⏳/ || status_col =~ /\bMissing\b/i || status_col =~ /\bNo\b/
+              in_progress_count += 1 if status_col =~ /\bIn Progress\b/i || status_col =~ /\bOngoing\b/i || status_col =~ /🔄/ || status_col =~ /\bPartial\b/i
             end
             
             task_total = done_count + pending_count + in_progress_count

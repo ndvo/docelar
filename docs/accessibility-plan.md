@@ -88,9 +88,9 @@
 - [ ] Provide transcripts for audio content
 
 #### Adaptable Content (1.3.1 - Level A)
-- [ ] Add `lang="pt-BR"` to `<html>` element
+- [x] Add `lang="pt-BR"` to `<html>` element
 - [ ] Ensure proper heading hierarchy (single H1 per page)
-- [ ] Add `scope` to table headers in `_simple_table.erb`
+- [x] Add `scope` to table headers in `_simple_table.erb`
 - [ ] Use `for` attributes on all form labels
 - [ ] Associate form errors with inputs via `aria-describedby`
 
@@ -117,14 +117,14 @@
 - [ ] Ensure no content flashes more than 3 times per second
 
 #### Navigable (2.4.1 - Level A)
-- [ ] Add bypass blocks (skip link)
-- [ ] Add descriptive page titles (`<title>` elements)
+- [x] Add bypass blocks (skip link)
+- [x] Add descriptive page titles (`<title>` elements)
 - [ ] Ensure link purpose is clear from link text
 - [ ] Add breadcrumbs if hierarchical navigation exists
 
 #### Focus Visible (2.4.7 - Level AA)
-- [ ] Style `:focus` and `:focus-visible` states
-- [ ] Ensure focus is not obscured
+- [x] Style `:focus` and `:focus-visible` states
+- [x] Ensure focus is not obscured
 
 ### 2.3 Understandable
 
@@ -140,24 +140,24 @@
 #### Input Assistance (3.3.1 - Level A)
 - [ ] Identify input errors with `aria-invalid`
 - [ ] Provide error suggestions where possible
-- [ ] Add `required` attributes to mandatory fields
-- [ ] Add `aria-required="true"` to required fields
+- [x] Add `required` attributes to mandatory fields
+- [x] Add `aria-required="true"` to required fields
 
 #### Identification (3.3.2 - Level A)
-- [ ] Add labels or instructions for all inputs
-- [ ] Group related inputs with `<fieldset>` and `<legend>`
+- [x] Add labels or instructions for all inputs
+- [x] Group related inputs with `<fieldset>` and `<legend>`
 
 ### 2.4 Robust
 
 #### Compatible with Assistive Technologies (4.1.1 - Level A)
-- [ ] Ensure valid HTML markup
-- [ ] Avoid duplicate IDs
-- [ ] Ensure ARIA is used correctly (valid roles, states, properties)
+- [x] Ensure valid HTML markup
+- [x] Avoid duplicate IDs
+- [x] Ensure ARIA is used correctly (valid roles, states, properties)
 
 #### Name, Role, Value (4.1.2 - Level A)
-- [ ] Set `role` for custom interactive elements
-- [ ] Set `aria-label` or `aria-labelledby` where needed
-- [ ] Ensure all form elements have accessible names
+- [x] Set `role` for custom interactive elements
+- [x] Set `aria-label` or `aria-labelledby` where needed
+- [x] Ensure all form elements have accessible names
 
 ---
 
@@ -267,6 +267,7 @@ if ('serviceWorker' in navigator) {
 - [ ] Ensure notifications are descriptive and actionable
 - [ ] Allow users to opt-out easily
 - [ ] Use `aria-live` regions for in-app notification announcements
+- [x] Ensure stream updates are announced via `aria-live`
 
 ---
 
