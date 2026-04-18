@@ -93,6 +93,7 @@ Manage family media and cultural consumption with intentionality - balancing ent
 - [ ] Extract duration, resolution, codec
 - [ ] Generate video thumbnails
 - [ ] Extract creation date from file
+- [ ] Extract title from filename (clean formatting)
 - [ ] Detect video quality (SD/HD/4K)
 - [ ] Audio track info (language, channels)
 
@@ -102,6 +103,11 @@ Manage family media and cultural consumption with intentionality - balancing ent
 - [ ] Tags and categories
 - [ ] Cast/crew information
 - [ ] Year and genre
+- [ ] **Automatic title extraction** from filename (clean formatting)
+- [ ] **IMDB/TMDB integration** for movie/series metadata lookup
+- [ ] **Open movie database API** for poster, plot, cast
+- [ ] **TVMaze API** for TV series episode info
+- [ ] **Manual override** for all auto-extracted data
 
 #### 3. Organization
 
@@ -212,6 +218,9 @@ Manage family media and cultural consumption with intentionality - balancing ent
 - [ ] Cover images
 - [ ] Author and series tracking
 - [ ] Genre and tags
+- [ ] **Google Books API** for automatic metadata (title, author, description, cover)
+- [ ] **Open Library API** for alternative metadata source
+- [ ] **Manual override** for all auto-extracted data
 
 **Family Features**
 - [ ] Family reading challenges
