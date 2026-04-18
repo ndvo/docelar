@@ -65,6 +65,7 @@ Manage family media and cultural consumption with intentionality - balancing ent
 - [x] Video library - core implementation (2026-04-17)
 
 ### In Progress
+- [x] Video library - resume from last position (2026-04-17)
 - [ ] Video library - advanced features (metadata API, playlists)
 - [ ] Reading tracking
 
@@ -145,9 +146,9 @@ Manage family media and cultural consumption with intentionality - balancing ent
 #### 4. User Experience
 
 **Watching**
-- [ ] Built-in video player
-- [ ] Resume from last position
-- [ ] Continue watching section
+- [x] Built-in video player
+- [x] Resume from last position
+- [x] Continue watching section
 - [ ] Progress bar with preview
 - [ ] Volume and playback controls
 - [ ] Full-screen mode
