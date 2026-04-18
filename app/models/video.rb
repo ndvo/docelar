@@ -48,4 +48,16 @@ class Video < ApplicationRecord
       external_url
     end
   end
+
+  def thumbnail_url
+    if poster_url.present?
+      poster_url
+    elsif file.attached? && file.previewable?
+      Rails.application.routes.url_helpers.preview_path(file, only_path: true)
+    end
+  end
+
+  def has_thumbnail?
+    poster_url.present? || (file.attached? && file.previewable?)
+  end
 end

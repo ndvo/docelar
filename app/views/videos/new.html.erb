@@ -1,6 +1,6 @@
 <h1>Novo Vídeo</h1>
 
-<%= form_with(model: @video, local: true, html: { multipart: true }) do |form| %>
+<%= form_with(model: @video, local: true, html: { multipart: true, data: { turbo: false } }) do |form| %>
   <% if @video.errors.any? %>
     <div class="error-messages">
       <h2><%= pluralize(@video.errors.count, "error") %> prohibited this video from being saved:</h2>
@@ -86,7 +86,6 @@
 <% end %>
 
 <%= javascript_tag do %>
-  // Toggle between file upload and external URL
   document.addEventListener('DOMContentLoaded', function() {
     var fileInput = document.getElementById('video_file');
     var urlInput = document.getElementById('video_external_url');
