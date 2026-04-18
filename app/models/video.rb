@@ -3,6 +3,7 @@ class Video < ApplicationRecord
   belongs_to :user, optional: true
 
   has_one_attached :file
+  has_one_attached :enhanced_file
   has_many :playlist_items, dependent: :destroy
   has_many :playlists, through: :playlist_items
   has_many :taggings, dependent: :destroy
@@ -12,6 +13,13 @@ class Video < ApplicationRecord
 
   validates :title, presence: true
   validate :file_type_validation, if: -> { file.attached? }
+
+  enum :enhance_audio_status, {
+    pending: 0,
+    processing: 1,
+    completed: 2,
+    failed: 3
+  }, prefix: :audio
 
   def file_type_validation
     return unless file.attached?
@@ -25,6 +33,7 @@ class Video < ApplicationRecord
   scope :watched, -> { where(watched: true) }
   scope :unwatched, -> { where(watched: false) }
   scope :by_category, ->(category_id) { where(video_category_id: category_id) }
+  scope :needs_audio_processing, -> { where(enhance_audio: true).where(enhance_audio_status: :pending) }
 
   def formatted_duration
     return nil unless duration_seconds
@@ -40,13 +49,19 @@ class Video < ApplicationRecord
   end
 
   def file_path_or_url
-    if file.attached?
+    if enhanced_file.attached? && audio_completed?
+      Rails.application.routes.url_helpers.rails_blob_url(enhanced_file, only_path: true)
+    elsif file.attached?
       Rails.application.routes.url_helpers.rails_blob_url(file, only_path: true)
     elsif file_path.present?
       file_path
     elsif external_url.present?
       external_url
     end
+  end
+
+  def current_file_url
+    file_path_or_url
   end
 
   def thumbnail_url
@@ -59,5 +74,9 @@ class Video < ApplicationRecord
 
   def has_thumbnail?
     poster_url.present? || (file.attached? && file.previewable?)
+  end
+
+  def queue_audio_enhancement!
+    update!(enhance_audio_status: :pending) if enhance_audio && !audio_completed?
   end
 end
