@@ -24,10 +24,62 @@
     </div>
     <div class="video-actions-row">
       <%= button_to "Marcar como Assistido", mark_watched_video_path(@video), method: :post, class: "btn btn-small" unless @video.watched %>
+      <% if @video.enhance_audio %>
+        <% case @video.enhance_audio_status %>
+        <% when "completed" %>
+          <button type="button" class="btn btn-small btn-success" onclick="toggleAudioQuality()">🔊 Áudio Melhorado Ativo</button>
+          <small class="audio-status">
+            <%= @video.enhanced_method&.upcase || "FFmpeg" %>
+            <%= " • " + l(@video.enhanced_at, format: :short) if @video.enhanced_at %>
+          </small>
+          <%= button_to "🔄 Reprocessar", reprocess_audio_video_path(@video), method: :post, class: "btn btn-small" %>
+        <% when "processing" %>
+          <span class="btn btn-small" disabled>⏳ Processando áudio...</span>
+          <small class="audio-status">Isso pode levar alguns minutos</small>
+        <% when "failed" %>
+          <%= button_to "↻ Reprocessar Áudio", reprocess_audio_video_path(@video), method: :post, class: "btn btn-small btn-danger" %>
+          <small class="audio-status">O processamento anterior falhou. Tente novamente.</small>
+        <% when "pending" %>
+          <span class="btn btn-small" disabled>🎬 Áudio Enhancement</span>
+          <small class="audio-status">Na fila para processamento</small>
+        <% else %>
+          <% end %>
+        <% unless @video.audio_completed? || @video.audio_processing? || @video.audio_failed? %>
+          <small class="audio-status">Enhancement disponível na edição</small>
+        <% end %>
+      <% end %>
       <%= link_to "Editar", edit_video_path(@video), class: "btn btn-small" %>
       <%= link_to "Voltar", videos_path, class: "btn btn-small" %>
       <%= link_to "Excluir", @video, method: :delete, data: { confirm: "Tem certeza?" }, class: "btn btn-small btn-danger" %>
     </div>
+
+  <% if @video.enhance_audio && !@video.audio_completed? %>
+    <div class="audio-notice">
+      <% case @video.enhance_audio_status %>
+      <% when "pending" %>
+        <p>📝 Seu vídeo será processado para melhorar a qualidade do áudio em breve.</p>
+      <% when "processing" %>
+        <p>🔄 Processando áudio... Por favor aguarde.</p>
+        <p>Este processo pode levar alguns minutos dependendo do tamanho do vídeo.</p>
+      <% when "failed" %>
+        <p>⚠️ O processamento de áudio encontrou um problema. <%= link_to "Tente novamente", edit_video_path(@video) %>.</p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= javascript_tag do %>
+    function toggleAudioQuality() {
+      var video = document.getElementById('video-player');
+      var sources = video.querySelectorAll('source[data-quality]');
+      if (sources.length > 0) {
+        var currentSrc = video.currentSrc;
+        var newSrc = sources[0].src;
+        video.src = newSrc;
+        video.currentTime = Math.floor(video.currentTime);
+        video.play();
+      }
+    }
+  <% end %>
   </div>
 
   <%# Video Player %>
@@ -36,6 +88,7 @@
       <video 
         id="video-player"
         data-controller="video-resume"
+        data-video-enhanced="<%= @video.enhanced_file.attached? && @video.audio_completed? %>"
         width="<%= @video.resolution.present? ? @video.resolution.split('x').first : 1280 %>" 
         height="<%= @video.resolution.present? ? @video.resolution.split('x').last : 720 %>"
         controls="controls" 
@@ -47,7 +100,10 @@
         data-video-resume-position-value="<%= @video.playback_position || 0 %>"
         style="max-height: 80vh; width: 100%; background: #000;">
         
-        <% if @video.file.attached? %>
+        <% if @video.enhanced_file.attached? && @video.audio_completed? %>
+          <source src="<%= url_for(@video.enhanced_file) %>" type="<%= @video.enhanced_file.content_type || 'video/mp4' %>">
+          <source src="<%= url_for(@video.file) %>" type="<%= @video.file.content_type || 'video/mp4' %>" data-quality="original">
+        <% elsif @video.file.attached? %>
           <source src="<%= url_for(@video.file) %>" type="<%= @video.file.content_type || 'video/mp4' %>">
         <% elsif @video.external_url.present? %>
           <source src="<%= @video.external_url %>" type="video/mp4">

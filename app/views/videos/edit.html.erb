@@ -1,0 +1,107 @@
+<h1>Editar Vídeo</h1>
+
+<%= form_with(model: @video, local: true, html: { multipart: true, data: { turbo: false } }) do |form| %>
+  <% if @video.errors.any? %>
+    <div class="error-messages">
+      <h2><%= pluralize(@video.errors.count, "error") %> prohibited this video from being saved:</h2>
+      <ul>
+        <% @video.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title, required: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :file, "Arquivo de Vídeo" %>
+    <%= form.file_field :file, accept: "video/*" %>
+    <% if @video.file.attached? %>
+      <p class="help">Arquivo atual: <%= @video.file.filename %></p>
+    <% end %>
+    <p class="help">MP4, WebM, MOV, AVI (max 4GB) - Deixe vazio para manter o atual</p>
+  </div>
+
+  <div class="field">
+    <%= form.label :external_url, "URL Externa (Archive.org, YouTube, etc.)" %>
+    <%= form.url_field :external_url, placeholder: "https://archive.org/..." %>
+  </div>
+
+  <div class="field">
+    <%= form.check_box :is_external %>
+    <%= form.label :is_external, "Vídeo externo (não fazer stream do servidor)" %>
+  </div>
+
+  <% if @video.file.attached? %>
+    <div class="field">
+      <%= form.check_box :enhance_audio %>
+      <%= form.label :enhance_audio, "🔊 Melhorar áudio (reduzir ruído de fundo)" %>
+      <% case @video.enhance_audio_status %>
+      <% when "pending" %>
+        <p class="help">Aguardando processamento...</p>
+      <% when "processing" %>
+        <p class="help">Processando áudio... (pode levar alguns minutos)</p>
+      <% when "completed" %>
+        <p class="help">✅ Áudio enhancement completo</p>
+      <% when "failed" %>
+        <p class="help" style="color: red;">❌ Processamento falhou</p>
+      <% else %>
+        <p class="help">Remove ruído de fundo para destacar vozes humanas</p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :video_category_id, "Categoria" %>
+    <%= form.select :video_category_id, options_from_collection_for_select(@categories, :id, :name), include_blank: "Selecione..." %>
+    <span>ou</span>
+    <%= link_to "Criar nova categoria", "#", id: "new-category-toggle", onclick: "document.getElementById('new-category-fields').style.display='block'; document.getElementById('video_video_category_id').value=''; return false;" %>
+  </div>
+
+  <div id="new-category-fields" style="display: none;" class="field">
+    <label for="new_category_name">Nova Categoria</label>
+    <input type="text" name="new_category_name" id="new_category_name" placeholder="Nome da nova categoria">
+    <% if @categories.any? %>
+      <select name="new_category_parent_id" id="new_category_parent_id">
+        <option value="">Categoria pai (opcional)</option>
+        <% @categories.each do |cat| %>
+          <option value="<%= cat.id %>"><%= cat.name %></option>
+        <% end %>
+      </select>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :genre %>
+    <%= form.text_field :genre %>
+  </div>
+
+  <div class="field">
+    <%= form.label :release_year, "Ano de Lançamento" %>
+    <%= form.number_field :release_year, min: 1900, max: Date.today.year + 5 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :plot_summary, "Sinopse" %>
+    <%= form.text_area :plot_summary %>
+  </div>
+
+  <div class="field">
+    <%= form.label :poster_url, "URL do Pôster" %>
+    <%= form.url_field :poster_url, placeholder: "https://..." %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Salvar Alterações", class: "btn btn-primary" %>
+    <%= link_to "Cancelar", @video, class: "btn btn-secondary" %>
+  </div>
+<% end %>
