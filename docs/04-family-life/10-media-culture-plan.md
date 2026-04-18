@@ -105,8 +105,9 @@ Manage family media and cultural consumption with intentionality - balancing ent
 - [ ] Year and genre
 - [ ] **Automatic title extraction** from filename (clean formatting)
 - [ ] **IMDB/TMDB integration** for movie/series metadata lookup
-- [ ] **Open movie database API** for poster, plot, cast
 - [ ] **TVMaze API** for TV series episode info
+- [ ] **Wikipedia API** for plot summary and movie info
+- [ ] **Rotten Tomatoes/TMDB** for ratings and reviews
 - [ ] **Manual override** for all auto-extracted data
 
 #### 3. Organization
@@ -218,8 +219,10 @@ Manage family media and cultural consumption with intentionality - balancing ent
 - [ ] Cover images
 - [ ] Author and series tracking
 - [ ] Genre and tags
-- [ ] **Google Books API** for automatic metadata (title, author, description, cover)
+- [ ] **Google Books API** for title, author, description, cover
 - [ ] **Open Library API** for alternative metadata source
+- [ ] **Goodreads API** for ratings and reviews
+- [ ] **Wikipedia** for book summary and author info
 - [ ] **Manual override** for all auto-extracted data
 
 **Family Features**
