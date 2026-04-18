@@ -1,0 +1,113 @@
+digraph G {
+  overlap=scale
+  Indivíduo
+
+  Paciente -> Indivíduo
+  Médico -> Indivíduo
+  subgraph clusterSaude {
+    Tratamento -> Paciente
+    Tratamento -> Médico
+    Tratamento -> Cuidado
+    Tratamento -> Diagnóstico
+    Diagnóstico -> Exame
+    Diagnóstico -> Paciente
+    Tratamento -> Medicamento -> "Medicamento Produto"
+  } 
+  Cuidado -> "Lista de Tarefas"
+    "Medicamento Produto" -> Produto
+
+
+  "Lista de Tarefas" -> Tarefa
+  "Lista de Tarefas" -> Responsável
+
+  subgraph clusterPrioridades {
+   "Lista de Prioridades"
+   Necessidade
+  }
+  Tratamento -> Necessidade
+  "Lista de Prioridades" -> Necessidade
+  Compra -> Necessidade
+  Necessidade -> "Plano de Vida"
+  Necessidade -> "Marco da Vida"
+  Necessidade -> Membro
+  Matrícula -> Necessidade
+
+  Consumidor -> Indivíduo
+  subgraph clusterEconomia {
+    Pagamento -> Compra
+    Pagamento -> Cartão
+    Parcela -> Pagamento
+    Compra -> Consumidor
+    Compra -> Vendedor
+    Compra -> Produto
+    Produto -> Marca
+  }
+
+
+  Estudante -> Indivíduo
+  Professor -> Indivíduo
+  Autor -> Indivíduo
+  subgraph clusterEducação {
+    Matrícula -> Disciplina
+    Matrícula -> Estudante
+    Disciplina -> Curso
+    Disciplina -> Professor
+    Disciplina -> Matéria
+    "Lista de Leitura" -> Livro
+    Livro -> Autor
+    Disciplina -> "Lista de Leitura"
+    Matéria -> "Lista de Leitura"
+    Curso -> "Lista de Leitura"
+  }
+  "Lista de Leitura" -> "Lista de Tarefas"
+  Disciplina -> "Lista de Tarefas"
+
+  Fiel -> Indivíduo
+  subgraph clusterVidaEspiritual {
+    subgraph clusterPlano {
+      Plano -> Ano
+      Plano -> Mês
+      Plano -> Dia
+    }
+    "Plano de Vida" -> Fiel
+    Dia-> Devoção
+    "Plano de Vida" -> "Vida Sacramental"
+    Mês -> "Vida Sacramental"
+    "Plano de Vida" -> Plano
+    Devoção -> Fiel
+    "Vida Sacramental" -> Fiel
+  }
+  "Plano de Vida" -> "Lista de Tarefas"
+  "Plano de Vida" -> "Marco da Vida"
+  Evento -> "Plano de Vida"
+  Devoção -> "Lista de Tarefas"
+  Devoção -> "Lista de Leitura"
+
+  Responsável -> Indivíduo
+  subgraph clusterTarefas {
+    "Lista de Tarefas"
+    Tarefa -> Responsável
+  }
+
+  Participante -> Indivíduo
+  subgraph clusterEvento {
+    Evento -> Participante
+    Agendamento -> Calendário
+    Evento -> Agendamento
+    Evento -> Calendário
+  }
+
+  subgraph clusterDispensa {
+    Estoque
+  }
+
+  Estoque -> Produto
+
+  Membro -> Indivíduo
+  subgraph clusterFamilia {
+    Família -> Membro
+    "Marco da Vida" -> Membro
+  }
+  "Marco da Vida" -> Evento
+  "Marco da Vida" -> "Lista de Tarefas"
+}
