@@ -1,0 +1,33 @@
+<button type="button" class="btn btn-small btn-primary" onclick="this.nextElementSibling.style.display='block'; this.style.display='none'">
+  + Nova Anotação
+</button>
+
+<div id="new-note-form" style="display: none;" class="new-form">
+  <%= form_with(model: VideoNote.new, url: video_notes_path(video), data: { turbo_stream: true }) do |f| %>
+    <div class="field">
+      <%= f.label :timestamp_seconds, "Timestamp (opcional)" %>
+      <%= f.number_field :timestamp_seconds, min: 0, placeholder: "Segundos", class: "form-control" %>
+    </div>
+    <div class="field">
+      <%= f.label :content, "Anotação" %>
+      <%= f.text_area :content, rows: 3, required: true, placeholder: "Sua anotação...", class: "form-control" %>
+    </div>
+    <div class="actions">
+      <%= f.submit "Salvar", class: "btn btn-primary" %>
+      <button type="button" class="btn btn-small" onclick="this.closest('.new-form').style.display='none'; this.closest('.new-form').previousElementSibling.style.display='block'">Cancelar</button>
+    </div>
+  <% end %>
+</div>
+
+<% if notes.any? %>
+  <ul class="notes-list" id="notes-list">
+    <% notes.each do |note| %>
+      <li>
+        <span class="timestamp"><%= note.timestamp_seconds ? Time.at(note.timestamp_seconds).strftime("%H:%M:%S") : "" %></span>
+        <span class="content"><%= note.content %></span>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="empty" id="notes-empty">Nenhuma anotação ainda. Clique em "+ Nova Anotação" para adicionar.</p>
+<% end %>

@@ -3,12 +3,18 @@ class Video::NotesController < ApplicationController
 
   def create
     @note = @video.notes.build(note_params)
-    @note.user = current_user if defined?(current_user) && current_user
+    @note.user = current_user if defined?(current_user) && current_user.present?
     
     if @note.save
-      redirect_to @video, notice: 'Anotação adicionada.'
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("notes-section-content", partial: "videos/notes_section", locals: { video: @video, notes: @video.notes.order(timestamp_seconds: :asc) }) }
+        format.html { redirect_to @video, notice: 'Anotação adicionada.' }
+      end
     else
-      redirect_to @video, alert: 'Erro ao salvar anotação.'
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("notes-section-content", partial: "videos/notes_section", locals: { video: @video, notes: @video.notes.order(timestamp_seconds: :asc) }) }
+        format.html { redirect_to @video, alert: 'Erro ao salvar anotação.' }
+      end
     end
   end
 

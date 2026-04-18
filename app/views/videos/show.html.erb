@@ -1,5 +1,8 @@
 <% content_for :title, @video.title %>
 
+<%= content_tag :div, nil, id: "video-resume-data", 
+      data: { video_id: @video.id, position: @video.playback_position || 0 } %>
+
 <div class="video-show">
   <%# Video Header - Title and metadata above video %>
   <div class="video-header">
@@ -32,6 +35,7 @@
     <% if @video.file.attached? || @video.file_path.present? || @video.external_url.present? %>
       <video 
         id="video-player"
+        data-controller="video-resume"
         width="<%= @video.resolution.present? ? @video.resolution.split('x').first : 1280 %>" 
         height="<%= @video.resolution.present? ? @video.resolution.split('x').last : 720 %>"
         controls="controls" 
@@ -40,14 +44,17 @@
         crossorigin="anonymous"
         poster="<%= @video.poster_url if @video.poster_url.present? %>"
         data-video-id="<%= @video.id %>"
+        data-video-resume-position-value="<%= @video.playback_position || 0 %>"
         style="max-height: 80vh; width: 100%; background: #000;">
         
         <% if @video.file.attached? %>
-          <source src="<%= url_for(@video.file) %>" type="<%= @video.file.content_type %>">
+          <source src="<%= url_for(@video.file) %>" type="<%= @video.file.content_type || 'video/mp4' %>">
         <% elsif @video.external_url.present? %>
           <source src="<%= @video.external_url %>" type="video/mp4">
         <% elsif @video.file_path.present? %>
           <source src="<%= videos_path(@video) %>/stream" type="video/mp4">
+        <% else %>
+          <source src="" type="">
         <% end %>
         
         Seu navegador não suporta reprodução de vídeo.
@@ -65,81 +72,27 @@
     </div>
   <% end %>
 
-  <%# Interactive Sections - Notes and Discussion %>
+<%# Interactive Sections - Notes and Discussion %>
   <div class="video-sections">
     <div class="section notes-section">
       <div class="section-header">
         <h2>Anotações</h2>
-        <button type="button" class="btn btn-small btn-primary" onclick="document.getElementById('new-note-form').style.display='block'">
-          + Nova Anotação
-        </button>
       </div>
       
-      <div id="new-note-form" style="display: none;" class="new-form">
-        <%= form_with(model: VideoNote.new, url: video_notes_path(@video), local: true) do |f| %>
-          <div class="field">
-            <%= f.label :timestamp_seconds, "Timestamp (opcional)" %>
-            <%= f.number_field :timestamp_seconds, min: 0, placeholder: "Segundos", class: "form-control" %>
-          </div>
-          <div class="field">
-            <%= f.label :content, "Anotação" %>
-            <%= f.text_area :content, rows: 3, required: true, placeholder: "Sua anotação...", class: "form-control" %>
-          </div>
-          <div class="actions">
-            <%= f.submit "Salvar", class: "btn btn-primary" %>
-            <button type="button" class="btn btn-small" onclick="document.getElementById('new-note-form').style.display='none'">Cancelar</button>
-          </div>
-        <% end %>
+      <div id="notes-section-content">
+        <%= render partial: "videos/notes_section", locals: { video: @video, notes: @notes } %>
       </div>
-      
-      <% if @notes.any? %>
-        <ul class="notes-list">
-          <% @notes.each do |note| %>
-            <li>
-              <span class="timestamp"><%= note.timestamp_seconds ? Time.at(note.timestamp_seconds).strftime("%H:%M:%S") : "" %></span>
-              <span class="content"><%= note.content %></span>
-            </li>
-          <% end %>
-        </ul>
-      <% else %>
-        <p class="empty">Nenhuma anotação ainda. Clique em "+ Nova Anotação" para adicionar.</p>
-      <% end %>
     </div>
 
     <div class="section discussion-section">
       <div class="section-header">
         <h2>Discussão</h2>
-        <button type="button" class="btn btn-small btn-primary" onclick="document.getElementById('new-comment-form').style.display='block'">
-          + Novo Comentário
-        </button>
       </div>
       
-      <div id="new-comment-form" style="display: none;" class="new-form">
-        <%= form_with(model: VideoComment.new, url: video_comments_path(@video), local: true) do |f| %>
-          <div class="field">
-            <%= f.label :content, "Comentário" %>
-            <%= f.text_area :content, rows: 3, required: true, placeholder: "Seu comentário...", class: "form-control" %>
-          </div>
-          <div class="actions">
-            <%= f.submit "Postar", class: "btn btn-primary" %>
-            <button type="button" class="btn btn-small" onclick="document.getElementById('new-comment-form').style.display='none'">Cancelar</button>
-          </div>
-        <% end %>
+      <div id="comments-section-content">
+        <%= render partial: "videos/comments_section", locals: { video: @video, comments: @comments } %>
       </div>
-      
-      <% if @comments.any? %>
-        <ul class="comments-list">
-          <% @comments.each do |comment| %>
-            <li>
-              <span class="author"><%= comment.user&.name || "Usuário" %></span>
-              <span class="content"><%= comment.content %></span>
-              <span class="date"><%= comment.created_at.strftime("%d/%m/%Y") %></span>
-            </li>
-          <% end %>
-        </ul>
-      <% else %}
-        <p class="empty">Nenhum comentário ainda. Clique em "+ Novo Comentário" para iniciar.</p>
-      <% end %>
     </div>
   </div>
+</div>
 </div>

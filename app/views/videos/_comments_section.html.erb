@@ -1,0 +1,30 @@
+<button type="button" class="btn btn-small btn-primary" onclick="this.nextElementSibling.style.display='block'; this.style.display='none'">
+  + Novo Comentário
+</button>
+
+<div id="new-comment-form" style="display: none;" class="new-form">
+  <%= form_with(model: VideoComment.new, url: video_comments_path(video), data: { turbo_stream: true }) do |f| %>
+    <div class="field">
+      <%= f.label :content, "Comentário" %>
+      <%= f.text_area :content, rows: 3, required: true, placeholder: "Seu comentário...", class: "form-control" %>
+    </div>
+    <div class="actions">
+      <%= f.submit "Postar", class: "btn btn-primary" %>
+      <button type="button" class="btn btn-small" onclick="this.closest('.new-form').style.display='none'; this.closest('.new-form').previousElementSibling.style.display='block'">Cancelar</button>
+    </div>
+  <% end %>
+</div>
+
+<% if comments.any? %>
+  <ul class="comments-list" id="comments-list">
+    <% comments.each do |comment| %>
+      <li>
+        <span class="author"><%= comment.user&.name || "Usuário" %></span>
+        <span class="content"><%= comment.content %></span>
+        <span class="date"><%= comment.created_at.strftime("%d/%m/%Y") %></span>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="empty" id="comments-empty">Nenhum comentário ainda. Clique em "+ Novo Comentário" para iniciar.</p>
+<% end %>
