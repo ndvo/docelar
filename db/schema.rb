@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_16_000527) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_17_000000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -587,6 +587,101 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_16_000527) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  create_table "video_categories", force: :cascade do |t|
+    t.string "name"
+    t.string "color"
+    t.integer "parent_id"
+    t.integer "position", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["parent_id"], name: "index_video_categories_on_parent_id"
+  end
+
+  create_table "video_comments", force: :cascade do |t|
+    t.text "content"
+    t.integer "timestamp_seconds"
+    t.boolean "is_spoiler", default: false
+    t.integer "video_id"
+    t.integer "user_id"
+    t.integer "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["parent_id"], name: "index_video_comments_on_parent_id"
+    t.index ["user_id"], name: "index_video_comments_on_user_id"
+    t.index ["video_id"], name: "index_video_comments_on_video_id"
+  end
+
+  create_table "video_notes", force: :cascade do |t|
+    t.text "content"
+    t.integer "timestamp_seconds"
+    t.integer "video_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_video_notes_on_user_id"
+    t.index ["video_id"], name: "index_video_notes_on_video_id"
+  end
+
+  create_table "video_playlist_items", force: :cascade do |t|
+    t.integer "playlist_id"
+    t.integer "video_id"
+    t.integer "position", default: 0
+    t.index ["playlist_id"], name: "index_video_playlist_items_on_playlist_id"
+    t.index ["video_id"], name: "index_video_playlist_items_on_video_id"
+  end
+
+  create_table "video_playlists", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.boolean "is_shared", default: false
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_video_playlists_on_user_id"
+  end
+
+  create_table "video_taggings", force: :cascade do |t|
+    t.integer "video_id"
+    t.integer "tag_id"
+    t.index ["tag_id"], name: "index_video_taggings_on_tag_id"
+    t.index ["video_id"], name: "index_video_taggings_on_video_id"
+  end
+
+  create_table "video_tags", force: :cascade do |t|
+    t.string "name"
+    t.string "color"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "videos", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.string "file_path"
+    t.string "external_url"
+    t.boolean "is_external", default: false
+    t.integer "duration_seconds"
+    t.string "thumbnail_path"
+    t.string "video_format"
+    t.string "resolution"
+    t.integer "file_size"
+    t.string "imdb_id"
+    t.string "tmdb_id"
+    t.integer "release_year"
+    t.string "genre"
+    t.text "plot_summary"
+    t.string "poster_url"
+    t.integer "video_category_id"
+    t.integer "user_id"
+    t.integer "playback_position", default: 0
+    t.boolean "watched", default: false
+    t.datetime "watched_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_videos_on_user_id"
+    t.index ["video_category_id"], name: "index_videos_on_video_category_id"
+  end
+
   create_table "whens", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -638,4 +733,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_16_000527) do
   add_foreign_key "tagged_photos", "tags"
   add_foreign_key "tasks", "responsibles"
   add_foreign_key "tasks", "tasks"
+  add_foreign_key "video_categories", "video_categories", column: "parent_id"
+  add_foreign_key "video_comments", "users"
+  add_foreign_key "video_comments", "video_comments", column: "parent_id"
+  add_foreign_key "video_comments", "videos"
+  add_foreign_key "video_notes", "users"
+  add_foreign_key "video_notes", "videos"
+  add_foreign_key "video_playlist_items", "video_playlists", column: "playlist_id"
+  add_foreign_key "video_playlist_items", "videos"
+  add_foreign_key "video_playlists", "users"
+  add_foreign_key "video_taggings", "video_tags", column: "tag_id"
+  add_foreign_key "video_taggings", "videos"
+  add_foreign_key "videos", "users"
+  add_foreign_key "videos", "video_categories"
 end

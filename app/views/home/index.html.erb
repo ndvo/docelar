@@ -53,6 +53,14 @@
       <h3>Galeria</h3>
       <p class="card-count"><%= recent_photos %> <%= recent_photos == 1 ? 'fotos' : 'fotos' %></p>
     <% end %>
+
+    <%= link_to videos_path, class: 'quick-card' do %>
+      <div class="card-icon">
+        <span style="font-size: 48px;">🎬</span>
+      </div>
+      <h3>Vídeos</h3>
+      <p class="card-count"><%= Video.count %> <%= Video.count == 1 ? 'vídeo' : 'vídeos' %></p>
+    <% end %>
   </div>
 </section>
 

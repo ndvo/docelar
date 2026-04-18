@@ -1,0 +1,75 @@
+<div class="video-show">
+  <div class="video-player">
+    <% if @video.is_external && @video.external_url.present? %>
+      <video controls crossorigin="anonymous" playsinline>
+        <source src="<%= @video.external_url %>" type="video/mp4">
+        Your browser does not support video playback.
+      </video>
+    <% elsif @video.file_path.present? %>
+      <video controls crossorigin="anonymous" playsinline data-video-id="<%= @video.id %>">
+        <source src="<%= videos_path(@video) %>/play" type="video/mp4">
+        Your browser does not support video playback.
+      </video>
+    <% else %>
+      <div class="no-video">No video file available</div>
+    <% end %>
+  </div>
+
+  <div class="video-details">
+    <h1><%= @video.title %></h1>
+    
+    <% if @video.genre || @video.release_year %>
+      <p class="video-meta">
+        <%= @video.release_year if @video.release_year %>
+        <%= " • " + @video.genre if @video.genre %>
+      </p>
+    <% end %>
+
+    <% if @video.plot_summary.present? %>
+      <div class="plot-summary">
+        <h3>Summary</h3>
+        <p><%= @video.plot_summary %></p>
+      </div>
+    <% end %>
+
+    <div class="video-actions">
+      <%= button_to "Mark as Watched", mark_watched_video_path(@video), method: :post unless @video.watched %>
+      <%= link_to "Edit", edit_video_path(@video), class: "btn btn-small" %>
+      <%= link_to "Delete", @video, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-small btn-danger" %>
+    </div>
+  </div>
+
+  <div class="video-sections">
+    <div class="section">
+      <h2>Notes</h2>
+      <% if @notes.any? %>
+        <ul class="notes-list">
+          <% @notes.each do |note| %>
+            <li>
+              <span class="timestamp"><%= note.timestamp_seconds ? Time.at(note.timestamp_seconds).strftime("%H:%M:%S") : "" %></span>
+              <span class="content"><%= note.content %></span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="empty">No notes yet.</p>
+      <% end %>
+    </div>
+
+    <div class="section">
+      <h2>Discussion</h2>
+      <% if @comments.any? %>
+        <ul class="comments-list">
+          <% @comments.each do |comment| %>
+            <li>
+              <span class="author"><%= comment.user&.name || "User" %></span>
+              <span class="content"><%= comment.content %></span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="empty">No comments yet.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -62,9 +62,10 @@ Manage family media and cultural consumption with intentionality - balancing ent
 - [x] Photo galleries
 - [x] Photo import (zip, Google Photos)
 - [x] Book library
+- [x] Video library - core implementation (2026-04-17)
 
 ### In Progress
-- [ ] Video library
+- [ ] Video library - advanced features (metadata API, playlists)
 - [ ] Reading tracking
 
 ### Video Library Detailed Plan

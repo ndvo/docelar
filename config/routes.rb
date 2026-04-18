@@ -86,6 +86,18 @@ Rails.application.routes.draw do
 
   resources :photos
 
+  resources :videos do
+    member do
+      get :play
+      get :stream
+      post :update_position
+      post :mark_watched
+    end
+    collection do
+      post :import
+    end
+  end
+
   namespace :oauth do
     get :google_photos, to: 'google_photos#connect', as: 'google_photos'
     get :google_photos_callback, to: 'google_photos#callback', as: 'google_photos_callback'

@@ -1,0 +1,42 @@
+<h1>Videos</h1>
+
+<div class="video-actions">
+  <%= link_to "Add Video", new_video_path, class: "btn btn-primary" %>
+  <%= link_to "Import from Folder", import_videos_path, method: :post, class: "btn btn-secondary" %>
+</div>
+
+<% if @categories.any? %>
+  <div class="categories">
+    <%= link_to "All", videos_path, class: "btn btn-small" %>
+    <% @categories.each do |category| %>
+      <%= link_to category.name, videos_path(category: category.id), class: "btn btn-small" %>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="video-grid">
+  <% @videos.each do |video| %>
+    <div class="video-card">
+      <% if video.poster_url.present? %>
+        <%= image_tag video.poster_url, alt: video.title, class: "video-thumbnail" %>
+      <% else %>
+        <div class="video-placeholder">🎬</div>
+      <% end %>
+      <div class="video-info">
+        <h3><%= link_to video.title, video %></h3>
+        <% if video.duration_seconds %>
+          <span class="duration"><%= video.formatted_duration %></span>
+        <% end %>
+        <% if video.progress_percentage > 0 && video.progress_percentage < 100 %>
+          <div class="progress-bar">
+            <div class="progress" style="width: <%= video.progress_percentage %>%"></div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if @videos.empty? %>
+  <p class="empty-state">No videos yet. <%= link_to "Add your first video", new_video_path %>.</p>
+<% end %>

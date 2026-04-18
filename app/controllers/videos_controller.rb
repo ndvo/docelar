@@ -1,0 +1,92 @@
+class VideosController < ApplicationController
+  before_action :set_video, only: [:show, :edit, :update, :destroy, :play, :update_position]
+
+  def index
+    @videos = Video.recent
+    @categories = VideoCategory.all
+  end
+
+  def show
+    @comments = @video.comments.order(created_at: :desc)
+    @notes = @video.notes.order(timestamp_seconds: :asc)
+  end
+
+  def new
+    @video = Video.new
+    @categories = VideoCategory.all
+  end
+
+  def create
+    @video = Video.new(video_params)
+    if @video.save
+      redirect_to @video, notice: 'Video was successfully created.'
+    else
+      @categories = VideoCategory.all
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  def edit
+    @categories = VideoCategory.all
+  end
+
+  def update
+    if @video.update(video_params)
+      redirect_to @video, notice: 'Video was successfully updated.'
+    else
+      @categories = VideoCategory.all
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @video.destroy
+    redirect_to videos_url, notice: 'Video was successfully deleted.'
+  end
+
+  def play
+    @video.update(playback_position: params[:position].to_i) if params[:position].present?
+    render json: { 
+      video: @video, 
+      stream_url: @video.is_external ? @video.external_url : nil
+    }
+  end
+
+  def stream
+    return redirect_to @video.external_url if @video.is_external && @video.external_url.present?
+    
+    if @video.file_path.present? && File.exist?(@video.file_path)
+      send_file @video.file_path, type: 'video/mp4', disposition: :inline
+    else
+      head :not_found
+    end
+  end
+
+  def update_position
+    @video.update(playback_position: params[:position].to_i)
+    render json: { success: true }
+  end
+
+  def mark_watched
+    @video = Video.find(params[:id])
+    @video.update(watched: true, watched_at: Time.current)
+    redirect_to @video, notice: 'Video marked as watched.'
+  end
+
+  def import
+    VideoImportJob.perform_later(params[:folder_path])
+    redirect_to videos_url, notice: 'Video import started.'
+  end
+
+  private
+
+  def set_video
+    @video = Video.find(params[:id])
+  end
+
+  def video_params
+    params.require(:video).permit(:title, :description, :file_path, :external_url, :is_external,
+                                   :duration_seconds, :video_format, :resolution, :release_year,
+                                   :genre, :plot_summary, :poster_url, :video_category_id, :tag_names)
+  end
+end
