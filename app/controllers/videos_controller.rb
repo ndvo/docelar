@@ -74,6 +74,10 @@ class VideosController < ApplicationController
     render json: { success: true }
   end
 
+  def position
+    render json: { position: @video.playback_position || 0 }
+  end
+
   def mark_watched
     @video = Video.find(params[:id])
     @video.update(watched: true, watched_at: Time.current)

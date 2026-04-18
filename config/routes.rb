@@ -90,6 +90,7 @@ Rails.application.routes.draw do
     member do
       get :play
       get :stream
+      get :position
       post :update_position
       post :mark_watched
     end
