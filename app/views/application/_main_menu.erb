@@ -1,12 +1,13 @@
 <nav class="main-nav">
   <input type="checkbox" id="nav-toggle" class="nav-toggle" />
 
-  <label class="nav-toggle-label" for="nav-toggle" aria-label="Menu">
-    <span class="hamburger">
+  <label class="nav-toggle-label" for="nav-toggle">
+    <span class="hamburger" aria-hidden="true">
       <span></span>
       <span></span>
       <span></span>
     </span>
+    <span class="sr-only">Menu</span>
   </label>
 
   <div class="nav-overlay"></div>
@@ -14,8 +15,9 @@
   <div class="nav-menu">
     <div class="nav-header">
       <span class="nav-title">Menu</span>
-      <label class="nav-close" for="nav-toggle" aria-label="Fechar">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <label class="nav-close" for="nav-toggle">
+        <span class="sr-only">Fechar</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>

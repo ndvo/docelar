@@ -64,25 +64,46 @@ def show_help
 
   def run_w3c_validation
     puts "=== W3C HTML Validation ==="
-    begin
-      require 'w3c_validators'
-      validator = W3CValidators::NuValidator.new
-      
-      # Check homepage
-      require 'net/http'
-      html = Net::HTTP.get(URI('http://localhost:3000/'))
-      results = validator.validate_text(html)
-      
-      if results.errors.empty?
-        puts "✓ Homepage HTML validates successfully"
-      else
-        puts "⚠ HTML validation errors found:"
-        results.errors.first(5).each do |err|
-          puts "  - #{err.message[0..100]}"
-        end
-      end
-    rescue => e
-      puts "⚠ W3C validation skipped: #{e.message}"
+    puts "Note: Requires Rails server running on localhost:3000"
+    puts
+    
+    script_file = "/tmp/w3c_validate.rb"
+    script = <<'RUBY'
+require 'w3c_validators'
+require 'net/http'
+
+# Follow redirects manually
+uri = URI('http://localhost:3000/')
+response = Net::HTTP.get_response(uri)
+while response.code == '302' || response.code == '301'
+  uri = URI(response['location'])
+  response = Net::HTTP.get_response(uri)
+end
+
+validator = W3CValidators::NuValidator.new
+results = validator.validate_text(response.body)
+
+if results.errors.empty?
+  puts "Homepage HTML validates successfully"
+else
+  # Filter out Rails authenticity_token warning (autocomplete on hidden input is intentional)
+  real_errors = results.errors.reject { |e| e.message.include?('autocomplete') && e.message.include?('hidden') }
+  
+  if real_errors.empty?
+    puts "✓ HTML validates (only Rails-generated warnings)"
+  else
+    puts "HTML validation errors found (#{real_errors.count}):"
+    real_errors.first(10).each { |e| puts "  - #{e.message[0..120]}" }
+  end
+end
+RUBY
+    
+    File.write(script_file, script)
+    result = system("bundle exec ruby -rw3c_validators #{script_file} 2>&1")
+    File.delete(script_file) if File.exist?(script_file)
+    
+    unless result
+      puts "⚠ W3C validator not available or server not running"
       puts "  (Start server with: bin/rails server)"
     end
   end
