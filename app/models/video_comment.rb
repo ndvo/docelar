@@ -6,10 +6,3 @@ class VideoComment < ApplicationRecord
 
   validates :content, presence: true
 end
-
-class VideoNote < ApplicationRecord
-  belongs_to :video
-  belongs_to :user
-
-  validates :content, presence: true
-end
