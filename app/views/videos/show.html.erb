@@ -1,19 +1,19 @@
 <% content_for :title, @video.title %>
 
 <div class="video-show">
-  <div class="video-player">
+  <div class="video-player" style="max-height: 80vh;">
     <% if @video.file.attached? %>
-      <video controls crossorigin="anonymous" playsinline data-video-id="<%= @video.id %>">
+      <video controls crossorigin="anonymous" playsinline data-video-id="<%= @video.id %>" style="max-height: 80vh;">
         <source src="<%= url_for(@video.file) %>" type="<%= @video.file.content_type %>">
         Seu navegador não suporta reprodução de vídeo.
       </video>
     <% elsif @video.is_external && @video.external_url.present? %>
-      <video controls crossorigin="anonymous" playsinline>
+      <video controls crossorigin="anonymous" playsinline style="max-height: 80vh;">
         <source src="<%= @video.external_url %>" type="video/mp4">
         Seu navegador não suporta reprodução de vídeo.
       </video>
     <% elsif @video.file_path.present? %>
-      <video controls crossorigin="anonymous" playsinline data-video-id="<%= @video.id %>">
+      <video controls crossorigin="anonymous" playsinline data-video-id="<%= @video.id %>" style="max-height: 80vh;">
         <source src="<%= videos_path(@video) %>/stream" type="video/mp4">
         Seu navegador não suporta reprodução de vídeo.
       </video>
