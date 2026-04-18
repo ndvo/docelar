@@ -17,6 +17,13 @@ class VideosController < ApplicationController
   end
 
   def create
+    # Handle new category creation
+    if params[:new_category_name].present?
+      parent_id = params[:new_category_parent_id].presence
+      category = VideoCategory.create!(name: params[:new_category_name], parent_id: parent_id)
+      params[:video][:video_category_id] = category.id
+    end
+
     @video = Video.new(video_params)
     if @video.save
       redirect_to @video, notice: 'Video was successfully created.'

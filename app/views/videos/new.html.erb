@@ -42,6 +42,21 @@
   <div class="field">
     <%= form.label :video_category_id, "Categoria" %>
     <%= form.select :video_category_id, options_from_collection_for_select(@categories, :id, :name), include_blank: "Selecione..." %>
+    <span>ou</span>
+    <%= link_to "Criar nova categoria", "#", id: "new-category-toggle", onclick: "document.getElementById('new-category-fields').style.display='block'; document.getElementById('video_video_category_id').value=''; return false;" %>
+  </div>
+
+  <div id="new-category-fields" style="display: none;" class="field">
+    <label for="new_category_name">Nova Categoria</label>
+    <input type="text" name="new_category_name" id="new_category_name" placeholder="Nome da nova categoria">
+    <% if @categories.any? %>
+      <select name="new_category_parent_id" id="new_category_parent_id">
+        <option value="">Categoria pai (opcional)</option>
+        <% @categories.each do |cat| %>
+          <option value="<%= cat.id %>"><%= cat.name %></option>
+        <% end %>
+      </select>
+    <% end %>
   </div>
 
   <div class="field">
