@@ -55,4 +55,24 @@
   <div class="actions">
     <%= f.submit "Salvar", class: "btn btn-primary" %>
   </div>
+
+  <% if appointment.persisted? %>
+  <details class="reminder-settings">
+    <summary>🔔 Lembrete</summary>
+    <div class="field">
+      <%= f.label :reminder_enabled, "Ativar lembrete" %>
+      <%= f.check_box :reminder_enabled %>
+    </div>
+    <div class="field">
+      <%= f.label :reminder_days_before, "Dias antes do lembrete" %>
+      <%= f.select :reminder_days_before, options_for_select([1, 2, 3, 5, 7], appointment.reminder_days_before || 1) %>
+      <span class="help">Dias antes da consulta para enviar o lembrete</span>
+    </div>
+    <% if appointment.reminder_sent_at %>
+    <p class="help">Lembrete enviado em <%= l(appointment.reminder_sent_at, format: :short) %></p>
+    <% else %>
+    <p class="help">Lembrete ainda não enviado</p>
+    <% end %>
+  </details>
+  <% end %>
 <% end %>

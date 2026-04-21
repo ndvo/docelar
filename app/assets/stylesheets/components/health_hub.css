@@ -310,3 +310,41 @@
   display: flex;
   gap: var(--margin-small);
 }
+
+/* Reminder Settings */
+.reminder-settings {
+  margin-top: var(--margin-normal);
+  padding: var(--margin-normal);
+  background: var(--med-surface);
+  border: 1px solid var(--med-border);
+  border-radius: 0.5em;
+}
+
+.reminder-settings summary {
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--hub-accent);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--margin-tiny);
+}
+
+.reminder-settings summary::before {
+  content: "🔔";
+}
+
+.reminder-settings[open] summary::before {
+  content: "🔔";
+}
+
+.reminder-settings .field {
+  margin-top: var(--margin-normal);
+}
+
+.reminder-settings .help {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--med-text-secondary);
+  margin-top: var(--margin-tiny);
+}
