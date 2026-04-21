@@ -122,6 +122,10 @@ The Doce Lar application is built around **11 pillars** organized into **4 major
 - [x] Core expense tracking
 - [x] Basic UI
 - [x] Test coverage
+- [x] Medical/health module
+- [x] Photo galleries
+- [x] Basic video support
+- [x] Medication tracking
 
 ### Phase 2: User Experience
 - [x] Homepage redesign
@@ -129,18 +133,27 @@ The Doce Lar application is built around **11 pillars** organized into **4 major
 - [ ] Mobile optimization
 - [ ] Dashboard overview
 
-### Phase 3: Insights
-- [ ] Budget reports
-- [ ] Spending analysis
-- [ ] Goal tracking
-- [ ] Notifications
+### Phase 3: Growth & Development
+- [x] Video library with HTML5 streaming
+- [x] Audio enhancement (Hush AI)
+- [ ] Baby development tracking
+- [ ] Religious life tracking
+- [ ] Development milestones
 
 ### Phase 4: Family
 - [ ] Multi-user support
 - [ ] Shared access
 - [ ] Role-based permissions
+- [x] Family calendar with events
+- [x] ZIP import
 
-### Phase 5: Accessibility & Quality
+### Phase 5: Integration
+- [ ] Gallery integration (photos/videos unified)
+- [ ] Baby + Religious integration
+- [ ] Calendar integration
+- [ ] Media tagging system
+
+### Phase 6: Accessibility & Quality
 - [ ] WCAG 2.1 AA compliance
 - [ ] PWA support (mobile, TV)
 - [ ] Comprehensive test coverage
@@ -179,8 +192,20 @@ The Doce Lar application is built around **11 pillars** organized into **4 major
 - [x] Google Photos - Import integration
 - [x] Zip/Tar Upload - Import from compressed files
 - [x] Articles - Content management
-- [ ] Video support
+- [x] Video support - Video library with streaming
+- [x] Audio enhancement - Hush AI noise reduction
+- [x] Video cropping - Frame selection for borders
 - [ ] Photo editing
+
+### Baby & Religious Module
+- [ ] Baby development tracking
+- [ ] Vaccination calendar (Brazilian)
+- [ ] Growth charts
+- [ ] Life events (baby shower, primeiras)
+- [ ] Religious profile
+- [ ] Sacrament tracking (baptism, communion, confirmation)
+- [ ] Catechism tracking
+- [ ] Family prayers
 
 ### Learning Module
 - [ ] Library - Family book collection
@@ -205,6 +230,19 @@ The Doce Lar application is built around **11 pillars** organized into **4 major
 10. **Library** - Family book collection with reading tracking
 11. **Calibre Integration** - Import e-books from Calibre
 12. **Kindle/Goodreads** - Import reading data
+13. **Gallery Integration** - Unified media across all modules
+
+## Recent Implementations
+
+- Video library with HTML5 streaming ✓
+- Audio enhancement with Hush AI DeepFilterNet ✓
+- Video reprocessing with audio enhancement ✓
+- Video frame cropping ✓
+- ZIP import for photos ✓
+- Baby development plan (vaccination calendar) ✓
+- Religious life tracking plan ✓
+- Baby cultural events (cha de bébé, primeiras) ✓
+- Gallery integration plan ✓
 
 ## Design Improvements Needed
 

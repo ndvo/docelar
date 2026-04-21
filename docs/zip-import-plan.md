@@ -1,6 +1,8 @@
 # Zip/Tar.gz Import Plan
 
-Plan for adding zip/tar.gz file upload as a third photo source for the gallery.
+Plan for adding zip/tar.gz file upload as a photo source for the gallery.
+
+**Status**: Implementation complete for photos. Videos use a separate workflow.
 
 ## Overview
 
@@ -46,6 +48,16 @@ OAuth::GooglePhotosAlbumsController
 2. Extract to temporary directory, process, then clean up
 3. Use existing Photo model and variant generation
 4. Reuse GooglePhotosImportService patterns where applicable
+
+## Current Status
+
+| Task | Status |
+|------|--------|
+| Add rubyzip to Gemfile | ✅ Done |
+| ZipImportService | ✅ Done |
+| upload_photos route | ✅ Done |
+| upload_photos action | ✅ Done |
+| Gallery show integration | ✅ Done |
 
 ## Implementation Plan
 

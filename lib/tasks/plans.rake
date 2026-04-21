@@ -231,28 +231,34 @@ namespace :plans do
     if File.exist?('ROADMAP.md')
       content = File.read('ROADMAP.md')
 
-      phases = {
-        'Phase 1: Foundation' => { status: '[OK]', next: 'Production deployment', items: [] },
-        'Phase 2: User Experience' => { status: '[..]', next: 'Gallery UX, mobile optimization', items: ['Better forms UX', 'Mobile optimization'] },
-        'Phase 3: Insights' => { status: '[-]', next: 'Budget reports, spending analysis', items: ['Dashboard overview', 'Budget reports'] },
-        'Phase 4: Family' => { status: '[-]', next: 'Multi-user support, shared access', items: ['User roles', 'Shared galleries'] },
-        'Phase 5: Accessibility & Quality' => { status: '[-]', next: 'WCAG compliance, PWA support', items: ['Skip links', 'Focus management'] }
-      }
+      sections = content.scan(/^### Phase (\d+):\s+(.+)$/)
+      
+      if sections.any?
+        sections.each do |(num, name)|
+          phase_title = "### Phase #{num}: #{name}"
+          section = content[/#{phase_title}.*?(?=^### Phase|^## |\z)/m]
+          next unless section
 
-      phases.each do |phase, info|
-        section = content[/### #{phase}.*?(?=###|\z)/m]
-        next unless section
+          completed = section.scan(/-\s*\[x\]/).count
+          total = section.scan(/-\s*\[/).count
+          pct = total > 0 ? ((completed.to_f / total) * 100).round : 0
 
-        completed = section.scan(/^\s*-\s*\[x\]/).count
-        total = section.scan(/^\s*-\s*\[/).count
-        puts "  #{info[:status]} #{phase.split(':').last.strip}: #{completed}/#{total} items"
-        puts "     Next: #{info[:next]}"
+          status = if completed == total && total > 0
+            '[OK]'
+          elsif completed > 0
+            '[..]'
+          else
+            '[-]'
+          end
+
+          puts "  #{status} Phase #{num}: #{name.strip} - #{completed}/#{total} (#{pct}%)"
+        end
       end
 
       puts "\nUPCOMING PHASE ITEMS:\n\n"
-      planned = content.scan(/^- \[ \] (.+)/).flatten
-      planned.first(5).each do |item|
-        puts "  [ ] #{item.strip}"
+      planned = content.scan(/^- \[ \] (.+)/).first(5)
+      planned.each do |item|
+        puts "  [ ] #{item[0].strip}"
       end
     else
       puts '  [--] ROADMAP.md not found'

@@ -2,6 +2,34 @@
 
 Plan for family photos, videos, books, and entertainment consumption.
 
+## Dependencies
+
+### Video Library Audio Enhancement
+
+**System Packages (required):**
+```bash
+sudo apt-get update
+sudo apt-get install -y ffmpeg python3-pip python3-venv
+```
+
+**Python Packages (optional, for Hush AI enhancement):**
+```bash
+pip install --user torch torchaudio numpy soundfile scipy DeepFilterLib
+```
+
+or using apt:
+```bash
+sudo apt-get install python3-torch python3-torchaudio python3-pip
+```
+
+**Python Model Download:**
+- Hush: Download from https://huggingface.co/weya-ai/hush
+- Place at: `Hush/deployment/models/model_best.ckpt`
+
+**Alternative Models:**
+- DPDFNet ONNX: Use `advanced_dfnet16k_model_best_onnx.tar.gz` in `deployment/models/`
+
+
 ## Overview
 
 Manage family media and cultural consumption with intentionality - balancing entertainment, education, and family bonding while respecting each family member's developmental needs.
@@ -63,15 +91,41 @@ Manage family media and cultural consumption with intentionality - balancing ent
 - [x] Photo import (zip, Google Photos)
 - [x] Book library
 - [x] Video library - core implementation (2026-04-17)
+- [x] Video library - media gallery design (2026-04-18)
+- [x] Video library - resume playback (2026-04-18)
+- [x] Video library - Turbo notes/comments (2026-04-18)
 
 ### In Progress
-- [x] Video library - resume from last position (2026-04-17)
+- [ ] Video library - audio enhancement (noise removal)
 - [ ] Video library - advanced features (metadata API, playlists)
 - [ ] Reading tracking
 
 ### Video Library Detailed Plan
 
-#### 1. Video Sources
+#### 0. Audio Enhancement (Noise Removal)
+
+**Feature**: Remove background noise from videos, isolating human voices.
+
+**Use Cases**:
+- Family videos with background noise (TV, fan, traffic, dog barking)
+- Better clarity for recording voiceovers
+- Improve audio for elderly family members
+
+**Implementation**:
+- [x] Add `enhance_audio` boolean field to videos table
+- [x] Add "Enhance Audio" checkbox in video form
+- [x] Use FFmpeg with voice isolation filters
+- [x] Process async in background job
+- [x] Store processed version separately from original
+- [x] Toggle between original/enhanced in player
+
+**AI Enhancement (Future)**:
+- Research complete: Found several lightweight models (Hush, GTCRN, DPDFNet)
+- All require Python dependencies + model download
+- Best candidate: **DPDFNet** - simpler ONNX inference, ~2-8MB models
+- Alternative: **Hush** - but complex API with DeepFilterLib
+
+For now, the FFmpeg-based enhancement is working. AI models can be added in a future iteration.
 
 **Local Videos**
 - [ ] Configure server folder path in settings (admin)
