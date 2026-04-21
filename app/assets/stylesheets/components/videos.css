@@ -978,3 +978,73 @@
   color: var(--video-accent);
   font-weight: 500;
 }
+
+/* Crop Selector */
+.crop-selector {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  width: 480px;
+}
+
+.crop-selector video {
+  width: 100%;
+  display: block;
+}
+
+.crop-selector .crop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.2s;
+  cursor: crosshair;
+  box-sizing: border-box;
+}
+
+.crop-selection {
+  position: absolute;
+  border: 2px solid #fff;
+  background: transparent;
+  display: none;
+  pointer-events: none;
+}
+
+.crop-selection {
+  position: absolute;
+  border: 2px solid #fff;
+  background: transparent;
+  display: none;
+  pointer-events: none;
+}
+
+.crop-controls {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.crop-inputs {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.crop-inputs label {
+  font-size: 0.75rem;
+  color: var(--med-text-secondary);
+}
+
+.crop-inputs input[type="number"] {
+  width: 60px;
+  padding: 0.25rem;
+  font-size: 0.875rem;
+}
+
+#crop-clear {
+  margin-left: auto;
+}

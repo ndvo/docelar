@@ -58,6 +58,36 @@
         <p class="help">Remove ruído de fundo para destacar vozes humanas</p>
       <% end %>
     </div>
+
+    <div class="field">
+      <%= form.label :crop, "✂️ Cortar bordas (recortar vídeo)" %>
+      <div class="crop-selector" id="crop-selector-el">
+        <video id="crop-video-preview" src="<%= url_for(@video.file) %>" muted preload="auto"></video>
+        <div class="crop-overlay" id="crop-overlay-el">
+          <div class="crop-selection" id="crop-selection-el"></div>
+        </div>
+      </div>
+      <div class="crop-controls">
+        <div class="crop-inputs">
+          <%= form.hidden_field :crop_x, id: "crop_x", value: @video.crop_x %>
+          <%= form.hidden_field :crop_y, id: "crop_y", value: @video.crop_y %>
+          <%= form.hidden_field :crop_width, id: "crop_width", value: @video.crop_width %>
+          <%= form.hidden_field :crop_height, id: "crop_height", value: @video.crop_height %>
+          <span>
+            <label>X:</label> <input type="number" id="crop_x_disp" value="<%= @video.crop_x || 0 %>" min="0"> 
+            <label>Y:</label> <input type="number" id="crop_y_disp" value="<%= @video.crop_y || 0 %>" min="0"> 
+            <label>L:</label> <input type="number" id="crop_w_disp" value="<%= @video.crop_width || '' %>" min="1"> 
+            <label>A:</label> <input type="number" id="crop_h_disp" value="<%= @video.crop_height || '' %>" min="1">
+          </span>
+        </div>
+        <button type="button" id="crop-clear" class="btn btn-small">Limpar crop</button>
+      </div>
+      <% if @video.crop_enabled? %>
+        <p class="help" style="color: green;">✂️ Crop configurado: <%= @video.crop_x %>, <%= @video.crop_y %>, <%= @video.crop_width %>x<%= @video.crop_height %></p>
+      <% else %>
+        <p class="help">Clique e arraste no vídeo para selecionar a área a manter</p>
+      <% end %>
+    </div>
   <% end %>
 
   <div class="field">
@@ -105,3 +135,84 @@
     <%= link_to "Cancelar", @video, class: "btn btn-secondary" %>
   </div>
 <% end %>
+
+<script>
+(function() {
+  var overlay = document.getElementById('crop-overlay-el');
+  var selection = document.getElementById('crop-selection-el');
+  var selector = document.getElementById('crop-selector-el');
+  var clearBtn = document.getElementById('crop-clear');
+  
+  if (!overlay || !selection) return;
+  
+  var isDragging = false;
+  var startX, startY;
+  
+  overlay.addEventListener('mousedown', function(e) {
+    isDragging = true;
+    var rect = overlay.getBoundingClientRect();
+    startX = e.clientX - rect.left;
+    startY = e.clientY - rect.top;
+    selector.classList.add('dragging');
+    selection.style.left = startX + 'px';
+    selection.style.top = startY + 'px';
+    selection.style.width = '0px';
+    selection.style.height = '0px';
+    selection.style.display = 'block';
+  });
+  
+  overlay.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    var rect = overlay.getBoundingClientRect();
+    var cx = e.clientX - rect.left;
+    var cy = e.clientY - rect.top;
+    cx = Math.max(0, Math.min(cx, rect.width));
+    cy = Math.max(0, Math.min(cy, rect.height));
+    var x = Math.min(startX, cx);
+    var y = Math.min(startY, cy);
+    var w = Math.abs(cx - startX);
+    var h = Math.abs(cy - startY);
+    selection.style.left = x + 'px';
+    selection.style.top = y + 'px';
+    selection.style.width = w + 'px';
+    selection.style.height = h + 'px';
+  });
+  
+  overlay.addEventListener('mouseup', endDrag);
+  overlay.addEventListener('mouseleave', endDrag);
+  
+  function endDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+    selector.classList.remove('dragging');
+    var x = Math.round(parseFloat(selection.style.left));
+    var y = Math.round(parseFloat(selection.style.top));
+    var w = Math.round(parseFloat(selection.style.width));
+    var h = Math.round(parseFloat(selection.style.height));
+    if (w < 10 || h < 10) {
+      clearCrop();
+      return;
+    }
+    document.getElementById('crop_x').value = x;
+    document.getElementById('crop_y').value = y;
+    document.getElementById('crop_width').value = w;
+    document.getElementById('crop_height').value = h;
+    if (document.getElementById('crop_x_disp')) {
+      document.getElementById('crop_x_disp').value = x;
+      document.getElementById('crop_y_disp').value = y;
+      document.getElementById('crop_w_disp').value = w;
+      document.getElementById('crop_h_disp').value = h;
+    }
+  }
+  
+  function clearCrop() {
+    document.getElementById('crop_x').value = 0;
+    document.getElementById('crop_y').value = 0;
+    document.getElementById('crop_width').value = '';
+    document.getElementById('crop_height').value = '';
+    selection.style.display = 'none';
+  }
+  
+  if (clearBtn) clearBtn.addEventListener('click', clearCrop);
+})();
+</script>

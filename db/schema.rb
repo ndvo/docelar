@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_18_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_19_000000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -170,6 +170,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_18_120000) do
     t.text "post_appointment_notes"
     t.date "follow_up_date"
     t.boolean "follow_up_required", default: false
+    t.boolean "reminder_enabled", default: true
+    t.integer "reminder_days_before", default: 1
+    t.datetime "reminder_sent_at"
     t.index ["appointment_date"], name: "index_medical_appointments_on_appointment_date"
     t.index ["checklist"], name: "index_medical_appointments_on_checklist"
     t.index ["follow_up_date"], name: "index_medical_appointments_on_follow_up_date"
@@ -682,6 +685,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_18_120000) do
     t.integer "enhance_audio_status", default: 0
     t.datetime "enhanced_at"
     t.string "enhanced_method"
+    t.integer "crop_x"
+    t.integer "crop_y"
+    t.integer "crop_width"
+    t.integer "crop_height"
+    t.datetime "cropped_at"
     t.index ["user_id"], name: "index_videos_on_user_id"
     t.index ["video_category_id"], name: "index_videos_on_video_category_id"
   end

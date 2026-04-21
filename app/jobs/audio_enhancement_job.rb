@@ -36,15 +36,17 @@ class AudioEnhancementJob < ApplicationJob
 
     Rails.logger.info "AudioEnhancementJob: Processing video #{video.id}"
 
-    result = AudioEnhancementService.enhance(input_path, output_mp4.to_s)
+    result = AudioEnhancementService.enhance(input_path, output_mp4.to_s, crop: video.crop_dimensions)
     enhanced_method = result[:method] || "ffmpeg"
 
     FileUtils.rm(input_path)
     
     if result[:success] && File.exist?(output_mp4)
+      crop_applied = video.crop_enabled?
       video.update!(
         enhanced_at: Time.current,
-        enhanced_method: enhanced_method
+        enhanced_method: enhanced_method,
+        cropped_at: crop_applied ? Time.current : nil
       )
       video.enhanced_file.attach(
         io: File.open(output_mp4),

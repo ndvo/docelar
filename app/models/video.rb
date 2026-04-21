@@ -79,4 +79,13 @@ class Video < ApplicationRecord
   def queue_audio_enhancement!
     update!(enhance_audio_status: :pending) if enhance_audio && !audio_completed?
   end
+
+  def crop_enabled?
+    crop_width.present? && crop_height.present? && crop_width > 0 && crop_height > 0
+  end
+
+  def crop_dimensions
+    return nil unless crop_enabled?
+    { x: crop_x || 0, y: crop_y || 0, width: crop_width, height: crop_height, display_width: crop_width, display_height: crop_height }
+  end
 end
