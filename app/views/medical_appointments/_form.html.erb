@@ -16,8 +16,8 @@
   </div>
 
   <div class="field">
-    <%= f.label :appointment_type, "Tipo de Consulta *" %>
-    <%= f.select :appointment_type, MedicalAppointment.appointment_types.keys.map { |t| [t.humanize, t] } %>
+    <%= f.label :appointment_type_id, "Tipo de Consulta *" %>
+    <%= f.collection_select :appointment_type_id, AppointmentType.active, :id, :name, { prompt: "Selecione o tipo de consulta" } %>
   </div>
 
   <div class="field">
@@ -26,8 +26,9 @@
   </div>
 
   <div class="field">
-    <%= f.label :professional_name, "Médico/Profissional" %>
-    <%= f.text_field :professional_name %>
+    <%= f.label :physician_id, "Médico/Profissional" %>
+    <%= f.collection_select :physician_id, Physician.order(:name), :id, :display_name, { prompt: "Selecione o médico" }, class: 'form-control' %>
+    <span class="help">Ou <%= link_to "cadastrar novo médico", new_physician_path, target: "_blank" %></span>
   </div>
 
   <div class="field">

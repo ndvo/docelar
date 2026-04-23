@@ -1,0 +1,31 @@
+<h1>Médicos</h1>
+
+<%= link_to 'Novo Médico', new_physician_path, class: 'btn btn-primary' %>
+
+<% if @physicians.any? %>
+  <table class="list-table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>CRM</th>
+        <th>Pessoa Associada</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @physicians.each do |physician| %>
+        <tr>
+          <td><%= physician.name %></td>
+          <td><%= physician.crm %></td>
+          <td><%= physician.person&.name || '-' %></td>
+          <td>
+            <%= link_to 'Editar', edit_physician_path(physician) %>
+            <%= link_to 'Remover', physician_path(physician), method: :delete, data: { confirm: 'Tem certeza?' } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>Nenhum médico cadastrado.</p>
+<% end %>

@@ -1,0 +1,32 @@
+<%= form_with model: @physician do |f| %>
+  <% if @physician.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@physician.errors.count, "erro") %> impediu este médico de ser salvo:</h2>
+      <ul>
+        <% @physician.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name, "Nome *" %>
+    <%= f.text_field :name, required: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :crm, "CRM *" %>
+    <%= f.text_field :crm, required: true, placeholder: "e.g., 12345-SP" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :person_id, "Associar a Pessoa" %>
+    <%= f.collection_select :person_id, Person.order(:name), :id, :name, { include_blank: "Selecione uma pessoa" } %>
+    <span class="help">Se não selecionar, uma pessoa será criada automaticamente a partir do nome.</span>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Salvar", class: "btn btn-primary" %>
+  </div>
+<% end %>
