@@ -1,0 +1,51 @@
+<%= form_with model: greeting_card do |f| %>
+  <% if greeting_card.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(greeting_card.errors.count, "erro") %> impediu este cartão de ser salvo:</h2>
+      <ul>
+        <% greeting_card.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :card_type, "Tipo de Cartão *" %>
+    <%= f.select :card_type, GreetingCard.card_types.keys.map { |t| [t.humanize, t] }, prompt: "Selecione o tipo" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :title, "Título *" %>
+    <%= f.text_field :title, required: true, placeholder: "e.g., Parabéns Maria!" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :person_id, "Destinatário" %>
+    <div class="person-select-with-new">
+      <%= f.collection_select :person_id, Person.order(:name), :id, :name, { include_blank: "Selecione uma pessoa" } %>
+      <span class="divider">ou</span>
+      <%= text_field_tag :new_person_name, "", placeholder: "Criar nova pessoa" %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= f.label :occasion_date, "Data da Ocasião" %>
+    <%= f.date_field :occasion_date %>
+  </div>
+
+  <div class="field">
+    <%= f.label :message, "Mensagem" %>
+    <%= f.text_area :message, rows: 5, placeholder: "Escreva sua mensagem..." %>
+  </div>
+
+  <div class="field">
+    <%= f.label :letter_background_id, "Fundo" %>
+    <%= f.collection_select :letter_background_id, LetterBackground.active.for_user(Current.user), :id, :name, { include_blank: "Sem fundo" } %>
+    <%= link_to 'Gerenciar fundos', letter_backgrounds_path, target: '_blank' %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Salvar", class: "btn btn-primary" %>
+  </div>
+<% end %>

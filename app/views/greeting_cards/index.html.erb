@@ -1,0 +1,75 @@
+<h1>Cartões</h1>
+
+<div class="greeting-cards-header">
+  <%= link_to 'Novo Cartão', new_greeting_card_path, class: 'btn btn-primary' %>
+</div>
+
+<% if @upcoming_cards.any? %>
+  <section class="upcoming-cards">
+    <h2>Próximas Datas</h2>
+    <div class="cards-grid">
+      <% @upcoming_cards.first(6).each do |card| %>
+        <article class="card-item">
+          <div class="card-type"><%= card.card_type.humanize %></div>
+          <h3><%= card.title %></h3>
+          <p class="recipient"><%= card.recipient_name %></p>
+          <p class="occasion-date">
+            <% if card.occasion_date %>
+              <%= l(card.occasion_date_display, format: :long) %>
+              (<%= card.days_until_occasion %> dias)
+            <% end %>
+          </p>
+          <% if card.sent %>
+            <span class="badge sent">Enviado</span>
+          <% else %>
+            <span class="badge pending">Pendente</span>
+          <% end %>
+        </article>
+      <% end %>
+    </div>
+  </section>
+<% end %>
+
+<% if @greeting_cards.any? %>
+  <section class="all-cards">
+    <h2>Todos os Cartões</h2>
+    <table class="list-table">
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Título</th>
+          <th>Destinatário</th>
+          <th>Data</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @greeting_cards.each do |card| %>
+          <tr>
+            <td><%= card.card_type.humanize %></td>
+            <td><%= card.title %></td>
+            <td><%= card.recipient_name %></td>
+            <td><%= card.occasion_date ? l(card.occasion_date, format: :short) : '-' %></td>
+            <td>
+              <% if card.sent %>
+                <span class="badge sent">Enviado</span>
+              <% else %>
+                <span class="badge pending">Pendente</span>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to 'Editar', edit_greeting_card_path(card) %>
+              <% unless card.sent %>
+                <%= link_to 'Marcar Enviado', mark_sent_greeting_card_path(card), method: :patch %>
+              <% end %>
+              <%= link_to 'Remover', greeting_card_path(card), method: :delete, data: { confirm: 'Tem certeza?' } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+<% else %>
+  <p class="empty-state">Nenhum cartão cadastrado. <%= link_to 'Criar primeiro cartão', new_greeting_card_path %>.</p>
+<% end %>
