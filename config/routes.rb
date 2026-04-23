@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     member do
       get :medications
       get :health, to: 'health_hubs#show'
-      get :timeline
+      get :timeline, to: 'health_hubs#timeline'
     end
     resources :treatments
     resources :medical_appointments do
@@ -33,6 +33,13 @@ Rails.application.routes.draw do
     match :pay, via: [:patch, :post, :put], on: :member
   end
   resources :dogs
+  resources :physicians
+  resources :greeting_cards do
+    member do
+      patch :mark_sent
+    end
+  end
+  resources :letter_backgrounds
   resources :tasks do
     post :bulk_update, on: :collection
     get :summary, on: :collection
@@ -40,6 +47,11 @@ Rails.application.routes.draw do
   resources :responsibles, only: [:create]
 
   root 'home#index'
+
+  resource :configuration, only: [:show]
+  post 'configuration/appointment_types', to: 'configurations#create_appointment_type', as: 'create_appointment_type'
+  patch 'configuration/update_appointment_types/:id', to: 'configurations#update_appointment_types', as: 'update_appointment_types'
+  patch 'appointment_types/:id/toggle_active', to: 'appointment_types#toggle_active', as: 'toggle_active_appointment_type'
 
   get 'sign_up' => 'users#new', as: 'sign_up'
   get 'login' => 'session#new', as: 'login'
@@ -68,6 +80,7 @@ Rails.application.routes.draw do
   resources :galleries do
     member do
       get :import
+      get :photos
       post :upload_photos
     end
     collection do
