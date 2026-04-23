@@ -1,0 +1,75 @@
+<main id="main-content" role="main" aria-labelledby="config-title">
+  <div class="configuration-page">
+    <header class="page-header">
+      <h1 id="config-title">Configurações</h1>
+      <p class="subtitle">Gerencie as configurações do sistema</p>
+    </header>
+
+    <section class="config-section" aria-labelledby="appointment-types-heading">
+      <h2 id="appointment-types-heading">Tipos de Consulta</h2>
+      <p class="section-description">Gerencie os tipos de consulta disponíveis para os pacientes.</p>
+
+      <div class="new-appointment-type-form">
+        <h3>Novo Tipo de Consulta</h3>
+        <%= form_with model: @new_appointment_type, url: '/configuration/appointment_types', local: true do |f| %>
+          <div class="form-row">
+            <div class="field">
+              <%= f.label :name, "Nome" %>
+              <%= f.text_field :name, placeholder: "checkup", required: true %>
+            </div>
+            <div class="field">
+              <%= f.label :description, "Descrição" %>
+              <%= f.text_field :description, placeholder: "Descrição do tipo de consulta" %>
+            </div>
+            <div class="field">
+              <%= f.label :applicable_types, "Aplicável a" %>
+              <%= f.text_field :applicable_types, placeholder: "Person,Dog", value: "Person,Dog" %>
+            </div>
+            <div class="field">
+              <%= f.label :active, "Ativo" %>
+              <%= f.check_box :active, checked: true %>
+            </div>
+            <div class="actions">
+              <%= f.submit "Criar Tipo", class: 'btn btn-primary' %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <table class="config-table" role="table" aria-label="Tipos de consulta">
+        <thead>
+          <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Descrição</th>
+            <th scope="col">Aplicável a</th>
+            <th scope="col">Status</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @appointment_types.each do |type| %>
+            <tr class="<%= type.active? ? '' : 'inactive' %>">
+              <%= form_with model: type, url: update_appointment_types_path(type), method: :patch do |f| %>
+                <td><%= type.name.humanize %></td>
+                <td>
+                  <%= f.text_field :description, placeholder: "Descrição", class: 'input-sm' %>
+                </td>
+                <td>
+                  <%= f.text_field :applicable_types, placeholder: "Person,Dog", class: 'input-sm' %>
+                </td>
+                <td>
+                  <span class="status-badge status-<%= type.active? ? 'active' : 'inactive' %>">
+                    <%= type.active? ? 'Ativo' : 'Inativo' %>
+                  </span>
+                </td>
+                <td class="actions">
+                  <%= f.submit "Salvar", class: 'btn btn-sm btn-secondary' %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</main>

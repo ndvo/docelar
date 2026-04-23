@@ -25,6 +25,56 @@ Country.find_or_create_by!(name: "United States", status: "public")
 Country.find_or_create_by!(name: "Portugal", status: "public")
 Country.find_or_create_by!(name: "Spain", status: "public")
 
+# Appointment Types
+puts "Creating appointment types..."
+appointment_types = [
+  {
+    name: "checkup",
+    description: "Routine health check-up consultation",
+    applicable_types: "Person,Dog"
+  },
+  {
+    name: "specialist",
+    description: "Consultation with a medical specialist",
+    applicable_types: "Person,Dog"
+  },
+  {
+    name: "emergency",
+    description: "Emergency or urgent care consultation",
+    applicable_types: "Person,Dog"
+  },
+  {
+    name: "follow_up",
+    description: "Follow-up consultation to monitor ongoing treatment",
+    applicable_types: "Person,Dog"
+  },
+  {
+    name: "exam",
+    description: "Laboratory or imaging exam appointment",
+    applicable_types: "Person,Dog"
+  }
+]
+appointment_types.each do |type|
+  AppointmentType.find_or_create_by!(name: type[:name]) do |at|
+    at.description = type[:description]
+    at.applicable_types = type[:applicable_types]
+  end
+end
+
+# Physicians
+puts "Creating physicians..."
+physicians = [
+  { name: "Dr. Silva", crm: "12345-SP" },
+  { name: "Dra. Costa", crm: "23456-SP" },
+  { name: "Dr. Santos", crm: "34567-SP" },
+  { name: "Dra. Oliveira", crm: "45678-SP" }
+]
+physicians.each do |phys|
+  Physician.find_or_create_by!(crm: phys[:crm]) do |p|
+    p.name = phys[:name]
+  end
+end
+
 # Medications
 puts "Creating medications..."
 medications = [
@@ -287,15 +337,17 @@ amoxicillin = Medication.find_by(name: "Amoxicillin")
 
 if nelson_patient
   appointments = [
-    { appointment_date: 7.days.from_now, appointment_type: :checkup, specialty: "Clínico Geral", professional_name: "Dr. Silva", location: "UBS Centro", status: :scheduled },
-    { appointment_date: 30.days.from_now, appointment_type: :specialist, specialty: "Cardiologia", professional_name: "Dra. Costa", location: "Hospital São Lucas", status: :scheduled },
-    { appointment_date: 60.days.ago, appointment_type: :checkup, specialty: "Clínico Geral", professional_name: "Dr. Silva", location: "UBS Centro", status: :completed },
-    { appointment_date: 120.days.ago, appointment_type: :follow_up, specialty: "Cardiologia", professional_name: "Dra. Costa", location: "Hospital São Lucas", status: :completed }
+    { appointment_date: 7.days.from_now, appointment_type_name: "checkup", specialty: "Clínico Geral", professional_name: "Dr. Silva", location: "UBS Centro", status: :scheduled },
+    { appointment_date: 30.days.from_now, appointment_type_name: "specialist", specialty: "Cardiologia", professional_name: "Dra. Costa", location: "Hospital São Lucas", status: :scheduled },
+    { appointment_date: 60.days.ago, appointment_type_name: "checkup", specialty: "Clínico Geral", professional_name: "Dr. Silva", location: "UBS Centro", status: :completed },
+    { appointment_date: 120.days.ago, appointment_type_name: "follow_up", specialty: "Cardiologia", professional_name: "Dra. Costa", location: "Hospital São Lucas", status: :completed }
   ]
   appointments.each do |data|
+    appointment_type = AppointmentType.find_by(name: data[:appointment_type_name])
+    next unless appointment_type
     nelson_patient.medical_appointments.find_or_create_by!(
       appointment_date: data[:appointment_date],
-      appointment_type: data[:appointment_type],
+      appointment_type: appointment_type,
       specialty: data[:specialty],
       professional_name: data[:professional_name],
       location: data[:location],
@@ -305,17 +357,19 @@ if nelson_patient
   puts "  - #{nelson.name}: #{appointments.size} appointments"
 end
 
-if maria_patient
+if maria_patient && dr_santos
   appointments = [
-    { appointment_date: 14.days.from_now, appointment_type: :specialist, specialty: "Ginecologia", professional_name: "Dra. Santos", location: "Clínica Vida", status: :scheduled },
-    { appointment_date: 45.days.from_now, appointment_type: :exam, specialty: "Laboratório", professional_name: nil, location: "Labcenter", status: :scheduled }
+    { appointment_date: 14.days.from_now, appointment_type_name: "specialist", specialty: "Ginecologia", physician: dr_santos, location: "Clínica Vida", status: :scheduled },
+    { appointment_date: 45.days.from_now, appointment_type_name: "exam", specialty: "Laboratório", physician: nil, location: "Labcenter", status: :scheduled }
   ]
   appointments.each do |data|
+    appointment_type = AppointmentType.find_by(name: data[:appointment_type_name])
+    next unless appointment_type
     maria_patient.medical_appointments.find_or_create_by!(
       appointment_date: data[:appointment_date],
-      appointment_type: data[:appointment_type],
+      appointment_type: appointment_type,
       specialty: data[:specialty],
-      professional_name: data[:professional_name],
+      physician: data[:physician],
       location: data[:location],
       status: data[:status]
     )

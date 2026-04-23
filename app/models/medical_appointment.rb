@@ -1,17 +1,14 @@
 class MedicalAppointment < ApplicationRecord
   belongs_to :patient
+  belongs_to :appointment_type
+  belongs_to :physician, optional: true
   has_many :medical_exams
   has_many :exam_requests
 
   attr_accessor :create_treatments
 
-  enum :appointment_type, {
-    checkup: 'checkup',
-    specialist: 'specialist',
-    emergency: 'emergency',
-    follow_up: 'follow_up',
-    exam: 'exam'
-  }, prefix: true
+  delegate :name, to: :appointment_type, prefix: true, allow_nil: true
+  delegate :name, :display_name, to: :physician, prefix: true, allow_nil: true
 
   enum :status, {
     scheduled: 'scheduled',
@@ -21,7 +18,7 @@ class MedicalAppointment < ApplicationRecord
   }, default: :scheduled
 
   validates :appointment_date, presence: true
-  validates :appointment_type, presence: true
+  validates :appointment_type_id, presence: true
 
   scope :upcoming, -> { where('appointment_date >= ?', Date.today).order(appointment_date: :asc) }
   scope :past, -> { where('appointment_date < ?', Date.today).order(appointment_date: :desc) }
