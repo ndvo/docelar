@@ -1,0 +1,29 @@
+<h1>Fundos de Cartões</h1>
+
+<%= link_to 'Novo Fundo', new_letter_background_path, class: 'btn btn-primary' %>
+
+<% if @letter_backgrounds.any? %>
+  <div class="backgrounds-grid">
+    <% @letter_backgrounds.each do |bg| %>
+      <article class="background-item">
+        <div class="background-preview">
+          <% if bg.image_url %>
+            <%= image_tag bg.image_url, alt: bg.name %>
+          <% else %>
+            <div class="no-image">Sem imagem</div>
+          <% end %>
+        </div>
+        <div class="background-info">
+          <h3><%= bg.name %></h3>
+          <p class="source-type"><%= bg.source_type.humanize %></p>
+          <div class="actions">
+            <%= link_to 'Editar', edit_letter_background_path(bg) %>
+            <%= link_to 'Remover', letter_background_path(bg), method: :delete, data: { confirm: 'Tem certeza?' } %>
+          </div>
+        </div>
+      </article>
+    <% end %>
+  </div>
+<% else %>
+  <p class="empty-state">Nenhum fundo cadastrado. <%= link_to 'Criar primeiro fundo', new_letter_background_path %>.</p>
+<% end %>

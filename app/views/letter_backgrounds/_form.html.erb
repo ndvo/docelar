@@ -1,0 +1,86 @@
+<%= form_with model: letter_background do |f| %>
+  <% if letter_background.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(letter_background.errors.count, "erro") %> impediu este fundo de ser salvo:</h2>
+      <ul>
+        <% letter_background.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name, "Nome *" %>
+    <%= f.text_field :name, required: true, placeholder: "e.g., Natal 2024" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :source_type, "Origem da Imagem *" %>
+    <%= f.select :source_type, LetterBackground.source_types.keys.map { |t| [t.humanize, t] }, { prompt: "Selecione" }, id: "source_type_select" %>
+  </div>
+
+  <div class="field upload-field">
+    <%= f.label :image, "Upload de Imagem" %>
+    <%= f.file_field :image, accept: 'image/*' %>
+    <% if letter_background.image.attached? %>
+      <div class="current-image">
+        <%= image_tag letter_background.image, size: '150x150' %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="field gallery-field" style="display: none;" data-controller="gallery-picker">
+    <label>Selecionar da Galeria</label>
+    <div class="gallery-picker">
+      <div class="gallery-selector">
+        <label>Galeria:</label>
+        <select id="gallery_select" data-gallery-picker-target="select" data-action="gallery-picker#loadPhotos">
+          <option value="">Selecione uma galeria</option>
+          <% Gallery.order(:name).each do |gallery| %>
+            <option value="<%= gallery.id %>"><%= gallery.name %></option>
+          <% end %>
+        </select>
+      </div>
+      <div class="gallery-content">
+        <div class="photo-selector" data-gallery-picker-target="grid">
+          <label>Fotos:</label>
+          <div class="photo-grid" id="photo_grid">
+            <p class="help">Selecione uma galeria primeiro</p>
+          </div>
+          <%= f.hidden_field :photo_id, id: 'selected_photo_id' %>
+        </div>
+        <div class="photo-preview" data-gallery-picker-target="preview">
+          <label>Preview:</label>
+          <div id="photo_preview_container">
+            <p class="help">Selecione uma foto</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('source_type_select').addEventListener('change', function() {
+      const uploadField = document.querySelector('.upload-field');
+      const galleryField = document.querySelector('.gallery-field');
+      
+      if (this.value === 'gallery') {
+        uploadField.style.display = 'none';
+        galleryField.style.display = 'block';
+      } else {
+        uploadField.style.display = 'block';
+        galleryField.style.display = 'none';
+      }
+    });
+  </script>
+
+  <div class="field">
+    <%= f.label :active, "Ativo" %>
+    <%= f.check_box :active %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Salvar", class: "btn btn-primary" %>
+  </div>
+<% end %>
