@@ -52,7 +52,7 @@
         <% appointments.each do |appointment| %>
           <article class="appointment-card">
             <header>
-              <h3><%= appointment.appointment_type.humanize %></h3>
+              <h3><%= appointment.appointment_type_name.humanize %></h3>
               <span class="status-badge status-<%= appointment.status %>"><%= appointment.status.humanize %></span>
             </header>
             

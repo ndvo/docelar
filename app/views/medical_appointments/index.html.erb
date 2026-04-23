@@ -7,7 +7,7 @@
     <% @appointments.each do |appointment| %>
       <li class="appointment-card">
         <div class="appointment-header">
-          <span class="appointment-type"><%= appointment.appointment_type.humanize %></span>
+          <span class="appointment-type"><%= appointment.appointment_type_name.humanize %></span>
           <span class="appointment-status status-<%= appointment.status %>"><%= appointment.status.humanize %></span>
         </div>
         
