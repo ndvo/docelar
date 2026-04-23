@@ -1,6 +1,8 @@
 class GalleriesController < ApplicationController
   PER_PAGE = 20
 
+  skip_before_action :require_authentication, only: [:photos]
+
   def import
     @gallery = Gallery.find(params[:id]) if params[:id]
     @galleries = Gallery.all.includes(:photos)
@@ -23,6 +25,23 @@ class GalleriesController < ApplicationController
 
     @total_count = @gallery.photos.count
     @total_pages = (@total_count.to_f / @per_page).ceil
+  end
+
+  def photos
+    @gallery = Gallery.find(params[:id])
+    @photos = @gallery.photos.order(created_at: :desc)
+
+    render json: {
+      photos: @photos.map { |p| {
+        id: p.id,
+        url_thumb: p.file.attached? ? 
+          url_for(p.file.variant(resize_to_limit: [100, 100])) : 
+          "/#{p.url_thumb_path}",
+        url_large: p.file.attached? ? 
+          url_for(p.file.variant(resize_to_limit: [400, 400])) : 
+          "/#{p.url_thumb_path}"
+      }}
+    }
   end
 
   def generate_thumbnails; end
