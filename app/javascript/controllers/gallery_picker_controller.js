@@ -1,10 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["select", "grid", "preview"]
+  static targets = ["select", "grid"]
 
   connect() {
-    console.log('GalleryPicker connected')
     this.loadPhotos()
   }
 
@@ -24,12 +23,12 @@ export default class extends Controller {
     }
 
     try {
-      const response = await fetch(`/galleries/${galleryId}/photos.json`)
+      const url = this.element.dataset.galleryPickerPhotosUrl || `/galleries/${galleryId}/photos.json`
+      const response = await fetch(url)
       const data = await response.json()
       this.renderPhotos(data.photos)
     } catch (error) {
-      console.error('Error:', error)
-      this.gridTarget.innerHTML = '<p class="error">Erro: ' + error.message + '</p>'
+      this.gridTarget.innerHTML = '<p class="error">Erro ao carregar fotos</p>'
     }
   }
 
@@ -39,13 +38,16 @@ export default class extends Controller {
       return
     }
 
-    const currentPhotoId = document.getElementById('selected_photo_id')?.value
     const self = this
+    const hiddenFieldId = this.element.dataset.galleryPickerHiddenFieldId || 'selected_photo_id'
+    const selectedId = this.element.dataset.galleryPickerSelectedId || document.getElementById(hiddenFieldId)?.value
     
     let html = '<div class="photo-grid">'
     for (const photo of photos) {
-      const isSelected = photo.id == currentPhotoId
-      html += `<div class="photo-item${isSelected ? ' selected' : ''}" data-photo-id="${photo.id}" data-url-large="${photo.url_large}">
+      const isSelected = photo.id == selectedId
+      html += `<div class="photo-item${isSelected ? ' selected' : ''}" 
+                   data-photo-id="${photo.id}" 
+                   data-url-large="${photo.url_large || photo.url_thumb}">
         <img src="${photo.url_thumb}" alt="" loading="lazy" />
       </div>`
     }
@@ -65,22 +67,21 @@ export default class extends Controller {
     })
     element.classList.add('selected')
     
-    const hiddenField = document.getElementById('selected_photo_id')
+    const hiddenFieldId = this.element.dataset.galleryPickerHiddenFieldId || 'selected_photo_id'
+    const hiddenField = document.getElementById(hiddenFieldId)
     if (hiddenField) hiddenField.value = photoId
     
-    const debugInfo = document.getElementById('debug-info')
-    if (debugInfo) debugInfo.textContent = `Selected: ${photoId}`
+    const containerId = this.element.dataset.galleryPickerPreviewContainerId || 'photo_preview_container'
+    const container = document.getElementById(containerId)
+    if (container) {
+      container.innerHTML = '<img src="' + urlLarge + '" alt="Preview" style="max-width: 250px;" />'
+    } else {
+      alert('Container not found: ' + containerId)
+    }
     
-    this.showPreview(urlLarge)
+    this.dispatch('photo:selected', { detail: { photoId, urlLarge } })
   }
 
   showPreview(urlLarge) {
-    const previewContainer = document.getElementById('photo_preview_container')
-    
-    if (previewContainer && urlLarge) {
-      previewContainer.innerHTML = '<img src="' + urlLarge + '" alt="Preview" class="preview-image" style="max-width: 300px;" />'
-    } else if (previewContainer) {
-      previewContainer.innerHTML = '<p class="help">No URL</p>'
-    }
   }
 }
