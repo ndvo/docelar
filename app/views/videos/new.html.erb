@@ -40,6 +40,12 @@
   </div>
 
   <div class="field">
+    <%= form.check_box :enhance_audio %>
+    <%= form.label :enhance_audio, "🔊 Melhorar áudio (reduzir ruído de fundo)" %>
+    <p class="help">Remove ruído de fundo para destacar vozes humanas</p>
+  </div>
+
+  <div class="field">
     <%= form.label :video_category_id, "Categoria" %>
     <%= form.select :video_category_id, options_from_collection_for_select(@categories, :id, :name), include_blank: "Selecione..." %>
     <span>ou</span>

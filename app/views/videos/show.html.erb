@@ -31,6 +31,9 @@
           <small class="audio-status">
             <%= @video.enhanced_method&.upcase || "FFmpeg" %>
             <%= " • " + l(@video.enhanced_at, format: :short) if @video.enhanced_at %>
+            <% if @video.cropped_at %>
+              <br>✂️ Cortado <%= l(@video.cropped_at, format: :short) %>
+            <% end %>
           </small>
           <%= button_to "🔄 Reprocessar", reprocess_audio_video_path(@video), method: :post, class: "btn btn-small" %>
         <% when "processing" %>
