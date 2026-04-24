@@ -30,12 +30,16 @@
     <% end %>
   </div>
 
-  <div class="field gallery-field" style="display: none;" data-controller="gallery-picker">
+  <div class="field gallery-field" style="display: none;" 
+     data-controller="gallery-picker"
+     data-gallery-picker-hidden-field-id="letter_background_photo_id"
+     data-gallery-picker-preview-container-id="letter_background_preview"
+     data-gallery-picker-preview-width="250">
     <label>Selecionar da Galeria</label>
     <div class="gallery-picker">
       <div class="gallery-selector">
         <label>Galeria:</label>
-        <select id="gallery_select" data-gallery-picker-target="select" data-action="gallery-picker#loadPhotos">
+        <select data-gallery-picker-target="select" data-action="gallery-picker#loadPhotos">
           <option value="">Selecione uma galeria</option>
           <% Gallery.order(:name).each do |gallery| %>
             <option value="<%= gallery.id %>"><%= gallery.name %></option>
@@ -45,14 +49,14 @@
       <div class="gallery-content">
         <div class="photo-selector" data-gallery-picker-target="grid">
           <label>Fotos:</label>
-          <div class="photo-grid" id="photo_grid">
+          <div class="photo-grid" id="letter_background_photo_grid">
             <p class="help">Selecione uma galeria primeiro</p>
           </div>
-          <%= f.hidden_field :photo_id, id: 'selected_photo_id' %>
+          <%= f.hidden_field :photo_id, id: 'letter_background_photo_id' %>
         </div>
-        <div class="photo-preview" data-gallery-picker-target="preview">
+        <div class="photo-preview">
           <label>Preview:</label>
-          <div id="photo_preview_container">
+          <div id="letter_background_preview">
             <p class="help">Selecione uma foto</p>
           </div>
         </div>

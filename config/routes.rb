@@ -39,7 +39,18 @@ Rails.application.routes.draw do
       patch :mark_sent
     end
   end
-  resources :letter_backgrounds
+  resources :letter_backgrounds do
+    member do
+      post :add_filter
+      delete :remove_filter
+      post :undo_filter
+      post :redo_filter
+      post :reset_filters
+      post :apply_preset
+      get :list_presets
+      get :preview
+    end
+  end
   resources :tasks do
     post :bulk_update, on: :collection
     get :summary, on: :collection
