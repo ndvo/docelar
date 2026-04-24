@@ -68,7 +68,8 @@ class Photo < ActiveRecord::Base
   end
 
   def thumb_url
-    return "/#{url_thumb_path}" unless file.attached?
+    return "/#{url_thumb_path}" if File.exist?(fs_thumbs_path)
+    return "/#{url_thumb_path}" unless file.attached? && File.exist?(fs_path)
     
     rails_representation_url(file.variant(:thumb).processed, only_path: true)
   rescue StandardError
@@ -76,7 +77,8 @@ class Photo < ActiveRecord::Base
   end
 
   def grid_url
-    return "/#{url_thumb_path}" unless file.attached?
+    return "/#{url_thumb_path}" if File.exist?(fs_thumbs_path)
+    return "/#{url_thumb_path}" unless file.attached? && File.exist?(fs_path)
     
     rails_representation_url(file.variant(:grid).processed, only_path: true)
   rescue StandardError
@@ -87,26 +89,16 @@ class Photo < ActiveRecord::Base
     ensure_medium_variant
   end
 
-  private
+  def ensure_thumb_variant
+    return if File.exist?(fs_thumbs_path)
 
-  def cleanup_files
-    return unless original_path.present?
+    src = fs_path
+    return unless File.exist?(src)
 
-    paths = [
-      fs_path,
-      fs_thumbs_path,
-      fs_medium_path
-    ]
-    paths.each do |path|
-      next unless File.exist?(path)
-      if File.directory?(path)
-        FileUtils.rm_rf(path)
-      else
-        File.delete(path)
-      end
-    rescue Errno::ENOENT, Errno::EACCES
-      Rails.logger.debug "Could not delete file: #{path}"
-    end
+    dst_dir = File.dirname(fs_thumbs_path)
+    FileUtils.mkdir_p(dst_dir)
+
+    system("convert -resize 200x200^ -gravity center -extent 200x200 -quality 85 '#{src}' '#{fs_thumbs_path}'")
   end
 
   def fs_thumbs_path
