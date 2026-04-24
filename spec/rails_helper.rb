@@ -18,6 +18,10 @@ module LoginHelper
     fill_in 'password', with: 'password'
     click_button 'Sign in'
   end
+
+  def set_authenticated_session(session)
+    Current.session = session
+  end
 end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -60,6 +64,7 @@ rescue LoadError
 end
 
   config.include LoginHelper, type: :feature
+  config.include LoginHelper, type: :request
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = ["#{::Rails.root}/spec/fixtures"]
