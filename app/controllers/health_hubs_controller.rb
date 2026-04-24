@@ -31,7 +31,7 @@ class HealthHubsController < ApplicationController
       events << {
         date: appt.appointment_date,
         type: :appointment,
-        title: appt.appointment_type.humanize,
+        title: appt.appointment_type_name.humanize,
         subtitle: appt.professional_name.presence || appt.specialty,
         record: appt
       }
