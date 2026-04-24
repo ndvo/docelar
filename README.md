@@ -1,8 +1,6 @@
 # Doce Lar - Home Management Tool
 
-**Sua gestão financeira e cuidados em um só lugar**
-
-A comprehensive home management application for Brazilian families.
+A home management application for Brazilian families.
 
 ## Core Modules
 
