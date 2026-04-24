@@ -11,6 +11,8 @@ class GalleriesController < ApplicationController
   def index
     @folders = Gallery.all.pluck(:name)
     @galleries = Gallery.all.includes(:photos)
+    
+    trigger_index_thumbnail_generation
   end
 
   def show
@@ -25,6 +27,8 @@ class GalleriesController < ApplicationController
 
     @total_count = @gallery.photos.count
     @total_pages = (@total_count.to_f / @per_page).ceil
+
+    generate_thumbnails_for_current_page
   end
 
   def photos
@@ -89,6 +93,28 @@ class GalleriesController < ApplicationController
   end
 
   private
+
+  def trigger_index_thumbnail_generation
+    @galleries.each do |gallery|
+      first_photo = gallery.photos.first
+      if first_photo
+        GenerateGalleryThumbnailsJob.perform_later(gallery.id, [first_photo.id])
+      end
+    end
+  end
+
+  def generate_thumbnails_for_current_page
+    photo_ids = @photos.pluck(:id)
+
+    prev_page_photos = @page > 1 ? 
+      @gallery.photos.order(created_at: :desc).offset((@page - 2) * @per_page).limit(@per_page).pluck(:id) : []
+    next_page_photos = @page < @total_pages ?
+      @gallery.photos.order(created_at: :desc).offset(@page * @per_page).limit(@per_page).pluck(:id) : []
+
+    all_photo_ids = (photo_ids + prev_page_photos + next_page_photos).uniq
+
+    GenerateGalleryThumbnailsJob.perform_later(@gallery.id, all_photo_ids)
+  end
 
   def save_uploaded_file(file)
     temp_file = Tempfile.new(['upload', File.extname(file.original_filename)])
