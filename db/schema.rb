@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_19_000000) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_25_000000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -37,6 +37,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_19_000000) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "appointment_types", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "applicable_types", default: "Person,Dog", null: false
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "articles", force: :cascade do |t|
@@ -149,6 +158,42 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_19_000000) do
     t.index ["gallery_id"], name: "index_galleries_on_gallery_id"
   end
 
+  create_table "greeting_cards", force: :cascade do |t|
+    t.integer "contact_id"
+    t.integer "person_id"
+    t.string "title", null: false
+    t.text "message"
+    t.integer "user_id", null: false
+    t.integer "card_type", default: 0, null: false
+    t.date "occasion_date"
+    t.string "occasion_type"
+    t.boolean "sent", default: false
+    t.datetime "sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "letter_background_id"
+    t.index ["contact_id"], name: "index_greeting_cards_on_contact_id"
+    t.index ["letter_background_id"], name: "index_greeting_cards_on_letter_background_id"
+    t.index ["person_id"], name: "index_greeting_cards_on_person_id"
+    t.index ["user_id"], name: "index_greeting_cards_on_user_id"
+  end
+
+  create_table "letter_backgrounds", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "user_id", null: false
+    t.integer "source_type", default: 0, null: false
+    t.integer "photo_id"
+    t.integer "width"
+    t.integer "height"
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.json "filter_stack", default: {"filters" => [], "redo_stack" => []}
+    t.index ["filter_stack"], name: "index_letter_backgrounds_on_filter_stack"
+    t.index ["photo_id"], name: "index_letter_backgrounds_on_photo_id"
+    t.index ["user_id"], name: "index_letter_backgrounds_on_user_id"
+  end
+
   create_table "medical_appointments", force: :cascade do |t|
     t.integer "patient_id", null: false
     t.datetime "appointment_date"
@@ -173,11 +218,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_19_000000) do
     t.boolean "reminder_enabled", default: true
     t.integer "reminder_days_before", default: 1
     t.datetime "reminder_sent_at"
+    t.integer "appointment_type_id"
+    t.integer "physician_id"
     t.index ["appointment_date"], name: "index_medical_appointments_on_appointment_date"
+    t.index ["appointment_type_id"], name: "index_medical_appointments_on_appointment_type_id"
     t.index ["checklist"], name: "index_medical_appointments_on_checklist"
     t.index ["follow_up_date"], name: "index_medical_appointments_on_follow_up_date"
     t.index ["patient_id", "appointment_date"], name: "index_medical_appointments_on_patient_id_and_appointment_date"
     t.index ["patient_id"], name: "index_medical_appointments_on_patient_id"
+    t.index ["physician_id"], name: "index_medical_appointments_on_physician_id"
     t.index ["status"], name: "index_medical_appointments_on_status"
   end
 
@@ -364,6 +413,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_19_000000) do
     t.string "google_photos_id"
     t.index ["gallery_id"], name: "index_photos_on_gallery_id"
     t.index ["google_photos_id"], name: "index_photos_on_google_photos_id"
+  end
+
+  create_table "physicians", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "crm", null: false
+    t.integer "person_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_physicians_on_person_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -714,7 +772,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_19_000000) do
   add_foreign_key "exam_requests", "medical_appointments"
   add_foreign_key "exam_requests", "patients"
   add_foreign_key "family_medical_histories", "patients"
+  add_foreign_key "medical_appointments", "appointment_types"
   add_foreign_key "medical_appointments", "patients"
+  add_foreign_key "medical_appointments", "physicians"
   add_foreign_key "medical_condition_treatments", "medical_conditions"
   add_foreign_key "medical_condition_treatments", "treatments"
   add_foreign_key "medical_conditions", "patients"
@@ -729,6 +789,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_19_000000) do
   add_foreign_key "payments", "purchases"
   add_foreign_key "pharmacotherapies", "medications"
   add_foreign_key "pharmacotherapies", "treatments"
+  add_foreign_key "physicians", "people"
   add_foreign_key "purchases", "cards"
   add_foreign_key "purchases", "products"
   add_foreign_key "responsibles", "people"
