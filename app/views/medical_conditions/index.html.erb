@@ -1,26 +1,32 @@
 <h1>Condições de Saúde</h1>
 
-<%= link_to 'Nova Condição', new_patient_medical_condition_path(@patient), class: 'btn btn-primary' %>
+<div class="conditions-header">
+  <%= link_to 'Nova Condição', new_patient_medical_condition_path(@patient), class: 'btn btn-primary' %>
+</div>
 
 <% if @conditions.any? %>
-  <ul class="conditions-list">
+  <div class="conditions-grid">
     <% @conditions.each do |condition| %>
-      <li class="condition-card">
-        <div class="condition-header">
-          <h3><%= condition.condition_name %></h3>
-          <span class="condition-status status-<%= condition.status %>"><%= condition.status.humanize %></span>
+      <article class="condition-card">
+        <div class="condition-card-header">
+          <h2 class="condition-name"><%= condition.condition_name %></h2>
+          <span class="status-badge status-<%= condition.status %>"><%= condition.status.humanize %></span>
         </div>
         
         <% if condition.icd_code %>
           <div class="condition-icd">CID-10: <%= condition.icd_code %></div>
         <% end %>
         
-        <div class="condition-date">
-          Diagnosticada em: <%= l(condition.diagnosed_date, format: :long) if condition.diagnosed_date %>
-        </div>
+        <% if condition.diagnosed_date %>
+          <div class="condition-diagnosed">
+            Diagnosticada em: <%= l(condition.diagnosed_date, format: :long) %>
+          </div>
+        <% end %>
         
         <% if condition.severity %>
-          <div class="condition-severity">Severidade: <%= condition.severity.humanize %></div>
+          <div class="condition-severity severity-<%= condition.severity %>">
+            Severidade: <%= condition.severity.humanize %>
+          </div>
         <% end %>
         
         <% if condition.notes %>
@@ -32,9 +38,9 @@
           <%= link_to 'Editar', edit_patient_medical_condition_path(@patient, condition), class: 'btn btn-secondary' %>
           <%= button_to 'Excluir', patient_medical_condition_path(@patient, condition), method: :delete, data: { confirm: 'Tem certeza?' }, class: 'btn btn-danger' %>
         </div>
-      </li>
+      </article>
     <% end %>
-  </ul>
+  </div>
 <% else %>
   <p class="empty-message">Nenhuma condição registrada.</p>
 <% end %>
