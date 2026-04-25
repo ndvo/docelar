@@ -97,7 +97,7 @@ class ImageFilterService
     end
 
     def apply_sepia(image, params)
-      image.modulate(saturation: 30)
+      image.modulate("100,30,100")
     end
 
     def apply_vignette(image, params)
