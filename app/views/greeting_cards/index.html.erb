@@ -7,23 +7,63 @@
 <% if @upcoming_cards.any? %>
   <section class="upcoming-cards">
     <h2>Próximas Datas</h2>
-    <div class="cards-grid">
+    <div class="greeting-cards-grid">
       <% @upcoming_cards.first(6).each do |card| %>
-        <article class="card-item">
-          <div class="card-type"><%= card.card_type.humanize %></div>
-          <h3><%= card.title %></h3>
-          <p class="recipient"><%= card.recipient_name %></p>
-          <p class="occasion-date">
-            <% if card.occasion_date %>
-              <%= l(card.occasion_date_display, format: :long) %>
-              (<%= card.days_until_occasion %> dias)
-            <% end %>
-          </p>
-          <% if card.sent %>
-            <span class="badge sent">Enviado</span>
-          <% else %>
-            <span class="badge pending">Pendente</span>
+        <article class="greeting-card-item">
+          <%= link_to greeting_card_path(card), class: 'greeting-card-link' do %>
+            <div class="greeting-card-image">
+              <% if card.preview_image.attached? %>
+                <img src="<%= url_for(card.preview_image) %>" alt="<%= card.title %>" loading="lazy">
+              <% else %>
+                <div class="greeting-card-placeholder">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <path d="M3 9h18M9 3v18"/>
+                  </svg>
+                </div>
+              <% end %>
+            </div>
+            <div class="greeting-card-content">
+              <div class="greeting-card-type <%= card.card_type %>"><%= card.card_type.humanize %></div>
+              <h3 class="greeting-card-title"><%= card.title %></h3>
+              <% if card.person %>
+                <p class="greeting-card-recipient">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  <%= card.recipient_name %>
+                </p>
+              <% end %>
+              <% if card.occasion_date %>
+                <p class="greeting-card-date">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                    <path d="M16 2v4M8 2v4M3 10h18"/>
+                  </svg>
+                  <%= l(card.occasion_date_display, format: :long) %>
+                  <span class="days-count <%= card.days_until_occasion <= 7 ? 'soon' : '' %>">
+                    (<%= card.days_until_occasion %> dias)
+                  </span>
+                </p>
+              <% end %>
+            </div>
           <% end %>
+          <div class="greeting-card-status">
+            <% if card.sent %>
+              <span class="badge sent">Enviado</span>
+            <% else %>
+              <span class="badge pending">Pendente</span>
+            <% end %>
+          </div>
+          <div class="greeting-card-actions">
+            <%= link_to 'Ver', greeting_card_path(card), class: 'btn btn-small' %>
+            <%= link_to 'Editar', edit_greeting_card_path(card), class: 'btn btn-small btn-secondary' %>
+            <% unless card.sent %>
+              <%= link_to 'Marcar Enviado', mark_sent_greeting_card_path(card), method: :patch, class: 'btn btn-small btn-primary' %>
+            <% end %>
+            <%= link_to 'Remover', greeting_card_path(card), method: :delete, data: { confirm: 'Tem certeza?' }, class: 'btn btn-small btn-danger' %>
+          </div>
         </article>
       <% end %>
     </div>
@@ -33,43 +73,52 @@
 <% if @greeting_cards.any? %>
   <section class="all-cards">
     <h2>Todos os Cartões</h2>
-    <table class="list-table">
-      <thead>
-        <tr>
-          <th>Tipo</th>
-          <th>Título</th>
-          <th>Destinatário</th>
-          <th>Data</th>
-          <th>Status</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @greeting_cards.each do |card| %>
-          <tr>
-            <td><%= card.card_type.humanize %></td>
-            <td><%= card.title %></td>
-            <td><%= card.recipient_name %></td>
-            <td><%= card.occasion_date ? l(card.occasion_date, format: :short) : '-' %></td>
-            <td>
-              <% if card.sent %>
-                <span class="badge sent">Enviado</span>
-              <% else %>
-                <span class="badge pending">Pendente</span>
-              <% end %>
-            </td>
-            <td>
-              <%= link_to 'Editar', edit_greeting_card_path(card) %>
-              <% unless card.sent %>
-                <%= link_to 'Marcar Enviado', mark_sent_greeting_card_path(card), method: :patch %>
-              <% end %>
-              <%= link_to 'Remover', greeting_card_path(card), method: :delete, data: { confirm: 'Tem certeza?' } %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <div class="greeting-cards-table">
+      <% @greeting_cards.each do |card| %>
+        <article class="greeting-card-row">
+          <div class="greeting-card-row-thumb">
+            <img src="<%= thumbnail_greeting_card_path(card, format: :png) %>" alt="<%= card.title %>">
+          </div>
+          <div class="greeting-card-row-type <%= card.card_type %>">
+            <%= card.card_type.humanize %>
+          </div>
+          <div class="greeting-card-row-info">
+            <h3><%= link_to card.title, greeting_card_path(card) %></h3>
+            <p><%= card.recipient_name %></p>
+          </div>
+          <div class="greeting-card-row-date">
+            <%= card.occasion_date ? l(card.occasion_date, format: :short) : '-' %>
+          </div>
+          <div class="greeting-card-row-status">
+            <% if card.sent %>
+              <span class="badge sent">Enviado</span>
+            <% else %>
+              <span class="badge pending">Pendente</span>
+            <% end %>
+          </div>
+          <div class="greeting-card-row-actions">
+            <%= link_to 'Ver', greeting_card_path(card), class: 'btn btn-small' %>
+            <%= link_to 'Editar', edit_greeting_card_path(card), class: 'btn btn-small' %>
+            <% unless card.sent %>
+              <%= link_to 'Marcar Enviado', mark_sent_greeting_card_path(card), method: :patch, class: 'btn btn-small btn-secondary' %>
+            <% end %>
+            <%= link_to 'Remover', greeting_card_path(card), method: :delete, data: { confirm: 'Tem certeza?' }, class: 'btn btn-small btn-danger' %>
+          </div>
+        </article>
+      <% end %>
+    </div>
   </section>
 <% else %>
-  <p class="empty-state">Nenhum cartão cadastrado. <%= link_to 'Criar primeiro cartão', new_greeting_card_path %>.</p>
+  <% unless @upcoming_cards.any? %>
+    <div class="empty-state">
+      <div class="empty-state-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="M7 8h10M7 12h10M7 16h6"/>
+        </svg>
+      </div>
+      <p>Nenhum cartão cadastrado</p>
+      <%= link_to 'Criar primeiro cartão', new_greeting_card_path, class: 'btn btn-primary' %>
+    </div>
+  <% end %>
 <% end %>
