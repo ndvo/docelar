@@ -1,0 +1,60 @@
+<div class="greeting-card-show">
+  <div class="greeting-card-show-header">
+    <%= link_to '← Voltar', greeting_cards_path, class: 'back-link' %>
+    <div class="greeting-card-show-actions">
+      <%= link_to 'Editar', edit_greeting_card_path(@greeting_card), class: 'btn btn-secondary' %>
+      <% unless @greeting_card.sent %>
+        <%= link_to 'Marcar Enviado', mark_sent_greeting_card_path(@greeting_card), method: :patch, class: 'btn btn-primary' %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="greeting-card-show-content">
+    <div class="greeting-card-preview-container">
+      <div class="greeting-card-preview-image">
+        <% if @greeting_card.preview_image.attached? %>
+          <img src="<%= url_for(@greeting_card.preview_image) %>" alt="<%= @greeting_card.title %>">
+        <% else %>
+          <div class="greeting-card-preview-loading">
+            <div class="spinner"></div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="greeting-card-sidebar">
+      <div class="greeting-card-meta">
+        <span class="greeting-card-type <%= @greeting_card.card_type %>"><%= @greeting_card.card_type.humanize %></span>
+        <% if @greeting_card.sent %>
+          <span class="badge sent">Enviado</span>
+        <% else %>
+          <span class="badge pending">Pendente</span>
+        <% end %>
+      </div>
+
+      <% if @greeting_card.occasion_date %>
+        <div class="greeting-card-date">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <path d="M16 2v4M8 2v4M3 10h18"/>
+          </svg>
+          <span><%= l(@greeting_card.occasion_date_display, format: :long) %></span>
+          <span class="days-count <%= @greeting_card.days_until_occasion <= 7 ? 'soon' : '' %>">
+            (<%= @greeting_card.days_until_occasion %> dias)
+          </span>
+        </div>
+      <% end %>
+
+      <div class="greeting-card-download">
+        <%= link_to download_greeting_card_path(@greeting_card), class: 'btn btn-secondary' do %>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Baixar Imagem
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
