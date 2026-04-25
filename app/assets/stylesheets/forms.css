@@ -768,3 +768,376 @@ fieldset legend {
   margin: var(--margin-normal) 0;
   flex-wrap: wrap;
 }
+
+/* Greeting Cards Styles */
+.greeting-cards-header {
+  margin: var(--margin-normal) 0;
+}
+
+.greeting-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--margin-normal);
+  margin: var(--margin-normal) 0;
+}
+
+.greeting-card-item {
+  background: var(--color-card-background);
+  border-radius: var(--radius-normal);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-base);
+  display: flex;
+  flex-direction: column;
+}
+
+.greeting-card-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.greeting-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.greeting-card-link:hover {
+  text-decoration: none;
+}
+
+.greeting-card-link:hover .greeting-card-title {
+  color: var(--color-highlight);
+}
+
+.greeting-card-image {
+  height: 160px;
+  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.greeting-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.greeting-card-placeholder {
+  width: 48px;
+  height: 48px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.greeting-card-placeholder svg {
+  width: 100%;
+  height: 100%;
+}
+
+.greeting-card-content {
+  padding: var(--margin-normal);
+  flex: 1;
+}
+
+.greeting-card-type {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--margin-tiny);
+}
+
+.greeting-card-type.birthday { color: var(--color-birthday); }
+.greeting-card-type.christmas { color: var(--color-christmas); }
+.greeting-card-type.anniversary { color: var(--color-anniversary); }
+.greeting-card-type.wedding { color: var(--color-wedding); }
+.greeting-card-type.baby { color: var(--color-baby); }
+
+.greeting-card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 var(--margin-small);
+  color: var(--color-text);
+}
+
+.greeting-card-recipient,
+.greeting-card-date {
+  display: flex;
+  align-items: center;
+  gap: var(--margin-tiny);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin: var(--margin-tiny) 0;
+}
+
+.greeting-card-recipient svg,
+.greeting-card-date svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.days-count {
+  font-size: 0.75rem;
+}
+
+.days-count.soon {
+  color: var(--color-warning);
+  font-weight: 600;
+}
+
+.greeting-card-status {
+  padding: 0 var(--margin-normal);
+  display: flex;
+  justify-content: flex-start;
+}
+
+.greeting-card-actions {
+  padding: var(--margin-normal);
+  display: flex;
+  gap: var(--margin-tiny);
+  border-top: 1px solid var(--color-border);
+  margin-top: auto;
+}
+
+.greeting-card-actions .btn {
+  flex: 1;
+  text-align: center;
+}
+
+/* Table View */
+.greeting-cards-table {
+  display: flex;
+  flex-direction: column;
+  gap: var(--margin-tiny);
+}
+
+.greeting-card-row {
+  display: grid;
+  grid-template-columns: 60px 120px 1fr 100px 100px auto;
+  gap: var(--margin-normal);
+  align-items: center;
+  padding: var(--margin-small);
+  background: var(--color-card-background);
+  border-radius: var(--radius-small);
+  box-shadow: var(--shadow-sm);
+}
+
+.greeting-card-row:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.greeting-card-row-thumb {
+  width: 60px;
+  height: 80px;
+  border-radius: var(--radius-small);
+  overflow: hidden;
+  background: var(--color-secondary);
+}
+
+.greeting-card-row-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.greeting-card-row-type {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+}
+
+.greeting-card-row-info h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.greeting-card-row-info h3 a {
+  color: var(--color-text);
+}
+
+.greeting-card-row-info h3 a:hover {
+  color: var(--color-highlight);
+}
+
+.greeting-card-row-info p {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin: var(--margin-tiny) 0 0;
+}
+
+.greeting-card-row-date {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.greeting-card-row-actions {
+  display: flex;
+  gap: var(--margin-tiny);
+  justify-content: flex-end;
+}
+
+/* Greeting Card Show Page */
+.greeting-card-show {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.greeting-card-show-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--margin-normal);
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: var(--margin-tiny);
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: var(--color-text);
+}
+
+.greeting-card-show-header .greeting-card-show-actions {
+  display: flex;
+  gap: var(--margin-small);
+  margin: 0;
+  border: none;
+}
+
+.greeting-card-show-content {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: var(--margin-large);
+  align-items: start;
+}
+
+@media (max-width: 700px) {
+  .greeting-card-show-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+.greeting-card-preview-container {
+  background: var(--color-secondary);
+  border-radius: var(--radius-normal);
+  overflow: hidden;
+  position: sticky;
+  top: var(--margin-normal);
+}
+
+.greeting-card-preview-image {
+  aspect-ratio: 3 / 4;
+}
+
+.greeting-card-preview-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: var(--color-secondary);
+}
+
+.greeting-card-preview-loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.greeting-card-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--margin-normal);
+}
+
+.greeting-card-meta {
+  display: flex;
+  gap: var(--margin-small);
+  align-items: center;
+}
+
+.greeting-card-type {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+}
+
+.greeting-card-type.birthday { color: var(--color-birthday); }
+.greeting-card-type.christmas { color: var(--color-christmas); }
+.greeting-card-type.anniversary { color: var(--color-anniversary); }
+.greeting-card-type.wedding { color: var(--color-wedding); }
+.greeting-card-type.baby { color: var(--color-baby); }
+
+.greeting-card-date {
+  display: flex;
+  align-items: center;
+  gap: var(--margin-small);
+  color: var(--color-text-muted);
+}
+
+.greeting-card-date svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.days-count {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.days-count.soon {
+  color: var(--color-warning);
+  font-weight: 600;
+}
+
+.greeting-card-download .btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.greeting-card-download {
+  margin-top: var(--margin-normal);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: var(--margin-large);
+  color: var(--color-text-muted);
+}
+
+.empty-state-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--margin-normal);
+  color: var(--color-border);
+}
+
+.empty-state-icon svg {
+  width: 100%;
+  height: 100%;
+}
