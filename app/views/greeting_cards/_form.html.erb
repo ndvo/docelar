@@ -39,9 +39,13 @@
     <%= f.text_area :message, rows: 5, placeholder: "Escreva sua mensagem..." %>
   </div>
 
-  <div class="field">
+  <div class="field" data-controller="letter-background-picker"
+       data-letter-background-picker-url="<%= letter_backgrounds_path(format: :json) %>"
+       data-letter-background-picker-selected-id="<%= greeting_card.letter_background_id %>">
     <%= f.label :letter_background_id, "Fundo" %>
-    <%= f.collection_select :letter_background_id, LetterBackground.active.for_user(Current.user), :id, :name, { include_blank: "Sem fundo" } %>
+    <%= f.hidden_field :letter_background_id %>
+    <div class="letter-background-picker-grid" data-letter-background-picker-target="grid"></div>
+    <div class="letter-background-picker-preview" data-letter-background-picker-target="preview"></div>
     <%= link_to 'Gerenciar fundos', letter_backgrounds_path, target: '_blank' %>
   </div>
 

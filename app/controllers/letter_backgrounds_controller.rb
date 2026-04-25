@@ -6,6 +6,17 @@ class LetterBackgroundsController < ApplicationController
 
   def index
     @letter_backgrounds = Current.user.letter_backgrounds.order(created_at: :desc)
+    
+    respond_to do |format|
+      format.html
+      format.json { render json: @letter_backgrounds.map { |bg| {
+        id: bg.id,
+        name: bg.name,
+        source_type: bg.source_type,
+        image_url: bg.image.attached? ? url_for(bg.image) : nil,
+        preview_url: bg.image.attached? ? preview_letter_background_url(bg) : nil
+      } } }
+    end
   end
 
   def show
