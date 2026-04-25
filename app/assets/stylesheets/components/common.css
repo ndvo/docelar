@@ -132,6 +132,28 @@ li {
   opacity: 0.6;
 }
 
+/* .page-header */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--margin-normal);
+  margin-bottom: var(--margin-large);
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: var(--font-size-2xl);
+}
+
+.page-header .text-secondary {
+  color: var(--link);
+  opacity: 0.7;
+  font-size: 0.9rem;
+  margin: var(--margin-small) 0 0 0;
+}
+
 /* Breadcrumb */
 .breadcrumb {
   margin-bottom: var(--margin-large);

@@ -1,29 +1,52 @@
-<h1>Fundos de Cartões</h1>
+<% content_for :title, "Fundos de Cartões" %>
 
-<%= link_to 'Novo Fundo', new_letter_background_path, class: 'btn btn-primary' %>
+<header class="page-header">
+  <div>
+    <h1>Fundos de Cartões</h1>
+    <p class="text-secondary">Gerencie as imagens de fundo dos seus cartões postais</p>
+  </div>
+  <%= link_to 'Novo Fundo', new_letter_background_path, class: 'btn btn-primary' %>
+</header>
 
 <% if @letter_backgrounds.any? %>
-  <div class="backgrounds-grid">
+  <div class="letter-backgrounds-grid">
     <% @letter_backgrounds.each do |bg| %>
-      <article class="background-item">
-        <div class="background-preview">
-          <% if bg.image_url %>
-            <%= image_tag bg.image_url, alt: bg.name %>
+      <article class="letter-background-card">
+        <div class="letter-background-preview">
+          <% if bg.image.attached? %>
+            <%= image_tag preview_letter_background_path(bg), alt: bg.name %>
           <% else %>
-            <div class="no-image">Sem imagem</div>
+            <div class="letter-background-placeholder">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
           <% end %>
         </div>
-        <div class="background-info">
-          <h3><%= bg.name %></h3>
-          <p class="source-type"><%= bg.source_type.humanize %></p>
-          <div class="actions">
-            <%= link_to 'Editar', edit_letter_background_path(bg) %>
-            <%= link_to 'Remover', letter_background_path(bg), method: :delete, data: { confirm: 'Tem certeza?' } %>
+        <div class="letter-background-body">
+          <h3 class="letter-background-title"><%= bg.name %></h3>
+          <div class="letter-background-meta">
+            <span class="letter-background-type"><%= bg.source_type.humanize %></span>
+          </div>
+          <div class="letter-background-actions">
+            <%= link_to 'Editar', edit_letter_background_path(bg), class: 'btn btn-small' %>
+            <%= link_to 'Remover', letter_background_path(bg), method: :delete, data: { confirm: 'Tem certeza?' }, class: 'btn btn-small btn-danger' %>
           </div>
         </div>
       </article>
     <% end %>
   </div>
 <% else %>
-  <p class="empty-state">Nenhum fundo cadastrado. <%= link_to 'Criar primeiro fundo', new_letter_background_path %>.</p>
+  <div class="empty-state-large">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+      <circle cx="8.5" cy="8.5" r="1.5"/>
+      <polyline points="21 15 16 10 5 21"/>
+    </svg>
+    <h2>Nenhum fundo cadastrado</h2>
+    <p>Crie seu primeiro fundo de cartão para começar a enviar cartões postais personalizados.</p>
+    <%= link_to 'Criar Primeiro Fundo', new_letter_background_path, class: 'btn btn-primary' %>
+  </div>
 <% end %>
