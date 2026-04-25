@@ -1,11 +1,14 @@
 class GreetingCardsController < ApplicationController
   before_action :require_authentication
-  before_action :set_greeting_card, only: [:edit, :update, :destroy, :mark_sent]
+  before_action :set_greeting_card, only: [:show, :edit, :update, :destroy, :mark_sent, :preview_image, :thumbnail]
 
   def index
     @greeting_cards = Current.user.greeting_cards.order(created_at: :desc)
     @upcoming_cards = Current.user.greeting_cards.upcoming
     @pending_cards = Current.user.greeting_cards.pending
+  end
+
+  def show
   end
 
   def new
@@ -40,6 +43,7 @@ class GreetingCardsController < ApplicationController
     end
     
     if @greeting_card.save
+      GreetingCardImageService.invalidate(@greeting_card)
       redirect_to greeting_cards_path, notice: 'Cartão atualizado com sucesso.'
     else
       render :edit
@@ -54,6 +58,31 @@ class GreetingCardsController < ApplicationController
   def mark_sent
     @greeting_card.mark_as_sent
     redirect_to greeting_cards_path, notice: 'Cartão marcado como enviado.'
+  end
+
+def preview_image
+    return head :not_found unless @greeting_card.preview_image.attached?
+
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    send_file @greeting_card.preview_image.path, type: @greeting_card.preview_image.content_type, disposition: :inline
+  end
+
+  def thumbnail
+    return head :not_found unless @greeting_card.preview_image.attached?
+
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    send_file @greeting_card.preview_image.path, type: @greeting_card.preview_image.content_type, disposition: :inline
+  end
+
+  def download
+    return head :not_found unless @greeting_card.preview_image.attached?
+
+    send_file @greeting_card.preview_image.path, 
+              type: @greeting_card.preview_image.content_type,
+              filename: "cartao-#{@greeting_card.title.parameterize}.png",
+              disposition: :attachment
   end
 
   private

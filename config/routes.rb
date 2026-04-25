@@ -37,6 +37,9 @@ Rails.application.routes.draw do
   resources :greeting_cards do
     member do
       patch :mark_sent
+      get :preview_image
+      get :thumbnail
+      get :download
     end
   end
   resources :letter_backgrounds do
