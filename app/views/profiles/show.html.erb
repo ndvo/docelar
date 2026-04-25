@@ -19,10 +19,6 @@
         </div>
       <% end %>
 
-      <% if flash[:notice] && params[:action] == 'password' %>
-        <p class="notice"><%= flash[:notice] %></p>
-      <% end %>
-
       <div class="field">
         <%= label_tag 'user[current_password]', 'Current Password' %>
         <%= password_field_tag 'user[current_password]' %>
