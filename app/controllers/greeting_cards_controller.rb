@@ -1,6 +1,6 @@
 class GreetingCardsController < ApplicationController
   before_action :require_authentication
-  before_action :set_greeting_card, only: [:show, :edit, :update, :destroy, :mark_sent, :preview_image, :thumbnail]
+  before_action :set_greeting_card, only: [:show, :edit, :update, :destroy, :mark_sent, :preview_image, :thumbnail, :download]
 
   def index
     @greeting_cards = Current.user.greeting_cards.order(created_at: :desc)
@@ -73,13 +73,13 @@ def preview_image
     return head :not_found unless @greeting_card.preview_image.attached?
 
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    send_file @greeting_card.preview_image.path, type: @greeting_card.preview_image.content_type, disposition: :inline
+    send_data @greeting_card.preview_image.download, type: @greeting_card.preview_image.content_type, disposition: :inline
   end
 
   def download
     return head :not_found unless @greeting_card.preview_image.attached?
 
-    send_file @greeting_card.preview_image.path, 
+    send_data @greeting_card.preview_image.download, 
               type: @greeting_card.preview_image.content_type,
               filename: "cartao-#{@greeting_card.title.parameterize}.png",
               disposition: :attachment
