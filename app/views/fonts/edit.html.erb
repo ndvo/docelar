@@ -1,0 +1,51 @@
+<div class="font-form-header">
+  <h1>Editar Fonte</h1>
+</div>
+
+<%= form_with model: @font, html: { class: "form" } do |f| %>
+  <% if @font.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@font.errors.count, "erro") %> impediu esta fonte de ser salva:</h2>
+      <ul>
+        <% @font.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name, "Nome *" %>
+    <%= f.text_field :name, required: true, placeholder: "e.g., Dancing Script" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description, "Descrição" %>
+    <%= f.text_area :description, rows: 3, placeholder: "Descreva a fonte, ex: Elegante e cursiva..." %>
+  </div>
+
+  <div class="field">
+    <%= f.label :occasions, "Ocasiões mais apropriadas" %>
+    <div class="checkbox-group">
+      <%= f.collection_check_boxes :occasions, Font::OCCASION_OPTIONS.map { |o| [o, o.humanize] }, :first, :second do |b| %>
+        <div class="checkbox-item">
+          <%= b.checkbox %>
+          <%= b.label %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= f.label :file, "Arquivo da Fonte (TTF/OTF)" %>
+    <%= f.file_field :file, accept: ".ttf,.otf,.woff,.woff2" %>
+    <% if @font.file.attached? %>
+      <p class="help">Arquivo atual: <%= @font.file.filename %></p>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Salvar", class: "btn btn-primary" %>
+    <%= link_to 'Cancelar', fonts_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>

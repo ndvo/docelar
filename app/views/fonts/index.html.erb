@@ -1,0 +1,37 @@
+<div class="fonts-header">
+  <h1>Fontes</h1>
+  <%= link_to 'Nova Fonte', new_font_path, class: "btn btn-primary" %>
+</div>
+
+<%= render "flash_message" %>
+
+<% if @fonts.any? %>
+  <div class="fonts-grid">
+    <% @fonts.each do |font| %>
+      <article class="font-card">
+        <div class="font-preview">
+          <span>AaBbCc 123</span>
+        </div>
+        <div class="font-info">
+          <h3><%= font.name %></h3>
+          <% if font.description.present? %>
+            <p><%= font.description %></p>
+          <% end %>
+          <% if font.occasions.any? %>
+            <div class="font-occasions">
+              <% font.occasions.each do |occasion| %>
+                <span class="badge"><%= occasion.humanize %></span>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        <div class="font-actions">
+          <%= link_to 'Editar', edit_font_path(font), class: "btn btn-small" %>
+          <%= link_to 'Remover', font_path(font), method: :delete, data: { confirm: 'Tem certeza?' }, class: "btn btn-small btn-danger" %>
+        </div>
+      </article>
+    <% end %>
+  </div>
+<% else %>
+  <p class="help">Nenhuma fonte disponível. Faça upload de arquivos TTF ou OTF.</p>
+<% end %>
