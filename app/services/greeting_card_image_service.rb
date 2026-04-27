@@ -7,8 +7,18 @@ class GreetingCardImageService
   PADDING = 60
   TITLE_FONT_SIZE = 72
   MESSAGE_FONT_SIZE = 48
-  FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+  FONT_DIR = "/usr/share/fonts/truetype"
   CACHE_DIR = "/tmp/greeting_cards"
+
+  FONTS = {
+    "dejavu_sans" => "dejavu/DejaVuSans.ttf",
+    "dejavu_serif" => "dejavu/DejaVuSerif.ttf",
+    "dejavu_mono" => "dejavu/DejaVuSansMono.ttf",
+    "lato" => "lato/Lato-Regular.ttf",
+    "lato_black" => "lato/Lato-Black.ttf",
+    "bitstream_charter" => "bitstream Charter.ttf",
+    "courier" => "courier/Courier10Pitch.ttf"
+  }.freeze
 
   class << self
     def generate(greeting_card)
@@ -30,8 +40,8 @@ class GreetingCardImageService
         card = composite_background(card, scaled_bg)
       end
 
-      card = add_title_text(card, greeting_card.title)
-      card = add_message_text(card, greeting_card.message) if greeting_card.message.present?
+      card = add_title_text(card, greeting_card.title, greeting_card.font_family)
+      card = add_message_text(card, greeting_card.message, greeting_card.font_family) if greeting_card.message.present?
 
       card.write(cached_path)
       card = MiniMagick::Image.open(cached_path)
@@ -72,7 +82,7 @@ class GreetingCardImageService
       bg_blob_key = bg&.image&.blob&.key
       filters_hash = bg&.filter_stack&.dig("filters")&.map { |f| f["type"] }&.join(",") || ""
 
-      "#{greeting_card.id}-#{bg_blob_key}-#{Digest::MD5.hexdigest(filters_hash)}-#{greeting_card.updated_at.to_i}"
+      "#{greeting_card.id}-#{greeting_card.font_family}-#{bg_blob_key}-#{Digest::MD5.hexdigest(filters_hash)}-#{greeting_card.updated_at.to_i}"
     end
 
     def get_background_image(greeting_card)
@@ -116,13 +126,15 @@ class GreetingCardImageService
       result
     end
 
-    def add_title_text(card, title)
+    def add_title_text(card, title, font_family = nil)
       return card unless title
+
+      font = font_for(font_family)
 
       card_path = card.path
       output_path = "/tmp/greeting_card_title_#{Process.pid}_#{Time.current.to_i}.png"
 
-      system("convert #{card_path} -gravity north -font #{FONT} -pointsize #{TITLE_FONT_SIZE} " \
+      system("convert #{card_path} -gravity north -font #{font} -pointsize #{TITLE_FONT_SIZE} " \
              "-fill white -stroke black -strokewidth 2 " \
              "-annotate 0x0+0+#{PADDING + TITLE_FONT_SIZE} '#{title.gsub("'", "\\'")}' #{output_path}")
 
@@ -131,22 +143,25 @@ class GreetingCardImageService
       File.delete(output_path) rescue nil
     end
 
-    def add_message_text(card, message)
+    def add_message_text(card, message, font_family = nil)
       return card unless message
+
+      font = font_for(font_family)
 
       wrapped_message = wrap_text(message, 40)
       lines = wrapped_message.lines
       line_height = MESSAGE_FONT_SIZE * 1.5
-      start_y = CARD_HEIGHT / 2
+      total_text_height = lines.count * line_height
+      start_y = (CARD_HEIGHT - total_text_height) / 2
 
       card_path = card.path
       output_path = "/tmp/greeting_card_msg_#{Process.pid}_#{Time.current.to_i}.png"
 
-      cmd = "convert #{card_path} -gravity north -font #{FONT} -pointsize #{MESSAGE_FONT_SIZE} " \
+      cmd = "convert #{card_path} -gravity north -font #{font} -pointsize #{MESSAGE_FONT_SIZE} " \
             "-fill white -stroke black -strokewidth 1"
 
       lines.each_with_index do |line, i|
-        y_pos = start_y + TITLE_FONT_SIZE + PADDING * 2 + (i * line_height)
+        y_pos = start_y + (i * line_height)
         cmd += " -annotate 0x0+0+#{y_pos} '#{line.strip.gsub("'", "\\'")}'"
       end
 
@@ -156,6 +171,36 @@ class GreetingCardImageService
       MiniMagick::Image.open(output_path)
     ensure
       File.delete(output_path) rescue nil
+    end
+
+    def font_for(font_family)
+      return default_font unless font_family.present?
+
+      # Check if it's a custom font ID (numeric)
+      if font_family.to_s.match?(/^\d+$/)
+        font = Font.active.find_by(id: font_family)
+        if font&.file.attached?
+          # Copy to temp file for ImageMagick to use
+          return copy_font_to_temp(font)
+        end
+      end
+
+      # Check system fonts
+      font_path = FONTS[font_family]
+      return "#{FONT_DIR}/#{font_path}" if font_path
+      default_font
+    end
+
+    def copy_font_to_temp(font)
+      temp_path = "/tmp/font_#{font.id}_#{font.file.filename}"
+      return temp_path if File.exist?(temp_path)
+      
+      FileUtils.cp(font.font_path, temp_path)
+      temp_path
+    end
+
+    def default_font
+      "#{FONT_DIR}/dejavu/DejaVuSans.ttf"
     end
 
     def wrap_text(text, max_width)

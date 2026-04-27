@@ -39,14 +39,21 @@
     <%= f.text_area :message, rows: 5, placeholder: "Escreva sua mensagem..." %>
   </div>
 
-  <div class="field" data-controller="letter-background-picker"
-       data-letter-background-picker-url="<%= letter_backgrounds_path(format: :json) %>"
-       data-letter-background-picker-selected-id="<%= greeting_card.letter_background_id %>">
+  <div class="field">
     <%= f.label :letter_background_id, "Fundo" %>
     <%= f.hidden_field :letter_background_id %>
     <div class="letter-background-picker-grid" data-letter-background-picker-target="grid"></div>
     <div class="letter-background-picker-preview" data-letter-background-picker-target="preview"></div>
     <%= link_to 'Gerenciar fundos', letter_backgrounds_path, target: '_blank' %>
+  </div>
+
+  <div class="field" data-controller="font-picker"
+       data-font-picker-url="<%= fonts_path(format: :json) %>"
+       data-font-picker-selected-id="<%= greeting_card.font_family %>">
+    <%= f.label :font_family, "Fonte" %>
+    <%= f.hidden_field :font_family, data: { font_picker_target: "hidden" } %>
+    <div class="font-picker-grid" data-font-picker-target="grid"></div>
+    <%= link_to 'Gerenciar fontes', fonts_path, target: '_blank' %>
   </div>
 
   <div class="actions">

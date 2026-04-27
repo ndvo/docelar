@@ -54,6 +54,7 @@ Rails.application.routes.draw do
       get :preview
     end
   end
+  resources :fonts
   resources :tasks do
     post :bulk_update, on: :collection
     get :summary, on: :collection

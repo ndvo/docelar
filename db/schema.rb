@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_25_233150) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_27_000002) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -148,6 +148,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_25_233150) do
     t.index ["patient_id"], name: "index_family_medical_histories_on_patient_id"
   end
 
+  create_table "fonts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.json "occasions", default: []
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_fonts_on_active"
+  end
+
   create_table "galleries", force: :cascade do |t|
     t.string "folder_name"
     t.string "name"
@@ -172,6 +182,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_25_233150) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "letter_background_id"
+    t.string "font_family"
     t.index ["contact_id"], name: "index_greeting_cards_on_contact_id"
     t.index ["letter_background_id"], name: "index_greeting_cards_on_letter_background_id"
     t.index ["person_id"], name: "index_greeting_cards_on_person_id"

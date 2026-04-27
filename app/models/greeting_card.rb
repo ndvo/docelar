@@ -64,7 +64,7 @@ class GreetingCard < ApplicationRecord
   private
 
   def should_generate_preview?
-    saved_change_to_title? || saved_change_to_message? || saved_change_to_letter_background_id? || preview_image.blank?
+    saved_change_to_title? || saved_change_to_message? || saved_change_to_letter_background_id? || saved_change_to_font_family? || preview_image.blank?
   end
 
   def generate_preview_image
