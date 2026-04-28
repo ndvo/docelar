@@ -4,6 +4,8 @@ class ConfigurationsController < ApplicationController
   def show
     @appointment_types = AppointmentType.order(:name)
     @new_appointment_type = AppointmentType.new
+    @fonts = Font.order(created_at: :desc)
+    @new_font = Font.new
   end
 
   def create_appointment_type
@@ -26,9 +28,30 @@ class ConfigurationsController < ApplicationController
     end
   end
 
+  def create_font
+    @new_font = Font.new(font_params)
+    if @new_font.save
+      redirect_to configuration_path, notice: 'Fonte criada com sucesso.'
+    else
+      @appointment_types = AppointmentType.order(:name)
+      @fonts = Font.order(created_at: :desc)
+      render :show
+    end
+  end
+
+  def destroy_font
+    @font = Font.find(params[:id])
+    @font.destroy
+    redirect_to configuration_path, notice: 'Fonte removida com sucesso.'
+  end
+
   private
 
   def appointment_type_params
     params.require(:appointment_type).permit(:name, :description, :applicable_types, :active)
+  end
+
+  def font_params
+    params.require(:font).permit(:name, :description, :file, :active, occasions: [])
   end
 end

@@ -71,5 +71,56 @@
         </tbody>
       </table>
     </section>
+
+    <section class="config-section" aria-labelledby="fonts-heading">
+      <h2 id="fonts-heading">Fontes</h2>
+      <p class="section-description">Gerencie as fontes personalizadas para os cartões.</p>
+
+      <div class="new-font-form">
+        <h3>Nova Fonte</h3>
+        <%= form_with model: @new_font, url: configuration_fonts_path, local: true do |f| %>
+          <div class="form-row">
+            <div class="field">
+              <%= f.label :name, "Nome" %>
+              <%= f.text_field :name, placeholder: "Dancing Script", required: true %>
+            </div>
+            <div class="field">
+              <%= f.label :description, "Descrição" %>
+              <%= f.text_field :description, placeholder: "Elegante e cursiva" %>
+            </div>
+            <div class="field">
+              <%= f.label :file, "Arquivo (TTF/OTF)" %>
+              <%= f.file_field :file, accept: ".ttf,.otf,.woff,.woff2", required: true %>
+            </div>
+            <div class="actions">
+              <%= f.submit "Adicionar Fonte", class: 'btn btn-primary' %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="fonts-list">
+        <% @fonts.each do |font| %>
+          <div class="font-item">
+            <style>
+              @font-face {
+                font-family: 'custom-font-<%= font.id %>';
+                src: url('<%= url_for(font.file) %>') format('truetype');
+              }
+            </style>
+            <div class="font-preview" style="font-family: 'custom-font-<%= font.id %>', sans-serif;">AaBbCc 123</div>
+            <div class="font-info">
+              <strong><%= font.name %></strong>
+              <% if font.description.present? %>
+                <p><%= font.description %></p>
+              <% end %>
+            </div>
+            <div class="font-actions">
+              <%= link_to 'Remover', configuration_font_path(font), method: :delete, data: { confirm: 'Tem certeza?' }, class: 'btn btn-sm btn-danger' %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </section>
   </div>
 </main>

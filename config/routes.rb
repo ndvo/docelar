@@ -66,6 +66,8 @@ Rails.application.routes.draw do
   resource :configuration, only: [:show]
   post 'configuration/appointment_types', to: 'configurations#create_appointment_type', as: 'create_appointment_type'
   patch 'configuration/update_appointment_types/:id', to: 'configurations#update_appointment_types', as: 'update_appointment_types'
+  post 'configuration/fonts', to: 'configurations#create_font', as: 'configuration_fonts'
+  delete 'configuration/fonts/:id', to: 'configurations#destroy_font', as: 'configuration_font'
   patch 'appointment_types/:id/toggle_active', to: 'appointment_types#toggle_active', as: 'toggle_active_appointment_type'
 
   get 'sign_up' => 'users#new', as: 'sign_up'
