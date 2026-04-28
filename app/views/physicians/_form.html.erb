@@ -22,7 +22,7 @@
 
   <div class="field">
     <%= f.label :person_id, "Associar a Pessoa" %>
-    <%= f.collection_select :person_id, Person.order(:name), :id, :name, { include_blank: "Selecione uma pessoa" } %>
+    <%= f.collection_select :person_id, @available_people, :id, :name, { include_blank: "Selecione uma pessoa" } %>
     <span class="help">Se não selecionar, uma pessoa será criada automaticamente a partir do nome.</span>
   </div>
 

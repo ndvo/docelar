@@ -8,6 +8,7 @@ class PhysiciansController < ApplicationController
 
   def new
     @physician = Physician.new
+    @available_people = available_people
   end
 
   def create
@@ -22,11 +23,13 @@ class PhysiciansController < ApplicationController
     if @physician.save
       redirect_to physicians_path, notice: 'Médico cadastrado com sucesso.'
     else
+      @available_people = available_people
       render :new
     end
   end
 
   def edit
+    @available_people = available_people
   end
 
   def update
@@ -41,6 +44,7 @@ class PhysiciansController < ApplicationController
     if @physician.save
       redirect_to physicians_path, notice: 'Médico atualizado com sucesso.'
     else
+      @available_people = available_people
       render :edit
     end
   end
@@ -58,5 +62,10 @@ class PhysiciansController < ApplicationController
 
   def physician_params
     params.require(:physician).permit(:name, :crm, :person_id)
+  end
+
+  def available_people
+    used_person_ids = Physician.where.not(id: @physician.id).pluck(:person_id).compact
+    Person.where.not(id: used_person_ids).order(:name)
   end
 end
