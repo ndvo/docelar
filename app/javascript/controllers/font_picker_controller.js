@@ -46,10 +46,20 @@ export default class extends Controller {
     // Custom fonts from database
     for (const font of this.customFonts) {
       const isSelected = font.id == selectedId || font.name?.toLowerCase().replace(/\s+/g, '_') == selectedId
+      const fontFamily = `custom-font-${font.id}`
+      const fontUrl = font.preview_url || font.file?.url
+      if (fontUrl) {
+        html += `<style>
+          @font-face {
+            font-family: '${fontFamily}';
+            src: url('${fontUrl}') format('truetype');
+          }
+        </style>`
+      }
       html += `<div class="font-picker-item${isSelected ? ' selected' : ''}" 
                    data-id="${font.id}" 
                    data-font-name="${font.id}">
-        <span class="font-preview">AaBbCc 123</span>
+        <span class="font-preview" style="font-family: '${fontFamily}', sans-serif;">AaBbCc 123</span>
         <span class="font-name">${font.name}</span>
       </div>`
     }
