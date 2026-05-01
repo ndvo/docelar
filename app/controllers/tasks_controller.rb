@@ -7,6 +7,7 @@ class TasksController < ApplicationController
   # GET /tasks or /tasks.json
   def index
     @tasks = tasks
+    @filter_status = index_params[:status] || 'pending'
   end
 
   # GET /tasks/1 or /tasks/1.json
@@ -69,8 +70,8 @@ class TasksController < ApplicationController
   end
 
   def bulk_update
-    Task.pending.where(id: bulk_update_params[:task_ids]).update(is_completed: true)
-    Task.completed.where(id:  bulk_update_params[:all_task_ids].split -  bulk_update_params[:task_ids]).update(is_completed: false)
+    Task.pending.where(id: bulk_update_params[:task_ids]).update(status: 'completed')
+    Task.where(status: ['completed', 'missed']).where(id:  bulk_update_params[:all_task_ids].split -  bulk_update_params[:task_ids]).update(status: 'pending')
 
     respond_to do |format|
       format.html { redirect_to tasks_url, notice: "Tasks was successfully updated." }
@@ -87,14 +88,12 @@ class TasksController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_task
       @task = Task.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def task_params
-      params.require(:task).permit(:responsible_id, :task_id, :name, :description, :is_completed)
+      params.require(:task).permit(:responsible_id, :task_id, :name, :description, :status, :due_date, :due_time, :recurrence_rule)
     end
 
     def bulk_update_params
@@ -102,29 +101,33 @@ class TasksController < ApplicationController
     end
 
     def index_params
-      params.permit(:completed, :responsible_id)
+      params.permit(:status, :responsible_id)
     end
 
-    def tasks
-      if action_name == 'index'
-        task_id = nil
-      else
-        task_id = params[:id]
-      end
-      filter_is_completed = index_params[:completed] || 'false'
-      responsible_id = index_params[:responsible_id]
-
-      query = Task.all
-
-      query = query.where(responsible_id:) if responsible_id.present?
-      query = query.where(task_id:)
-      case filter_is_completed
-      when 'true'
-        query.completed
-      when 'false'
-        query.pending
-      else
-        query.all
-      end
+  def tasks
+    if action_name == 'index'
+      task_id = nil
+    else
+      task_id = params[:id]
     end
+    filter_status = index_params[:status] || 'pending'
+    responsible_id = index_params[:responsible_id]
+
+    query = Task.all
+
+    query = query.where(responsible_id:) if responsible_id.present?
+    query = query.where(task_id:)
+    case filter_status
+    when 'completed'
+      query.completed
+    when 'missed'
+      query.missed
+    when 'cancelled'
+      query.cancelled
+    when 'pending'
+      query.pending
+    else
+      query.all
+    end
+  end
 end

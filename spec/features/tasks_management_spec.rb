@@ -13,11 +13,11 @@ RSpec.describe 'Tasks Management', type: :feature do
       expect(page).to have_content('Buy groceries')
     end
 
-    scenario 'filters by completion status' do
-      create(:task, name: 'Pending Task', is_completed: false)
-      create(:task, name: 'Completed Task', is_completed: true)
+    scenario 'filters by status' do
+      create(:task, name: 'Pending Task', status: 'planned')
+      create(:task, name: 'Completed Task', status: 'completed')
 
-      visit tasks_path(completed: 'false')
+      visit tasks_path(status: 'pending')
       expect(page).to have_content('Pending Task')
     end
   end

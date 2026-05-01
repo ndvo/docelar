@@ -33,8 +33,23 @@
   </div>
 
   <div>
-    <%= form.check_box :is_completed %>
-    <%= form.label :is_completed %>
+    <%= form.label :status, 'Status' %>
+    <%= form.select :status, Task::STATUSES.map { |key, value| [value, key] }, { include_blank: false }, class: 'form-select' %>
+  </div>
+
+  <div>
+    <%= form.label :due_date, style: "display: block" %>
+    <%= form.date_field :due_date %>
+  </div>
+
+  <div>
+    <%= form.label :due_time, 'Horário', style: "display: block" %>
+    <%= form.time_field :due_time, step: 1 %>
+  </div>
+
+  <div>
+    <%= form.label :recurrence_rule, 'Repetição' %>
+    <%= form.select :recurrence_rule, Task::RECURRENCE_OPTIONS.map { |key, value| [value, key] }, { include_blank: false }, class: 'form-select' %>
   </div>
 
   <div class="actions">

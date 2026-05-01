@@ -1,33 +1,59 @@
-
 <div class="actions">
   <%= form_with url: request.path, method: :get do |form| %>
-    <%= form.radio_button :completed, true, checked: @filter_is_completed == "true" %>
-    <%= form.label :completed_true, "Completed" %>
-    <%= form.radio_button :completed, false, checked: @filter_is_completed == "false" %>
-    <%= form.label :completed_false, "Pending" %>
-    <%= form.radio_button :completed, "all", checked: @filter_is_completed == "all" %>
-    <%= form.label :completed_all, "All" %>
-    <%= form.submit "Filter" %>
+    <%= form.radio_button :status, 'pending', checked: @filter_status == "pending" %>
+    <%= form.label :status_pending, "Pendentes" %>
+    <%= form.radio_button :status, 'completed', checked: @filter_status == "completed" %>
+    <%= form.label :status_completed, "Concluídas" %>
+    <%= form.radio_button :status, 'missed', checked: @filter_status == "missed" %>
+    <%= form.label :status_missed, "Perdidas" %>
+    <%= form.radio_button :status, 'cancelled', checked: @filter_status == "cancelled" %>
+    <%= form.label :status_cancelled, "Canceladas" %>
+    <%= form.radio_button :status, "all", checked: @filter_status == "all" %>
+    <%= form.label :status_all, "Todas" %>
+    <%= form.submit "Filtrar" %>
   <% end %>
 </div>
+
 <% if @tasks.blank? %>
   <%= render 'empty_collection', resource: 'tarefa' %>
 <% else %>
   <%= form_with url: { action: 'bulk_update' }, method: :post do |form| %>
     <%= hidden_field_tag("all_task_ids", @tasks.pluck(:id)) %>
     <fieldset>
-      <%= render 'simple_table', {
-        keys: %w(Tarefa Detalhes ✓), 
-        rows: @tasks.map { |i| [
-          (link_to i.name, i),
-          i.description,
-          check_box_tag("task_ids[]", i.id, i.is_completed?),
-        ] }
-      }
-    %>
-  <div class="actions">
-    <%= submit_tag "Salvar" %>
-  </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Tarefa</th>
+            <th>Detalhes</th>
+            <th>Vencimento</th>
+            <th>Repetição</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @tasks.each do |i| %>
+            <tr>
+              <td><%= link_to i.name, i %></td>
+              <td><%= i.description %></td>
+              <td>
+                <% if i.due_date %>
+                  <%= l(i.due_date) %>
+                  <% if i.due_time %>
+                    <%= l(i.due_time, format: :time_only) %>
+                  <% end %>
+                <% end %>
+              </td>
+              <td>
+                <%= Task::RECURRENCE_OPTIONS[i.recurrence_rule] if i.recurrence_rule.present? %>
+              </td>
+              <td><%= Task::STATUSES[i.status] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <div class="actions">
+        <%= form.submit "Salvar" %>
+      </div>
     </fieldset>
   <% end %>
 <% end %>

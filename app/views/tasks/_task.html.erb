@@ -22,4 +22,23 @@
   </p>
   <% end %>
 
+  <% if task.due_date %>
+  <p>
+    <strong>Vencimento:</strong>
+    <%= l task.due_date %><% if task.due_time %>, <%= l task.due_time, format: :time_only %><% end %>
+  </p>
+  <% end %>
+
+  <p>
+    <strong>Status:</strong>
+    <%= Task::STATUSES[task.status] %>
+  </p>
+
+  <% if task.recurring? %>
+  <p>
+    <strong>Repetição:</strong>
+    <%= Task::RECURRENCE_OPTIONS[task.recurrence_rule] %>
+  </p>
+  <% end %>
+
 </div>
