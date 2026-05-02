@@ -480,13 +480,133 @@ gem 'redis' # For job queue if needed
 | Add specs | Medium | Pending |
 | Add navigation link | Low | Pending |
 
+## Productivity Integration
+
+### Pomodoro Sessions on Calendar
+
+- **Focus Blocks** - Pomodoro work sessions visible on calendar
+- **Session Types** - Work (25min), Short Break (5min), Long Break (15-30min)
+- **Task Association** - Click session to see linked task/project
+- **Drag to Reschedule** - Move focus blocks to optimal times
+- **Productivity View** - Calendar overlay showing deep work periods
+
+### GTD Integration
+
+- **Next Actions with Dates** - Scheduled next actions appear on calendar
+- **Project Deadlines** - Project outcomes with due dates
+- **Weekly Review Block** - Recurring weekly review time slot
+- **Context Filtering** - Show only @home, @work, etc. on calendar
+- **Energy Matching** - Color code by energy level required
+
+### Habit Tracking Integration
+
+- **Habit Reminders** - Calendar events for daily habits
+- **Catholic Habits** - Daily Mass, rosary, prayer times
+- **Streak Visualization** - Calendar shows habit completion
+- **Family Habits** - Shared family spiritual practices
+
+## Catholic Features
+
+### Liturgical Calendar Integration
+
+- **Liturgical Seasons** - Advent, Christmas, Lent, Easter, Ordinary Time
+- **Feast Days** - Saint feast days (Brazilian saints highlighted)
+  - **Our Lady of Aparecida** (Oct 12 - National Holiday)
+  - **St. Joseph** (Mar 19)
+  - **St. Sebastian** (Jan 20 - Rio de Janeiro patron)
+  - **St. Francis of Assisi** (Oct 4)
+- **Holy Days of Obligation** - Mass attendance required
+  - Christmas (Dec 25)
+  - Solemnity of Mary (Jan 1)
+  - Assumption of Mary (Aug 15)
+  - All Saints (Nov 1)
+  - Immaculate Conception (Dec 8)
+- **Lenten Season** - Special calendar view (purple theme)
+- **Easter Triduum** - Holy Thursday, Good Friday, Easter Sunday
+
+### Family Spiritual Life
+
+- **Family Prayer Time** - Recurring calendar event
+- **Sunday Rest** - Block Sundays as rest day (no tasks/appointments)
+- **Examen Time** - Daily examen reminder (evening)
+- **Adoration Hours** - Eucharistic adoration time slots
+- **Confession Reminders** - Monthly confession reminder
+- **Bible Study** - Weekly scripture study group
+
+## Brazilian Context
+
+### Brazilian Holidays (Auto-Added)
+
+**National Holidays:**
+- January 1 - Confraternização Universal (New Year)
+- April 21 - Tiradentes
+- May 1 - Dia do Trabalhador (Labor Day)
+- September 7 - Independência do Brasil
+- October 12 - Nossa Senhora Aparecida (Patron Saint)
+- November 2 - Finados (Day of the Dead)
+- November 15 - Proclamação da República
+- December 25 - Natal (Christmas)
+
+**Optional Holidays (State/Municipal):**
+- January 20 - St. Sebastian (RJ)
+- March 19 - St. Joseph
+- Corpus Christi (60 days after Easter)
+- Easter Sunday
+
+**School Calendar Integration:**
+- Summer break (December - January)
+- Winter break (July)
+- School holidays (July, December/January)
+- ENEM date (typically November)
+- Vestibular dates (varies by university)
+
+### Brazilian Regional Features
+
+- **Feriado Municipal** - Allow users to add city-specific holidays
+- **Carnaval** - Moveable feast (typically February/March) - 4-day holiday
+- **Festa Junina** (June) - Traditional celebrations
+- **PIX Payment Reminders** - Bills due appear with PIX integration
+- **SUS Appointments** - Integration with SUS scheduling system
+
+## Enhanced Integration Sources
+
+### Internal Modules (Expanded)
+
+| Source | Event Type | Fields | Productivity Integration |
+|--------|------------|--------|------------------------|
+| Tasks | todo | name, due_date, assignee | Pomodoro sessions, GTD contexts |
+| Payments | payment | amount, due_date, card | PIX reminders, bill alerts |
+| Medical Appointments | appointment | doctor, specialty, location, patient | Treatment adherence habits |
+| Treatments | medication | medication name, scheduled_time | Medication habit tracking |
+| Purchases | delivery | estimated delivery date | - |
+| Pomodoro Sessions | focus | task, project, duration, interruptions | Productivity blocking |
+| Habits | daily | habit name, completion status | Streak visualization |
+| Weekly Review | recurring | review date, checklist items | Recurring calendar block |
+| Education | exam/assignment | subject, due date, student | Study session planning |
+| Academic Counselor | milestone | ENEM date, application deadlines | Countdown timers |
+
+### External Services (Enhanced)
+
+| Service | Sync Direction | Implementation | Brazilian Context |
+|---------|----------------|----------------|------------------|
+| Google Calendar | Read/Write | Google Calendar API | Works in Brazil |
+| Apple Calendar | Import only | ICS file upload | Works in Brazil |
+| ICS Feed | Read only | URL subscription | Brazilian holiday feeds |
+| SUS Appointments | Read only | SUS API (future) | Brazilian health system |
+| School Portals | Read only | Varies by school | Brazilian schools |
+| ENEM/SISU | Read only | INEP API (future) | Brazilian education |
+
 ## Future Enhancements
 
 1. **Event Creation** - Create events directly from calendar
 2. **Drag & Drop** - Reschedule by dragging
-3. **Reminders** - Email/SMS notifications
-4. **Availability** - Block time slots for availability
-5. **Recurring Events** - Full recurrence support
-6. **Invitations** - Send event invitations to family members
+3. **Reminders** - Email/SMS notifications (WhatsApp integration)
+4. **Availability** - Block time slots for availability, focus time
+5. **Recurring Events** - Full recurrence support (Brazilian holiday patterns)
+6. **Invitations** - Send event invitations to family members (WhatsApp share)
 7. **Calendar Sharing** - Share specific calendars with family
-8. **Holiday Calendar** - Brazilian holidays integration
+8. **Holiday Calendar** - Brazilian holidays + Catholic liturgical calendar ✅
+9. **Productivity Views** - Pomodoro sessions, GTD next actions overlay ✅
+10. **Catholic Integration** - Liturgical seasons, feast days, spiritual habits ✅
+11. **Weather Integration** - Brazilian weather for outdoor event planning
+12. **Traffic Integration** - Waze/Google Maps for appointment planning (Brazilian cities)
