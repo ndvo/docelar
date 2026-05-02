@@ -1,7 +1,17 @@
 # Product Team
 project-owner: Project Owner Agent
-health-product: Health Product Owner Agent
 manager: Project Manager Agent
+
+# Family & Personal Team
+pet-care: Pet Care Product Owner Agent
+health-care: Health Care Product Owner Agent
+first-childhood: First Childhood Agent
+education: Education Expert Agent
+academic-counselor: Academic Counselor Agent
+financial-advisor: Financial Advisor Agent
+intellectual-life: Intellectual Life Agent
+social-bonds: Social Bonds Agent
+productivity: Productivity Expert Agent
 
 # UX/Design Team
 design: Design Specialist Agent
