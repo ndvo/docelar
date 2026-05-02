@@ -2,27 +2,45 @@ require "mini_magick"
 require "fileutils"
 
 class GreetingCardImageService
-  CARD_WIDTH = 1200
-  CARD_HEIGHT = 1600
+  FONT_DIR = "/usr/share/fonts/truetype"
+  CACHE_DIR = "/tmp/greeting_cards"
+
+  DEFAULT_WIDTH = 1080
+  DEFAULT_HEIGHT = 1920
   PADDING = 60
   TITLE_FONT_SIZE = 72
   MESSAGE_FONT_SIZE = 48
-  FONT_DIR = "/usr/share/fonts/truetype"
-  CACHE_DIR = "/tmp/greeting_cards"
+
+  PRESET_SIZES = {
+    "whatsapp" => { width: 1080, height: 1920 },
+    "instagram_story" => { width: 1080, height: 1920 },
+    "instagram_portrait" => { width: 1080, height: 1350 },
+    "instagram_square" => { width: 1080, height: 1080 },
+    "facebook" => { width: 1200, height: 630 },
+    "email" => { width: 600, height: 800 },
+    "print_4x6" => { width: 600, height: 900 },
+    "print_5x7" => { width: 750, height: 1050 }
+  }.freeze
+
+  FOLD_CONFIGS = {
+    "none" => { panels: 1 },
+    "half" => { panels: 2 },
+    "tri" => { panels: 3 }
+  }.freeze
 
   FONTS = {
     "dejavu_sans" => "dejavu/DejaVuSans.ttf",
     "dejavu_serif" => "dejavu/DejaVuSerif.ttf",
     "dejavu_mono" => "dejavu/DejaVuSansMono.ttf",
     "lato" => "lato/Lato-Regular.ttf",
-    "lato_black" => "lato/Lato-Black.ttf",
-    "bitstream_charter" => "bitstream Charter.ttf",
-    "courier" => "courier/Courier10Pitch.ttf"
+    "lato_black" => "lato/Lato-Black.ttf"
   }.freeze
 
   class << self
     def generate(greeting_card)
       ensure_cache_dir
+      
+      width, height = dimensions_for(greeting_card)
       cache_key = cache_key_for(greeting_card)
       cached_path = "#{CACHE_DIR}/#{cache_key}.png"
 
@@ -31,22 +49,28 @@ class GreetingCardImageService
       background_image = get_background_image(greeting_card)
       temp_path = "/tmp/greeting_card_base_#{Process.pid}_#{Time.current.to_i}.png"
 
-      system("convert -size #{CARD_WIDTH}x#{CARD_HEIGHT} xc:white #{temp_path}")
+      system("convert -size #{width}x#{height} xc:white #{temp_path}")
       card = MiniMagick::Image.open(temp_path)
       File.delete(temp_path)
 
       if background_image
-        scaled_bg = scale_background_to_card(background_image)
+        scaled_bg = scale_background_to_card(background_image, width, height)
         card = composite_background(card, scaled_bg)
       end
 
-      card = add_title_text(card, greeting_card.title, greeting_card.font_family)
-      card = add_message_text(card, greeting_card.message, greeting_card.font_family) if greeting_card.message.present?
+      card = add_title_text(card, greeting_card.title, greeting_card.font_family, height)
+      card = add_message_text(card, greeting_card.message, greeting_card.font_family, height) if greeting_card.message.present?
 
       card.write(cached_path)
       card = MiniMagick::Image.open(cached_path)
 
       card
+    end
+
+    def dimensions_for(greeting_card)
+      preset = greeting_card.preset_size || "whatsapp"
+      size = PRESET_SIZES[preset] || PRESET_SIZES["whatsapp"]
+      [size[:width], size[:height]]
     end
 
     def thumbnail(greeting_card)
@@ -77,12 +101,30 @@ class GreetingCardImageService
       FileUtils.mkdir_p(CACHE_DIR) unless Dir.exist?(CACHE_DIR)
     end
 
-    def cache_key_for(greeting_card)
+def cache_key_for(greeting_card)
       bg = greeting_card.letter_background
       bg_blob_key = bg&.image&.blob&.key
       filters_hash = bg&.filter_stack&.dig("filters")&.map { |f| f["type"] }&.join(",") || ""
 
-      "#{greeting_card.id}-#{greeting_card.font_family}-#{bg_blob_key}-#{Digest::MD5.hexdigest(filters_hash)}-#{greeting_card.updated_at.to_i}"
+      "#{greeting_card.id}-#{greeting_card.font_family}-#{greeting_card.preset_size}-#{greeting_card.fold_type}-#{bg_blob_key}-#{Digest::MD5.hexdigest(filters_hash)}-#{greeting_card.updated_at.to_i}"
+    end
+
+    def scale_background_to_card(image, target_width, target_height)
+      bg_width = image.width
+      bg_height = image.height
+
+      target_ratio = target_width.to_f / target_height.to_f
+      bg_ratio = bg_width.to_f / bg_height.to_f
+
+      if bg_ratio > target_ratio
+        new_height = target_height
+        new_width = (bg_width * target_height.to_f / bg_height).to_i
+      else
+        new_width = target_width
+        new_height = (bg_height * target_width.to_f / bg_width).to_i
+      end
+
+      image.resize("#{new_width}x#{new_height}")
     end
 
     def get_background_image(greeting_card)
@@ -96,19 +138,19 @@ class GreetingCardImageService
       ImageFilterService.apply_filters(image, filters)
     end
 
-    def scale_background_to_card(image)
+    def scale_background_to_card(image, target_width, target_height)
       bg_width = image.width
       bg_height = image.height
 
-      target_ratio = CARD_WIDTH.to_f / CARD_HEIGHT.to_f
+      target_ratio = target_width.to_f / target_height.to_f
       bg_ratio = bg_width.to_f / bg_height.to_f
 
       if bg_ratio > target_ratio
-        new_height = CARD_HEIGHT
-        new_width = (bg_width * CARD_HEIGHT.to_f / bg_height).to_i
+        new_height = target_height
+        new_width = (bg_width * target_height.to_f / bg_height).to_i
       else
-        new_width = CARD_WIDTH
-        new_height = (bg_height * CARD_WIDTH.to_f / bg_width).to_i
+        new_width = target_width
+        new_height = (bg_height * target_width.to_f / bg_width).to_i
       end
 
       image.resize("#{new_width}x#{new_height}")

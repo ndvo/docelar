@@ -1,4 +1,4 @@
-<%= form_with model: greeting_card do |f| %>
+<%= form_with model: greeting_card, data: { controller: "greeting-card-form" } do |f| %>
   <% if greeting_card.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(greeting_card.errors.count, "erro") %> impediu este cartão de ser salvo:</h2>
@@ -13,6 +13,26 @@
   <div class="field">
     <%= f.label :card_type, "Tipo de Cartão *" %>
     <%= f.select :card_type, GreetingCard.card_types.keys.map { |t| [t.humanize, t] }, prompt: "Selecione o tipo" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :fold_type, "Tipo de Impressão" %>
+    <%= f.select :fold_type, GreetingCard.fold_types.keys.map { |t| [t.humanize, t] }, prompt: "Selecione o tipo" %>
+  </div>
+
+  <div class="field panel-fields" data-fold-types="half tri">
+    <%= f.label :inside_message, "Mensagem (interna)" %>
+    <%= f.text_area :inside_message, rows: 5, placeholder: "Mensagem para o interior do cartão..." %>
+  </div>
+
+  <div class="field panel-fields" data-fold-types="half tri">
+    <%= f.label :back_message, "Mensagem (verso)" %>
+    <%= f.text_area :back_message, rows: 3, placeholder: "Mensagem para o verso do cartão..." %>
+  </div>
+
+  <div class="field">
+    <%= f.label :preset_size, "Tamanho" %>
+    <%= f.select :preset_size, GreetingCard.preset_sizes.keys.map { |t| [t.humanize, t] }, prompt: "Selecione o tamanho" %>
   </div>
 
   <div class="field">
@@ -35,7 +55,7 @@
   </div>
 
   <div class="field">
-    <%= f.label :message, "Mensagem" %>
+    <%= f.label :message, "Mensagem (frente)" %>
     <%= f.text_area :message, rows: 5, placeholder: "Escreva sua mensagem..." %>
   </div>
 

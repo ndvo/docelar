@@ -2,6 +2,8 @@ class GreetingCard < ApplicationRecord
   belongs_to :person, optional: true
   belongs_to :user
   belongs_to :letter_background, optional: true
+  belongs_to :inside_background, class_name: "LetterBackground", optional: true
+  belongs_to :back_background, class_name: "LetterBackground", optional: true
 
   has_one_attached :preview_image
 
@@ -17,6 +19,21 @@ class GreetingCard < ApplicationRecord
     congratulations: 8,
     other: 9
   }
+
+  enum :fold_type, {
+    single: "single",
+    half: "half",
+    tri: "tri"
+  }, prefix: false, default: :single
+
+  enum :preset_size, {
+    whatsapp: "whatsapp",
+    instagram_story: "instagram_story",
+    instagram_portrait: "instagram_portrait",
+    instagram_square: "instagram_square",
+    facebook: "facebook",
+    email: "email"
+  }, prefix: false
 
   validates :title, presence: true
   validates :card_type, presence: true
@@ -64,7 +81,17 @@ class GreetingCard < ApplicationRecord
   private
 
   def should_generate_preview?
-    saved_change_to_title? || saved_change_to_message? || saved_change_to_letter_background_id? || saved_change_to_font_family? || preview_image.blank?
+    saved_change_to_title? || 
+    saved_change_to_message? || 
+    saved_change_to_letter_background_id? || 
+    saved_change_to_font_family? ||
+    saved_change_to_fold_type? ||
+    saved_change_to_inside_message? ||
+    saved_change_to_back_message? ||
+    saved_change_to_inside_background_id? ||
+    saved_change_to_back_background_id? ||
+    saved_change_to_preset_size? ||
+    preview_image.blank?
   end
 
   def generate_preview_image

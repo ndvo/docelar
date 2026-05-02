@@ -92,6 +92,6 @@ def preview_image
   end
 
   def greeting_card_params
-    params.require(:greeting_card).permit(:title, :message, :person_id, :card_type, :occasion_date, :occasion_type, :letter_background_id, :font_family)
+    params.require(:greeting_card).permit(:title, :message, :person_id, :card_type, :occasion_date, :occasion_type, :letter_background_id, :font_family, :fold_type, :preset_size, :inside_message, :back_message, :inside_background_id, :back_background_id)
   end
 end
