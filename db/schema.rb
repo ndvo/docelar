@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_27_000002) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_30_233521) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -183,6 +183,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_27_000002) do
     t.datetime "updated_at", null: false
     t.integer "letter_background_id"
     t.string "font_family"
+    t.string "fold_type", default: "none"
+    t.text "inside_message"
+    t.text "back_message"
+    t.integer "inside_background_id"
+    t.integer "back_background_id"
+    t.string "preset_size"
     t.index ["contact_id"], name: "index_greeting_cards_on_contact_id"
     t.index ["letter_background_id"], name: "index_greeting_cards_on_letter_background_id"
     t.index ["person_id"], name: "index_greeting_cards_on_person_id"
@@ -393,6 +399,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_27_000002) do
     t.datetime "updated_at", null: false
     t.date "borned_on"
     t.date "dead_on"
+    t.index ["name"], name: "index_people_on_name", unique: true
     t.index ["nationality_id"], name: "index_people_on_nationality_id"
   end
 
@@ -636,6 +643,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_27_000002) do
     t.datetime "updated_at", null: false
     t.boolean "is_completed"
     t.integer "responsible_id"
+    t.date "due_date"
+    t.string "recurrence_rule"
+    t.integer "recurring_task_id"
+    t.time "due_time"
+    t.string "status", default: "pending", null: false
+    t.index ["recurring_task_id"], name: "index_tasks_on_recurring_task_id"
     t.index ["responsible_id"], name: "index_tasks_on_responsible_id"
     t.index ["task_id"], name: "index_tasks_on_task_id"
   end
@@ -817,6 +830,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_27_000002) do
   add_foreign_key "tagged_photos", "tags"
   add_foreign_key "tasks", "responsibles"
   add_foreign_key "tasks", "tasks"
+  add_foreign_key "tasks", "tasks", column: "recurring_task_id"
   add_foreign_key "video_categories", "video_categories", column: "parent_id"
   add_foreign_key "video_comments", "users"
   add_foreign_key "video_comments", "video_comments", column: "parent_id"
