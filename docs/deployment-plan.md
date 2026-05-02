@@ -166,6 +166,99 @@ RAILS_ENV=production
 DATABASE_URL=postgresql://user:pass@localhost/docelar_production
 ```
 
+## Local Dual Environment Setup
+
+Run development and production versions of the app on the same machine using separate folders via `git worktree`.
+
+### Why Separate Folders?
+
+- Isolate production environment from development changes
+- Allow checking out different branches (e.g., `main` for production, feature branches for development)
+- Prevent configuration conflicts between environments
+
+### Prerequisites
+
+- Git repository with existing production branch (or create one: `git checkout -b production`)
+- SQLite as database (already configured)
+- Existing `config/master.key` (shared between environments)
+
+### Setup Steps
+
+1. **Create Production Worktree**
+   ```bash
+   git worktree add ../docelar-prod production
+   ```
+   This creates a separate working directory at `../docelar-prod` linked to the `production` branch.
+
+2. **Add Queue Database to `config/database.yml`**
+   Solid Queue requires a separate queue database in production. Add to `config/database.yml`:
+   ```yaml
+   queue:
+     <<: *default
+     database: db/queue.sqlite3
+   ```
+   Then update production environment to use it (already configured in `config/environments/production.rb:54`).
+
+3. **Prepare Databases**
+   Run in both directories:
+   ```bash
+   # Development (current directory)
+   rails db:prepare
+
+   # Production (worktree directory)
+   cd ../docelar-prod && rails db:prepare
+   ```
+
+4. **Handle SSL for Local Production**
+   `config.force_ssl = true` in production will cause issues locally. Override it by setting `RAILS_FORCE_SSL=false` when starting the production server, or modify `config/environments/production.rb` to allow overriding:
+   ```ruby
+   config.force_ssl = ENV.fetch("RAILS_FORCE_SSL", "true") == "true"
+   ```
+
+### Start Script (`bin/start-both`)
+
+Create a script to automate starting both servers:
+
+```bash
+#!/bin/bash
+
+# Configuration
+DEV_PORT=3000
+PROD_PORT=4000
+PROD_DIR="../docelar-prod"
+DEV_DIR="."
+
+# Start Development Server
+echo "Starting Development Server on port $DEV_PORT..."
+cd $DEV_DIR && rails s -p $DEV_PORT &
+
+# Start Production Server
+echo "Starting Production Server on port $PROD_PORT..."
+cd $PROD_DIR && \
+  SOLID_QUEUE_IN_PUMA=true && \
+  RAILS_ENV=production && \
+  rails assets:precompile && \
+  rails s -p $PROD_PORT -e production &
+
+wait
+```
+
+Make the script executable:
+```bash
+chmod +x bin/start-both
+```
+
+### Verify Setup
+
+- Development: http://localhost:3000
+- Production: http://localhost:4000 (disable SSL for local testing)
+
+### Troubleshooting
+
+- **Port conflicts**: Change `DEV_PORT` or `PROD_PORT` in the script
+- **Database issues**: Run `rails db:reset` in respective directories
+- **Asset issues**: Re-run `rails assets:precompile` in production directory
+
 ## CI/CD Pipeline
 
 ### GitHub Actions Example
