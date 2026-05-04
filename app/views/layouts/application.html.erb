@@ -42,24 +42,135 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "base", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "layout", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "forms", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tables", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "components/hero", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "components/cards", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "components/gallery", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "components/common", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "components/medication", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "components/health_hub", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "components/videos", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "components/dashboard", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "components/module-cards", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "components/navigation-v2", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "components/tv-interface", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
-    <header role="banner">
-      <h1><a href="/">Doce Lar</a></h1>
-      <%= render 'main_menu' %>
-      <div id="user-status">
+    <a href="#main-content" class="skip-link" tabindex="0">Pular para conteúdo principal</a>
+    
+    <!-- Mobile Bottom Navigation (visible < 640px) -->
+    <nav class="nav-bottom" aria-label="Navegação móvel">
+      <%= link_to root_path, class: "nav-bottom-item #{current_page?(root_path) ? 'active' : ''}", aria_label: "Início" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+        </svg>
+        <span>Início</span>
+      <% end %>
+      
+      <%= link_to cards_path, class: "nav-bottom-item #{current_page?(cards_path) ? 'active' : ''}", aria_label: "Finanças" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375c-.621 0-1.125-.504-1.125-1.125V18.75zm0-7.5a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375c-.621 0-1.125-.504-1.125-1.125V11.25zm0-7.5a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375C2.754 4.5 2.25 3.996 2.25 3.375V1.5z" />
+        </svg>
+        <span>Finanças</span>
+      <% end %>
+      
+      <%= link_to patients_path, class: "nav-bottom-item #{current_page?(patients_path) ? 'active' : ''}", aria_label: "Saúde" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+        </svg>
+        <span>Saúde</span>
+      <% end %>
+      
+      <!-- Calendar link - TODO: implement calendars_path -->
+      <button class="nav-bottom-item" aria-label="Calendário">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+        </svg>
+        <span>Calendário</span>
+      </button>
+      
+      <button class="nav-bottom-item" aria-label="Mais módulos" onclick="toggleSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+        </svg>
+        <span>Mais</span>
+      </button>
+    </nav>
+    
+    <!-- Desktop Sidebar Navigation -->
+    <aside class="sidebar-nav" aria-label="Navegação principal" id="sidebar-nav">
+      <div class="sidebar-header">
+        <a href="/" class="sidebar-logo">
+          <div class="sidebar-logo-icon" aria-hidden="true">D</div>
+          <span class="sidebar-logo-text">Doce Lar</span>
+        </a>
+        <button class="sidebar-close" aria-label="Fechar menu" onclick="toggleSidebar()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      
+      <!-- GROUP 1: Finance, Legal & Estate -->
+      <nav class="sidebar-group" aria-label="Finanças, Legal & Patrimônio">
+        <div class="sidebar-group-title">Finanças & Patrimônio</div>
+        <ul style="list-style:none;margin:0;padding:0;">
+          <li><%= link_to 'Cards', cards_path, class: "sidebar-link #{current_page?(cards_path) ? 'active' : ''}" %></li>
+          <li><%= link_to 'Compras', purchases_path, class: "sidebar-link #{current_page?(purchases_path) ? 'active' : ''}" %></li>
+          <li><%= link_to 'Pagamentos', payments_path, class: "sidebar-link #{current_page?(payments_path) ? 'active' : ''}" %></li>
+          <li><%= link_to 'Produtos', products_path, class: "sidebar-link #{current_page?(products_path) ? 'active' : ''}" %></li>
+        </ul>
+      </nav>
+      
+      <!-- GROUP 2: Wellness -->
+      <nav class="sidebar-group" aria-label="Bem-Estar">
+        <div class="sidebar-group-title">Bem-Estar</div>
+        <ul style="list-style:none;margin:0;padding:0;">
+          <li><%= link_to 'Pacientes', patients_path, class: "sidebar-link #{current_page?(patients_path) ? 'active' : ''}" %></li>
+          <li><%= link_to 'Tratamentos', treatments_path, class: "sidebar-link #{current_page?(treatments_path) ? 'active' : ''}" %></li>
+          <li><%= link_to 'Pets', dogs_path, class: "sidebar-link #{current_page?(dogs_path) ? 'active' : ''}" %></li>
+        </ul>
+      </nav>
+      
+      <!-- GROUP 3: Growth & Routine -->
+      <nav class="sidebar-group" aria-label="Crescimento & Rotina">
+        <div class="sidebar-group-title">Crescimento</div>
+        <ul style="list-style:none;margin:0;padding:0;">
+          <li><%= link_to 'Tarefas', tasks_path, class: "sidebar-link #{current_page?(tasks_path) ? 'active' : ''}" %></li>
+          <li><%= link_to 'Notas', notes_path, class: "sidebar-link #{current_page?(notes_path) ? 'active' : ''}" %></li>
+          <li><%= link_to 'Etiquetas', tags_path, class: "sidebar-link #{current_page?(tags_path) ? 'active' : ''}" %></li>
+        </ul>
+      </nav>
+      
+      <!-- GROUP 4: Family Life -->
+      <nav class="sidebar-group" aria-label="Vida Familiar">
+        <div class="sidebar-group-title">Vida Familiar</div>
+        <ul style="list-style:none;margin:0;padding:0;">
+          <li><%= link_to 'Galerias', galleries_path, class: "sidebar-link #{current_page?(galleries_path) ? 'active' : ''}" %></li>
+          <li><%= link_to 'Artigos', articles_path, class: "sidebar-link #{current_page?(articles_path) ? 'active' : ''}" %></li>
+          <li><%= link_to 'Vídeos', videos_path, class: "sidebar-link #{current_page?(videos_path) ? 'active' : ''}" %></li>
+          <!-- Calendar link - TODO: implement calendars_path -->
+          <li><button class="sidebar-link">Calendário</button></li>
+        </ul>
+      </nav>
+      
+      <div class="sidebar-footer">
         <% if current_user %>
-          <%= link_to current_user.email_address, profile_path %>
-          <%= link_to 'Sair', logout_path %>
+          <%= link_to 'Perfil', profile_path, class: "sidebar-footer-link" %>
+          <%= link_to 'Sair', logout_path, class: "sidebar-footer-link" %>
         <% else %>
-          <%= link_to 'Entrar', login_path %>
+          <%= link_to 'Entrar', login_path, class: "sidebar-footer-link" %>
         <% end %>
       </div>
-    </header>
+    </aside>
+    
+    <!-- Overlay for sidebar -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
     
     <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcer"></div>
     <div aria-live="assertive" aria-atomic="true" class="sr-only" id="error-announcer"></div>
@@ -67,9 +178,64 @@
     <main id="main-content" role="main">
       <%= yield %>
     </main>
+    
+    <!-- FAB Button (Quick Add) -->
+    <div class="fab-container">
+      <button class="fab-button" aria-label="Adição rápida" aria-expanded="false" aria-controls="fab-menu" onclick="toggleFabMenu()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+      </button>
+      <div class="fab-menu" id="fab-menu" role="menu">
+        <%= link_to new_purchase_path, class: "fab-menu-item", role: "menuitem" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-21 5.25h19.5m-19.5 1.5h19.5" />
+          </svg>
+          <span>Nova Compra</span>
+        <% end %>
+        <%= link_to new_task_path, class: "fab-menu-item", role: "menuitem" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Nova Tarefa</span>
+        <% end %>
+      </div>
+    </div>
+    
     <%= render partial: "flash_message" %>
+    
+    <script>
+      function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar-nav');
+        const overlay = document.getElementById('sidebar-overlay');
+        const isOpen = sidebar.classList.contains('open');
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('open');
+        document.body.classList.toggle('sidebar-open');
+      }
+      
+      function toggleFabMenu() {
+        const menu = document.getElementById('fab-menu');
+        const button = document.querySelector('.fab-button');
+        const isOpen = menu.classList.contains('open');
+        menu.classList.toggle('open');
+        button.setAttribute('aria-expanded', !isOpen);
+      }
+      
+      // Close FAB menu when clicking outside
+      document.addEventListener('click', function(event) {
+        const fabContainer = document.querySelector('.fab-container');
+        if (fabContainer && !fabContainer.contains(event.target)) {
+          const menu = document.getElementById('fab-menu');
+          const button = document.querySelector('.fab-button');
+          menu?.classList.remove('open');
+          button?.setAttribute('aria-expanded', 'false');
+        }
+      });
+    </script>
+    
     <% if Rails.env.development? %>
-    <%=  console %>
+      <%=  console %>
     <% end %>
   </body>
 </html>

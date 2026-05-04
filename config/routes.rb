@@ -58,7 +58,13 @@ Rails.application.routes.draw do
   resources :tasks do
     post :bulk_update, on: :collection
     get :summary, on: :collection
+    collection do
+      get :inbox
+      get :next_actions
+      get :waiting_for
+    end
   end
+  resources :projects
   resources :responsibles, only: [:create]
 
   root 'home#index'
