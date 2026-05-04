@@ -135,9 +135,18 @@ Before adding any gem, npm package, or library:
 | `developer-experience` | Tests, tooling, developer productivity |
 | `rails` | Ruby on Rails, system design, backend |
 | `rails-performance` | Query optimization, caching |
+| `git` | Git, commit messages, commit descriptions |
 | `design` | CSS, layouts |
 | `accessibility` | WCAG compliance, screen readers, ARIA, a11y testing |
 | `project-owner` | Planning, prioritization |
 | `devops` | CI/CD, deployment, automation |
 | `qa` | Test quality, code quality, accessibility |
-| `health` | Medical appointments, patient health records, conditions, exams |
+| `health-care` | Human health records, medical appointments, SUS vaccinations |
+| `pet-care` | Pet health management, veterinary care, vaccinations |
+| `first-childhood` | Child development (0-6 years), WHO growth charts, ECA |
+| `education` | Brazilian education (BNCC, ENEM), pedagogic theories |
+| `academic-counselor` | University prep (15-18 years), ENEM/vestibular, SISU/PROUNI |
+| `intellectual-life` | Study methods, Zettelkasten, reading strategies, Fides et Ratio |
+| `social-bonds` | Relationships, friendship theology (Aristotelian-Thomistic) |
+| `financial-advisor` | Budget, debt relief, retirement (INSS), Catholic stewardship |
+| `productivity` | GTD system, Pomodoro, habit tracking, Catholic productivity |
