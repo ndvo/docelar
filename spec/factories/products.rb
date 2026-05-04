@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :product do
-    name { "Sample Product" }
-    brand { "Brand" }
-    kind { "food" }
+    sequence(:name) { |n| "Product #{n}" }
+    brand { "Test Brand" }
+    kind { "other" }
   end
 end
