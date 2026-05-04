@@ -1,13 +1,13 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.5.0.dev"
+ruby "3.4.9"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.0.0"
 
-# The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
-gem "sprockets-rails"
+# The modern asset pipeline for Rails 8
+gem "propshaft"
 
 # Use sqlite3 as the database for Active Record
 gem "sqlite3", "~> 2.1"
@@ -58,12 +58,13 @@ gem "bootsnap", require: false
 gem "image_processing", "~> 1.2"
 
 group :development, :test do
-  gem "debug", platforms: %i[ mri mingw x64_mingw ]
-  gem "rspec-rails", "~> 6.0"
-  gem "shoulda-matchers"
-  gem "guard-rspec"
-  gem "ostruct"
+  gem "rspec-rails"
   gem "factory_bot_rails"
+  gem "capybara"
+  gem "selenium-webdriver"
+  gem "webdrivers"
+  gem "shoulda-matchers"
+  gem "rails-controller-testing"
 end
 
 group :development do
