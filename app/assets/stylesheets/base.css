@@ -1,141 +1,459 @@
+/**
+ * Doce Lar - Base Styles & Design Tokens
+ * Version 2.0 - Redesigned for 12-pillar architecture
+ */
+
 :root {
-  /* layout definition */
-  --page-width: 120ch;
+  /* ============================================
+     CORE BRAND COLORS (WCAG AA Compliant)
+     ============================================ */
+  
+  /* Primary - Deep forest green (stewardship, growth, stability) */
+  --color-primary-50: #f0f7f0;
+  --color-primary-100: #dcefdc;
+  --color-primary-200: #bce0bc;
+  --color-primary-300: #8bc88b;
+  --color-primary-400: #5aad5a;
+  --color-primary-500: #2d7a2d;  /* Main primary - 5.2:1 on white */
+  --color-primary-600: #246324;  /* 7.1:1 on white */
+  --color-primary-700: #1b4d1b;
+  --color-primary-800: #133813;
+  --color-primary-900: #0d260d;
+  
+  /* Secondary - Warm terracotta (earth, family, warmth) */
+  --color-secondary-50: #fdf6f0;
+  --color-secondary-100: #fae8d8;
+  --color-secondary-200: #f5d0b0;
+  --color-secondary-300: #edb080;
+  --color-secondary-400: #e59050;
+  --color-secondary-500: #d46a2b;
+  --color-secondary-600: #b35523;
+  --color-secondary-700: #8c4420;
+  --color-secondary-800: #66321a;
+  --color-secondary-900: #402015;
+  
+  /* Accent - Golden wheat (harvest, blessing, Brazilian flag hint) */
+  --color-accent-50: #fefce8;
+  --color-accent-100: #fef9c3;
+  --color-accent-200: #fef08a;
+  --color-accent-300: #fde047;
+  --color-accent-400: #facc15;
+  --color-accent-500: #eab308;
+  --color-accent-600: #ca8a04;
+  --color-accent-700: #a16207;
+  --color-accent-800: #854d0e;
+  --color-accent-900: #713f12;
 
-  --margin-tiny: 0.2em;
-  --margin-small: 0.3236em;
-  --margin-normal: 0.5236em;
-  --margin-large: 0.8472em;
-  --margin-enourmous: 1.3708em;
+  /* ============================================
+     GROUP COLORS (4 Major Groups)
+     ============================================ */
+  
+  /* GROUP 1: Finance, Legal & Estate - Trust blue */
+  --color-group-finance-50: #eff6ff;
+  --color-group-finance-100: #dbeafe;
+  --color-group-finance-200: #bfdbfe;
+  --color-group-finance-300: #93c5fd;
+  --color-group-finance-400: #60a5fa;
+  --color-group-finance-500: #3b82f6;
+  --color-group-finance-600: #2563eb;
+  --color-group-finance-700: #1d4ed8;
 
-  /* typography scale */
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.25rem;
-  --font-size-xl: 1.563rem;
-  --font-size-2xl: 1.953rem;
-  --font-size-3xl: 2.441rem;
+  /* GROUP 2: Wellness - Healing green */
+  --color-group-wellness-50: #f0fdf4;
+  --color-group-wellness-100: #dcfce7;
+  --color-group-wellness-200: #bbf7d0;
+  --color-group-wellness-300: #86efac;
+  --color-group-wellness-400: #4ade80;
+  --color-group-wellness-500: #22c55e;
+  --color-group-wellness-600: #16a34a;
+  --color-group-wellness-700: #15803d;
 
-  /* colors definition */
-  --prussian-blue: hsla(209, 80%, 16%, 1);
-  --blush: hsla(345, 65%, 60%, 1);
-  --shimmering-blush: hsla(348, 66%, 69%, 1);
-  --mauvelous: hsla(348, 67%, 79%, 1);
-  --baby-pink: hsla(350, 70%, 88%, 1);
-  --sage: hsla(58, 31%, 67%, 1);
-  --army-green: hsla(89, 66%, 16%, 1);
-  --phthalo-green: hsla(89, 67%, 12%, 1);
-  --gold: hsla(43, 100%, 50%, 1);
-  --burgundy: hsla(348, 67%, 30%, 1);
-  --teal: hsla(174, 62%, 34%, 1);
-  --lavender: hsla(240, 67%, 67%, 1);
-  --rose: hsla(345, 65%, 55%, 1);
+  /* GROUP 3: Growth & Routine - Growth purple */
+  --color-group-growth-50: #faf5ff;
+  --color-group-growth-100: #f3e8ff;
+  --color-group-growth-200: #e9d5ff;
+  --color-group-growth-300: #d8b4fe;
+  --color-group-growth-400: #c084fc;
+  --color-group-growth-500: #a855f7;
+  --color-group-growth-600: #9333ea;
+  --color-group-growth-700: #7e22ce;
 
-  /* color usage */
-  --color-primary: var(--phthalo-green);
-  --color-secondary: var(--army-green);
-  --background: white;
-  --alert: var(--blush);
-  --warning: var(--prussian-blue);
-  --color-highlight: var(--sage);
-  --color-highlight-background: var(--army-green);
-  --link: var(--prussian-blue);
+  /* GROUP 4: Family Life - Warm rose */
+  --color-group-family-50: #fff1f2;
+  --color-group-family-100: #ffe4e6;
+  --color-group-family-200: #fecdd3;
+  --color-group-family-300: #fda4af;
+  --color-group-family-400: #fb7185;
+  --color-group-family-500: #f43f5e;
+  --color-group-family-600: #e11d48;
+  --color-group-family-700: #be123c;
 
-  /* greeting card type colors */
-  --color-birthday: var(--gold);
-  --color-christmas: var(--blush);
-  --color-anniversary: var(--rose);
-  --color-wedding: var(--mauvelous);
-  --color-baby: var(--lavender);
+  /* ============================================
+     SEMANTIC COLORS
+     ============================================ */
+  
+  /* Status Colors */
+  --color-success: #16a34a;
+  --color-success-bg: #f0fdf4;
+  --color-warning: #d97706;
+  --color-warning-bg: #fffbeb;
+  --color-info: #2563eb;
+  --color-info-bg: #eff6ff;
+  --color-danger: #dc2626;
+  --color-danger-bg: #fef2f2;
 
-  /* common styles */
-  --color-card-background: var(--background);
-  --color-border: var(--sage);
-  --color-text: var(--phthalo-green);
-  --color-text-muted: var(--army-green);
-  --color-danger: var(--blush);
+  /* Neutral Palette */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
 
-  /* shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* ============================================
+     APPLICATION COLORS (Light Mode)
+     ============================================ */
+  
+  --color-background: #ffffff;
+  --color-background-secondary: var(--color-gray-50);
+  --color-background-tertiary: var(--color-gray-100);
+  
+  --color-surface: #ffffff;
+  --color-surface-secondary: var(--color-gray-50);
+  
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-muted: var(--color-gray-400);
+  --color-text-inverse: #ffffff;
+  
+  --color-border: var(--color-gray-200);
+  --color-border-focus: var(--color-primary-500);
+  
+  --color-link: var(--color-primary-600);
+  --color-link-hover: var(--color-primary-700);
+  
+  --color-button-primary-bg: var(--color-primary-500);
+  --color-button-primary-text: #ffffff;
+  --color-button-primary-hover: var(--color-primary-600);
+  
+  --color-header-bg: var(--color-primary-700);
+  --color-header-text: #ffffff;
+  
+  --color-focus-ring: var(--color-accent-500);
 
-  /* transitions */
+  /* ============================================
+     TYPOGRAPHY
+     ============================================ */
+  
+  /* Font Families */
+  --font-family-ui: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+                     Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family-heading: 'Georgia', 'Times New Roman', serif;
+  --font-family-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', 
+                      'Courier New', monospace;
+
+  /* Font Sizes (Minor Third Scale: 1.2) */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px - Base */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 1.875rem;  /* 30px */
+  --text-4xl: 2.25rem;   /* 36px */
+  --text-5xl: 3rem;      /* 48px */
+
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  /* Font Weights */
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* Letter Spacing */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+
+  /* ============================================
+     SPACING SCALE (4px base = 0.25rem)
+     ============================================ */
+  
+  --space-0: 0;
+  --space-px: 1px;
+  --space-0-5: 0.125rem;  /* 2px */
+  --space-1: 0.25rem;     /* 4px */
+  --space-1-5: 0.375rem;  /* 6px */
+  --space-2: 0.5rem;      /* 8px */
+  --space-2-5: 0.625rem;  /* 10px */
+  --space-3: 0.75rem;     /* 12px */
+  --space-4: 1rem;        /* 16px */
+  --space-5: 1.25rem;     /* 20px */
+  --space-6: 1.5rem;      /* 24px */
+  --space-8: 2rem;        /* 32px */
+  --space-10: 2.5rem;     /* 40px */
+  --space-12: 3rem;       /* 48px */
+  --space-16: 4rem;       /* 64px */
+  --space-20: 5rem;       /* 80px */
+  --space-24: 6rem;       /* 96px */
+
+  /* ============================================
+     LAYOUT
+     ============================================ */
+  
+  --layout-max-width: 1400px;
+  --layout-sidebar-width: 280px;
+  --layout-gutter: var(--space-6);
+  --layout-content-padding: var(--space-4);
+  --layout-container-padding: var(--space-4);
+
+  /* ============================================
+     BORDER RADIUS
+     ============================================ */
+  
+  --radius-none: 0;
+  --radius-sm: 0.125rem;   /* 2px */
+  --radius-base: 0.25rem;  /* 4px */
+  --radius-md: 0.375rem;   /* 6px */
+  --radius-lg: 0.5rem;     /* 8px */
+  --radius-xl: 0.75rem;    /* 12px */
+  --radius-2xl: 1rem;      /* 16px */
+  --radius-3xl: 1.5rem;    /* 24px */
+  --radius-full: 9999px;    /* Pill shape */
+
+  /* ============================================
+     TOUCH TARGET (WCAG/ADA)
+     ============================================ */
+  
+  --touch-target-min: 44px;  /* Minimum for accessibility */
+  --touch-target-comfortable: 48px;
+
+  /* ============================================
+     SHADOWS
+     ============================================ */
+  
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+
+  /* ============================================
+     TRANSITIONS
+     ============================================ */
+  
   --transition-base: all 0.2s ease-in-out;
+  --transition-colors: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  --transition-transform: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  /* border radius */
-  --radius-small: 0.25em;
-  --radius-normal: 0.5em;
+/* ============================================
+   DARK MODE (prefers-color-scheme)
+   ============================================ */
 
-  /** widths */
-  --width-short: 20ch;
-  --width-regular: 40ch;
-  --width-large: 80ch;
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Background colors */
+    --color-background: #0f172a;
+    --color-background-secondary: #1e293b;
+    --color-background-tertiary: #334155;
+    
+    /* Surface colors */
+    --color-surface: #1e293b;
+    --color-surface-secondary: #334155;
+    
+    /* Text colors */
+    --color-text-primary: #f1f5f9;
+    --color-text-secondary: #94a3b8;
+    --color-text-muted: #64748b;
+    --color-text-inverse: #0f172a;
+    
+    /* Border */
+    --color-border: #334155;
+    --color-border-focus: var(--color-accent-400);
+    
+    /* Links */
+    --color-link: var(--color-primary-400);
+    --color-link-hover: var(--color-primary-300);
+    
+    /* Buttons */
+    --color-button-primary-bg: var(--color-primary-600);
+    --color-button-primary-text: #ffffff;
+    --color-button-primary-hover: var(--color-primary-500);
+    
+    /* Header */
+    --color-header-bg: #1e293b;
+    --color-header-text: #f1f5f9;
+    
+    /* Focus */
+    --color-focus-ring: var(--color-accent-400);
+    
+    /* Shadows (reduced for dark mode) */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  color: var(--color-primary);
-  background: var(--background);
+  color: var(--color-text-primary);
+  background: var(--color-background);
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-family-ui);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  overflow-x: hidden;
 }
 
+/* Links */
 a {
-  color: var(--link);
-  font-weight: bold;
+  color: var(--color-link);
+  font-weight: var(--font-medium);
   text-decoration: none;
+  transition: var(--transition-colors);
 }
 
 a:hover {
+  color: var(--color-link-hover);
   text-decoration: underline;
 }
 
+/* Headings */
 h1, h2, h3, h4, h5, h6 {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-weight: normal;
+  font-family: var(--font-family-heading);
+  font-weight: var(--font-normal);
+  line-height: var(--leading-tight);
+  color: var(--color-text-primary);
   margin: 0;
 }
 
-h1 { font-size: var(--font-size-3xl); }
-h2 { font-size: var(--font-size-2xl); }
-h3 { font-size: var(--font-size-xl); }
-h4 { font-size: var(--font-size-lg); }
-h5, h6 { font-size: var(--font-size-base); }
+h1, .h1 {
+  font-size: var(--text-4xl);
+  margin-bottom: 0.5em;
+}
 
+h2, .h2 {
+  font-size: var(--text-3xl);
+  margin-bottom: 0.5em;
+}
+
+h3, .h3 {
+  font-size: var(--text-2xl);
+  margin-bottom: 0.5em;
+}
+
+h4, .h4 {
+  font-size: var(--text-xl);
+  margin-bottom: 0.5em;
+}
+
+h5, h6, .h5, .h6 {
+  font-size: var(--text-lg);
+  margin-bottom: 0.5em;
+}
+
+/* Body Text */
+p {
+  margin: 0 0 var(--space-4) 0;
+}
+
+.text-caption {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-normal);
+}
+
+.text-mono {
+  font-family: var(--font-family-mono);
+}
+
+/* Images */
 img {
   max-width: 100%;
   height: auto;
+  display: block;
 }
 
-/* Skip link for accessibility */
+/* ============================================
+   ACCESSIBILITY - WCAG AA COMPLIANCE
+   ============================================ */
+
+/* Skip Link */
 .skip-link {
   position: absolute;
-  top: -40px;
-  left: 0;
-  background: var(--color-primary);
-  color: var(--background);
-  padding: 0.5em 1em;
-  z-index: 100;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-header-bg);
+  color: var(--color-header-text);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-lg);
   text-decoration: none;
+  font-weight: var(--font-semibold);
+  z-index: 1000;
+  transition: top 0.3s ease;
 }
 
 .skip-link:focus {
-  top: 0;
+  top: var(--space-4);
 }
 
-/* Focus visible styles */
+/* Focus Visible - 3px solid, high contrast */
 :focus-visible {
-  outline: 3px solid var(--color-highlight);
+  outline: 3px solid var(--color-focus-ring);
   outline-offset: 2px;
-  border-radius: 0.25em;
+  border-radius: var(--radius-base);
 }
 
-a:focus-visible {
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
+/* Remove default focus for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
-button:focus-visible {
-  transform: translateY(1px);
+/* Touch Target Minimum (44x44px) */
+button, 
+a, 
+input, 
+select, 
+textarea, 
+[tabindex] {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+}
+
+/* Buttons specific */
+button,
+.btn {
+  min-height: var(--touch-target-min);
 }
 
 /* Screen reader only content */
@@ -158,5 +476,81 @@ button:focus-visible {
     width: auto;
     height: auto;
     clip: auto;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: more) {
+  :root {
+    --color-border: var(--color-gray-900);
+    --color-text-secondary: var(--color-gray-800);
+  }
+  
+  :focus-visible {
+    outline-width: 4px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+/* ============================================
+   PWA SUPPORT
+   ============================================ */
+
+@media (display-mode: standalone) {
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Safe area insets for notched devices */
+  body {
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
 }

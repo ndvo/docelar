@@ -1,0 +1,246 @@
+/**
+ * Doce Lar - TV Interface Styles
+ * Large screen, remote-friendly interface for TV displays
+ * Target: 1920px+ landscape, controlled via remote
+ */
+
+@media (min-width: 1920px) and (orientation: landscape) {
+  /* ============================================
+     TV-SAFE AREA
+     ============================================ */
+  
+  .tv-safe-area {
+    padding: 5vh 5vw;
+  }
+  
+  /* ============================================
+     BASE ADJUSTMENTS FOR TV
+     ============================================ */
+  
+  :root {
+    --text-base: 1.125rem;  /* Larger base font for viewing distance */
+    --touch-target-min: 56px;  /* Even larger touch/click targets for remote */
+    --layout-container-padding: var(--space-10);
+  }
+  
+  body {
+    font-size: var(--text-base);
+  }
+  
+  /* ============================================
+     TV FOCUS INDICATORS (Remote Navigation)
+     ============================================ */
+  
+  :focus-visible {
+    outline: 6px solid var(--color-focus-ring);
+    outline-offset: 4px;
+    border-radius: var(--radius-lg);
+  }
+  
+  /* Larger focus for interactive elements on TV */
+  button:focus-visible,
+  a:focus-visible,
+  .module-card:focus-visible,
+  .btn:focus-visible {
+    outline-width: 6px;
+    outline-offset: 4px;
+    box-shadow: 0 0 20px rgba(234, 179, 8, 0.4);
+  }
+  
+  /* ============================================
+     MODULE CARDS - TV OPTIMIZED
+     ============================================ */
+  
+  .modules-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns max for readability */
+    gap: var(--space-8);
+  }
+  
+  .module-card {
+    padding: var(--space-8);
+    min-height: 300px;
+    border-width: 2px;
+  }
+  
+  .module-card:hover {
+    transform: scale(1.02); /* Subtle scale instead of translateY */
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Remove hover-only elements on TV (no mouse) */
+  .module-card-actions {
+    opacity: 1;  /* Always visible on TV */
+    transform: none;
+    transition: none;
+  }
+  
+  .module-card-icon {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .module-card-icon svg {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .module-card-title {
+    font-size: var(--text-xl);
+  }
+  
+  .module-card-description {
+    font-size: var(--text-base);
+  }
+  
+  /* ============================================
+     DASHBOARD - TV OPTIMIZED
+     ============================================ */
+  
+  .dashboard-header {
+    padding: var(--space-10) var(--space-8);
+  }
+  
+  .dashboard-header h1 {
+    font-size: var(--text-4xl);
+  }
+  
+  .dashboard-header p {
+    font-size: var(--text-xl);
+  }
+  
+  .stat-card {
+    padding: var(--space-8);
+  }
+  
+  .stat-card-icon {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .stat-card-icon svg {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .stat-card-value {
+    font-size: var(--text-4xl);
+  }
+  
+  .stat-card-label {
+    font-size: var(--text-lg);
+  }
+  
+  /* ============================================
+     NAVIGATION - TV OPTIMIZED
+     ============================================ */
+  
+  .sidebar-nav {
+    width: 320px; /* Wider sidebar for TV */
+  }
+  
+  main {
+    margin-left: 320px;
+  }
+  
+  .sidebar-link {
+    font-size: var(--text-base);
+    padding: var(--space-4) var(--space-6);
+    border-left-width: 4px;
+  }
+  
+  .sidebar-link svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .sidebar-group-title {
+    font-size: var(--text-sm);
+    padding: var(--space-3) var(--space-6);
+  }
+  
+  /* ============================================
+     BUTTONS - TV OPTIMIZED
+     ============================================ */
+  
+  .btn {
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--text-base);
+    border-radius: var(--radius-xl);
+  }
+  
+  /* ============================================
+     TYPOGRAPHY - TV SCALING
+     ============================================ */
+  
+  h1, .h1 { font-size: 2.5rem; }
+  h2, .h2 { font-size: 2rem; }
+  h3, .h3 { font-size: 1.75rem; }
+  h4, .h4 { font-size: 1.5rem; }
+  
+  /* ============================================
+     SIMPLIFIED LAYOUT FOR TV
+     ============================================ */
+  
+  /* Hide complex hover interactions */
+  .hover-only {
+    display: none !important;
+  }
+  
+  /* Show all actions by default */
+  .tv-show-always {
+    display: flex !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  /* ============================================
+     TV LOADING STATE
+     ============================================ */
+  
+  .tv-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    background: var(--color-background);
+  }
+  
+  .tv-loading-spinner {
+    width: 80px;
+    height: 80px;
+    border: 6px solid var(--color-border);
+    border-top-color: var(--color-primary-500);
+    border-radius: 50%;
+    animation: tv-spin 1s linear infinite;
+  }
+  
+  @keyframes tv-spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .tv-loading-text {
+    margin-top: var(--space-6);
+    font-size: var(--text-xl);
+    color: var(--color-text-secondary);
+  }
+}
+
+/* ============================================
+   TV INTERFACE HELPER CLASS
+   ============================================ */
+
+.tv-interface {
+  /* Applied via JS detection of TV/large screen */
+}
+
+.tv-interface .module-card-actions {
+  opacity: 1;
+  transform: none;
+}
+
+.tv-interface :focus-visible {
+  outline: 6px solid var(--color-focus-ring);
+  outline-offset: 4px;
+}

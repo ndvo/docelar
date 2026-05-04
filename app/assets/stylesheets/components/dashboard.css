@@ -1,0 +1,396 @@
+/**
+ * Doce Lar - Dashboard Components
+ * Dashboard widgets, stats cards, activity timeline
+ */
+
+/* ============================================
+   DASHBOARD HEADER
+   ============================================ */
+
+.dashboard-header {
+  background: linear-gradient(135deg, 
+    var(--color-primary-700) 0%, 
+    var(--color-primary-600) 100%);
+  color: var(--color-header-text);
+  padding: var(--space-8) var(--space-6);
+  margin: calc(-1 * var(--layout-content-padding)) 
+         calc(-1 * var(--layout-content-padding)) 
+         var(--space-8);
+  border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+}
+
+.dashboard-header h1 {
+  color: var(--color-header-text);
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--text-3xl);
+}
+
+.dashboard-header p {
+  opacity: 0.9;
+  margin: 0;
+  font-size: var(--text-lg);
+}
+
+/* ============================================
+   DASHBOARD GRID
+   ============================================ */
+
+.dashboard-grid {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-bottom: var(--space-8);
+}
+
+/* ============================================
+   STAT CARD
+   ============================================ */
+
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  transition: var(--transition-base);
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.stat-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-50);
+  color: var(--color-primary-600);
+  flex-shrink: 0;
+}
+
+.stat-card-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.stat-card-content {
+  flex: 1;
+}
+
+.stat-card-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.stat-card-value {
+  font-family: var(--font-family-mono);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  line-height: var(--leading-tight);
+  margin: 0;
+}
+
+.stat-card-change {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  margin-top: var(--space-2);
+}
+
+.stat-card-change.positive {
+  color: var(--color-success);
+}
+
+.stat-card-change.negative {
+  color: var(--color-danger);
+}
+
+.stat-card-change svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============================================
+   QUICK STATS ROW
+   ============================================ */
+
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.quick-stat-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  text-align: center;
+  transition: var(--transition-base);
+}
+
+.quick-stat-item:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.quick-stat-number {
+  font-family: var(--font-family-mono);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-primary-600);
+  display: block;
+  line-height: var(--leading-tight);
+}
+
+.quick-stat-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-1);
+}
+
+/* ============================================
+   ACTIVITY TIMELINE
+   ============================================ */
+
+.activity-timeline {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+
+.activity-timeline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.activity-timeline-header h3 {
+  margin: 0;
+}
+
+.activity-item {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-50);
+  color: var(--color-primary-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.activity-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-text {
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: var(--leading-relaxed);
+}
+
+.activity-time {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+/* ============================================
+   QUICK ACTIONS FAB
+   ============================================ */
+
+.fab-container {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  z-index: 50;
+}
+
+.fab-button {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-500);
+  color: var(--color-button-primary-text);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(45, 122, 45, 0.4);
+  transition: var(--transition-transform);
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+}
+
+.fab-button:hover {
+  background: var(--color-primary-600);
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(45, 122, 45, 0.5);
+}
+
+.fab-button:active {
+  transform: scale(0.95);
+}
+
+.fab-button svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* FAB Menu (expanded) */
+.fab-menu {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-2);
+  min-width: 200px;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: var(--transition-base);
+}
+
+.fab-menu.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.fab-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  transition: var(--transition-colors);
+  min-height: var(--touch-target-min);
+}
+
+.fab-menu-item:hover {
+  background: var(--color-background-secondary);
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.fab-menu-item svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   NOTIFICATION BADGE
+   ============================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: var(--font-bold);
+  line-height: 1;
+}
+
+.badge-danger {
+  background: var(--color-danger);
+  color: white;
+}
+
+.badge-warning {
+  background: var(--color-warning);
+  color: white;
+}
+
+.badge-success {
+  background: var(--color-success);
+  color: white;
+}
+
+.badge-info {
+  background: var(--color-info);
+  color: white;
+}
+
+/* Position relative for badge positioning */
+.badge-container {
+  position: relative;
+  display: inline-block;
+}
+
+.badge-container .badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 639px) {
+  .dashboard-header {
+    padding: var(--space-6) var(--space-4);
+    margin: calc(-1 * var(--space-4)) 
+           calc(-1 * var(--space-4)) 
+           var(--space-6);
+  }
+  
+  .dashboard-header h1 {
+    font-size: var(--text-2xl);
+  }
+  
+  .stat-card {
+    padding: var(--space-4);
+  }
+  
+  .stat-card-value {
+    font-size: var(--text-2xl);
+  }
+  
+  .fab-container {
+    bottom: 80px; /* Above mobile bottom nav */
+  }
+}
