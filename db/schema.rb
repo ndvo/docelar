@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_30_233521) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_02_200200) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -452,6 +452,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_30_233521) do
     t.index ["name", "brand", "kind"], name: "index_products_on_name_and_brand_and_kind", unique: true
   end
 
+  create_table "projects", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "name"
+    t.text "description"
+    t.text "outcome"
+    t.integer "project_type"
+    t.string "category"
+    t.integer "status"
+    t.date "next_review_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_projects_on_user_id"
+  end
+
   create_table "purchases", force: :cascade do |t|
     t.decimal "price"
     t.integer "product_id", null: false
@@ -647,7 +661,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_30_233521) do
     t.string "recurrence_rule"
     t.integer "recurring_task_id"
     t.time "due_time"
-    t.string "status", default: "pending", null: false
+    t.string "status", default: "planned", null: false
+    t.string "context"
+    t.integer "energy_level"
+    t.integer "estimated_time"
+    t.integer "priority"
+    t.string "area_of_focus"
+    t.integer "project_id"
+    t.integer "pomodoro_estimate"
+    t.integer "pomodoro_actual"
+    t.integer "time_spent", default: 0, null: false
+    t.integer "gtd_status"
+    t.index ["context"], name: "index_tasks_on_context"
+    t.index ["energy_level"], name: "index_tasks_on_energy_level"
+    t.index ["gtd_status"], name: "index_tasks_on_gtd_status"
+    t.index ["priority"], name: "index_tasks_on_priority"
+    t.index ["project_id"], name: "index_tasks_on_project_id"
     t.index ["recurring_task_id"], name: "index_tasks_on_recurring_task_id"
     t.index ["responsible_id"], name: "index_tasks_on_responsible_id"
     t.index ["task_id"], name: "index_tasks_on_task_id"
@@ -814,6 +843,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_30_233521) do
   add_foreign_key "pharmacotherapies", "medications"
   add_foreign_key "pharmacotherapies", "treatments"
   add_foreign_key "physicians", "people"
+  add_foreign_key "projects", "users"
   add_foreign_key "purchases", "cards"
   add_foreign_key "purchases", "products"
   add_foreign_key "responsibles", "people"
@@ -828,6 +858,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_30_233521) do
   add_foreign_key "tagged", "tags"
   add_foreign_key "tagged_photos", "photos"
   add_foreign_key "tagged_photos", "tags"
+  add_foreign_key "tasks", "projects", on_delete: :nullify
   add_foreign_key "tasks", "responsibles"
   add_foreign_key "tasks", "tasks"
   add_foreign_key "tasks", "tasks", column: "recurring_task_id"
