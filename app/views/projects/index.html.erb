@@ -1,0 +1,70 @@
+<h1>Projetos</h1>
+
+<%= link_to 'Novo Projeto', new_project_path, class: 'btn btn-primary' %>
+
+<% if @active_projects.any? %>
+  <h2>Projetos Ativos</h2>
+  <div class="projects-list">
+    <% @active_projects.each do |project| %>
+      <div class="project-card">
+        <h3><%= link_to project.name, project %></h3>
+        <p><%= project.description %></p>
+        <p><strong>Status:</strong> <%= project.status.humanize %></p>
+        <p><strong>Tipo:</strong> <%= project.project_type&.humanize || 'Não definido' %></p>
+        <% if project.overdue_for_review? %>
+          <p class="warning">Revisão atrasada!</p>
+        <% elsif project.next_review_date %>
+          <p><strong>Próxima Revisão:</strong> <%= l(project.next_review_date) %></p>
+        <% end %>
+        <div class="actions">
+          <%= link_to 'Editar', edit_project_path(project) %>
+          <%= link_to 'Remover', project, method: :delete, data: { confirm: 'Tem certeza?' } %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @on_hold_projects.any? %>
+  <h2>Projetos em Espera</h2>
+  <div class="projects-list">
+    <% @on_hold_projects.each do |project| %>
+      <div class="project-card">
+        <h3><%= link_to project.name, project %></h3>
+        <p><%= project.description %></p>
+        <div class="actions">
+          <%= link_to 'Editar', edit_project_path(project) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @completed_projects.any? %>
+  <h2>Projetos Concluídos</h2>
+  <div class="projects-list">
+    <% @completed_projects.each do |project| %>
+      <div class="project-card completed">
+        <h3><%= link_to project.name, project %></h3>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @someday_projects.any? %>
+  <h2>Algum Dia / Talvez</h2>
+  <div class="projects-list">
+    <% @someday_projects.each do |project| %>
+      <div class="project-card">
+        <h3><%= link_to project.name, project %></h3>
+        <div class="actions">
+          <%= link_to 'Editar', edit_project_path(project) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @projects.empty? %>
+  <p>Você ainda não tem projetos. <%= link_to 'Crie seu primeiro projeto!', new_project_path %></p>
+<% end %>

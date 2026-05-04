@@ -1,0 +1,51 @@
+<%= form_with model: project, local: true do |f| %>
+  <% if project.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(project.errors.count, "erro") %> impediu este projeto de ser salvo:</h2>
+      <ul>
+        <% project.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name, "Nome *" %>
+    <%= f.text_field :name, required: true, placeholder: "Nome do projeto" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description, "Descrição" %>
+    <%= f.text_area :description, rows: 4, placeholder: "Descreva o projeto..." %>
+  </div>
+
+  <div class="field">
+    <%= f.label :outcome, "Resultado Esperado" %>
+    <%= f.text_area :outcome, rows: 3, placeholder: "O que será alcançado com este projeto?" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :project_type, "Tipo de Projeto" %>
+    <%= f.select :project_type, Project.project_types.keys.map { |t| [t.humanize, t] }, prompt: "Selecione o tipo" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :category, "Categoria" %>
+    <%= f.text_field :category, placeholder: "Ex: Trabalho, Pessoal, Casa" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :status, "Status" %>
+    <%= f.select :status, Project.statuses.keys.map { |s| [s.humanize, s] }, prompt: "Selecione o status" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :next_review_date, "Próxima Revisão" %>
+    <%= f.date_field :next_review_date %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Salvar", class: "btn btn-primary" %>
+  </div>
+<% end %>

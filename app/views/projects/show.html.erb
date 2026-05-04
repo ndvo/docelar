@@ -1,0 +1,61 @@
+<h1><%= @project.name %></h1>
+
+<div class="project-details">
+  <p><strong>Status:</strong> <%= @project.status.humanize %></p>
+  <p><strong>Tipo:</strong> <%= @project.project_type&.humanize || 'Não definido' %></p>
+  
+  <% if @project.description.present? %>
+    <p><strong>Descrição:</strong> <%= @project.description %></p>
+  <% end %>
+  
+  <% if @project.outcome.present? %>
+    <p><strong>Resultado Esperado:</strong> <%= @project.outcome %></p>
+  <% end %>
+  
+  <% if @project.category.present? %>
+    <p><strong>Categoria:</strong> <%= @project.category %></p>
+  <% end %>
+  
+  <% if @project.next_review_date.present? %>
+    <p><strong>Próxima Revisão:</strong> <%= l(@project.next_review_date) %>
+    <% if @project.overdue_for_review? %>
+      <span class="warning">(Atrasada!)</span>
+    <% end %>
+    </p>
+  <% end %>
+</div>
+
+<div class="actions">
+  <%= link_to 'Editar', edit_project_path(@project), class: 'btn btn-secondary' %>
+  <%= link_to 'Voltar', projects_path, class: 'btn btn-secondary' %>
+</div>
+
+<% if @active_tasks.any? %>
+  <h2>Tarefas Ativas</h2>
+  <div class="tasks-list">
+    <% @active_tasks.each do |task| %>
+      <div class="task-item">
+        <span class="task-status"><%= task.gtd_status.humanize %></span>
+        <span class="task-name"><%= task.name || "Tarefa ##{task.id}" %></span>
+        <% if task.due_date %>
+          <span class="task-due-date">Vence em: <%= l(task.due_date) %></span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @completed_tasks.any? %>
+  <h2>Tarefas Concluídas</h2>
+  <div class="tasks-list completed">
+    <% @completed_tasks.each do |task| %>
+      <div class="task-item">
+        <span class="task-name"><%= task.name || "Tarefa ##{task.id}" %></span>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @project.tasks.empty? %>
+  <p>Este projeto ainda não tem tarefas.</p>
+<% end %>
