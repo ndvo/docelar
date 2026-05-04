@@ -1,0 +1,102 @@
+<h1>GTD Next Actions</h1>
+
+<p class="help-text">Ações que você pode executar agora. Filtre por contexto, energia ou prioridade.</p>
+
+<div class="filters">
+  <%= form_tag(next_actions_tasks_path, method: :get, class: 'filter-form') do %>
+    <div class="filter-field">
+      <%= label_tag :context, "Contexto" %>
+      <%= select_tag :context, 
+            options_for_select(@contexts, params[:context]), 
+            prompt: "Todos",
+            class: 'form-control' %>
+    </div>
+
+    <div class="filter-field">
+      <%= label_tag :energy_level, "Nível de Energia" %>
+      <%= select_tag :energy_level, 
+            options_for_select(@energy_levels.map { |e| [e.humanize, e] }, params[:energy_level]), 
+            prompt: "Todos",
+            class: 'form-control' %>
+    </div>
+
+    <div class="filter-field">
+      <%= label_tag :priority, "Prioridade (Matriz Eisenhower)" %>
+      <%= select_tag :priority, 
+            options_for_select(Task.priorities.keys.map { |p| [p.humanize, p] }, params[:priority]), 
+            prompt: "Todas",
+            class: 'form-control' %>
+    </div>
+
+    <div class="filter-actions">
+      <%= submit_tag "Filtrar", class: 'btn btn-primary' %>
+      <%= link_to "Limpar", next_actions_tasks_path, class: 'btn btn-secondary' %>
+    </div>
+  <% end %>
+</div>
+
+<hr>
+
+<h2>Próximas Ações (<%= @next_actions.count %>)</h2>
+
+<% if @next_actions.any? %>
+  <% @grouped_by_project.each do |project, tasks| %>
+    <div class="project-group">
+      <h3>
+        <% if project.present? %>
+          Projeto: <%= link_to project.name, project %>
+        <% else %>
+          Sem Projeto
+        <% end %>
+      </h3>
+      
+      <div class="tasks-list">
+        <% tasks.each do |task| %>
+          <div class="task-card next-action-item">
+            <div class="task-header">
+              <strong><%= link_to(task.name || "Tarefa ##{task.id}", task) %></strong>
+              <% if task.priority.present? %>
+                <span class="priority-badge priority-<%= task.priority %>">
+                  <%= task.priority.humanize %>
+                </span>
+              <% end %>
+            </div>
+            
+            <% if task.description.present? %>
+              <p class="task-description"><%= task.description %></p>
+            <% end %>
+            
+            <div class="task-meta">
+              <% if task.context.present? %>
+                <span class="context-badge"><%= task.context %></span>
+              <% end %>
+              
+              <% if task.energy_level.present? %>
+                <span class="energy-badge energy-<%= task.energy_level %>">
+                  Energia: <%= task.energy_level.humanize %>
+                </span>
+              <% end %>
+              
+              <% if task.due_date.present? %>
+                <span class="due-date <%= 'overdue' if task.due_date < Date.today %>">
+                  Vence: <%= l(task.due_date) %>
+                </span>
+              <% end %>
+            </div>
+            
+            <div class="task-actions">
+              <%= link_to "Editar", edit_task_path(task), class: 'btn btn-small' %>
+              <%= button_to "Concluir", 
+                    task_path(task), 
+                    method: :patch,
+                    params: { task: { gtd_status: 'completed', status: 'completed' } },
+                    class: 'btn btn-small btn-success' %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <p class="empty-message">Nenhuma próxima ação definida. <%= link_to "Adicione tarefas ao seu inbox", inbox_tasks_path %> e processe-as.</p>
+<% end %>

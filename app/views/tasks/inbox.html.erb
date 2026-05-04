@@ -1,0 +1,82 @@
+<h1>GTD Inbox</h1>
+
+<p class="help-text">Capture everything that has your attention. Process these items regularly.</p>
+
+<h2>Capturar Nova Tarefa</h2>
+<%= form_with model: @task, local: true, class: 'quick-capture-form' do |f| %>
+  <% if @task.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@task.errors.count, "erro") %> impediu esta tarefa de ser salvo:</h2>
+      <ul>
+        <% @task.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name, "Nome da Tarefa *" %>
+    <%= f.text_field :name, required: true, placeholder: "O que precisa ser feito?", class: 'form-control' %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description, "Descrição" %>
+    <%= f.text_area :description, rows: 3, placeholder: "Detalhes adicionais...", class: 'form-control' %>
+  </div>
+
+  <%= f.hidden_field :status, value: 'idea' %>
+  <%= f.hidden_field :gtd_status, value: 'inbox' %>
+
+  <div class="actions">
+    <%= f.submit "Capturar", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<hr>
+
+<h2>Itens no Inbox (<%= @inbox_tasks.count %>)</h2>
+
+<% if @inbox_tasks.any? %>
+  <div class="tasks-list">
+    <% @inbox_tasks.each do |task| %>
+      <div class="task-card inbox-item">
+        <h3><%= task.name || "Tarefa ##{task.id}" %></h3>
+        <% if task.description.present? %>
+          <p><%= task.description %></p>
+        <% end %>
+        <p><small>Criado em: <%= l(task.created_at, format: :short) %></small></p>
+        
+        <div class="task-actions">
+          <%= button_to "Processar: Next Action", 
+                task_path(task), 
+                method: :patch,
+                params: { task: { gtd_status: 'next_action', status: 'planned' } },
+                class: 'btn btn-small btn-success' %>
+          
+          <%= button_to "Processar: Agendar", 
+                task_path(task), 
+                method: :patch,
+                params: { task: { gtd_status: 'scheduled', status: 'scheduled' } },
+                class: 'btn btn-small btn-info' %>
+          
+          <%= button_to "Processar: Waiting For", 
+                task_path(task), 
+                method: :patch,
+                params: { task: { gtd_status: 'waiting_for', status: 'waiting' } },
+                class: 'btn btn-small btn-warning' %>
+          
+          <%= link_to "Editar", edit_task_path(task), class: 'btn btn-small' %>
+          
+          <%= button_to "Remover", 
+                task_path(task), 
+                method: :delete,
+                data: { confirm: 'Tem certeza?' },
+                class: 'btn btn-small btn-danger' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="empty-message">Seu inbox está vazio! 🎉</p>
+<% end %>

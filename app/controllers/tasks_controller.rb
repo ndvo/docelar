@@ -87,13 +87,39 @@ class TasksController < ApplicationController
     @summary = query.group(:is_completed).count
   end
 
+  # GTD Inbox - Quick capture and process inbox items
+  def inbox
+    @inbox_tasks = Task.gtd_inbox.order(created_at: :desc)
+    @task = Task.new(status: 'idea', gtd_status: 'inbox')
+  end
+
+  # GTD Next Actions - Actionable items with filters
+  def next_actions
+    @next_actions = Task.gtd_next_actions.order(:priority, :due_date)
+    @contexts = Task.pluck(:context).compact.uniq
+    @energy_levels = Task.energy_levels.keys
+
+    # Apply filters
+    @next_actions = @next_actions.where(context: params[:context]) if params[:context].present?
+    @next_actions = @next_actions.where(energy_level: params[:energy_level]) if params[:energy_level].present?
+    @next_actions = @next_actions.where(priority: params[:priority]) if params[:priority].present?
+
+    # Group by project
+    @grouped_by_project = @next_actions.group_by(&:project)
+  end
+
+  # GTD Waiting For - Items waiting on others
+  def waiting_for
+    @waiting_tasks = Task.gtd_waiting_for.order(created_at: :desc)
+  end
+
   private
     def set_task
       @task = Task.find(params[:id])
     end
 
     def task_params
-      params.require(:task).permit(:responsible_id, :task_id, :name, :description, :status, :due_date, :due_time, :recurrence_rule)
+      params.require(:task).permit(:responsible_id, :task_id, :name, :description, :status, :due_date, :due_time, :recurrence_rule, :gtd_status, :context, :energy_level, :priority, :project_id)
     end
 
     def bulk_update_params

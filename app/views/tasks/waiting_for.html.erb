@@ -1,0 +1,51 @@
+<h1>GTD Waiting For</h1>
+
+<p class="help-text">Itens que estão aguardando resposta ou ação de terceiros.</p>
+
+<h2>Itens Aguardando (<%= @waiting_tasks.count %>)</h2>
+
+<% if @waiting_tasks.any? %>
+  <div class="tasks-list">
+    <% @waiting_tasks.each do |task| %>
+      <div class="task-card waiting-item">
+        <h3><%= link_to(task.name || "Tarefa ##{task.id}", task) %></h3>
+        
+        <% if task.description.present? %>
+          <p><%= task.description %></p>
+        <% end %>
+        
+        <div class="task-meta">
+          <p><strong>Aguardando desde:</strong> <%= l(task.updated_at, format: :short) %></p>
+          
+          <% if task.due_date.present? %>
+            <p class="<%= 'overdue' if task.due_date < Date.today %>">
+              <strong>Prazo:</strong> <%= l(task.due_date) %>
+            </p>
+          <% end %>
+          
+          <% if task.project.present? %>
+            <p><strong>Projeto:</strong> <%= link_to task.project.name, task.project %></p>
+          <% end %>
+        </div>
+        
+        <div class="task-actions">
+          <%= link_to "Editar", edit_task_path(task), class: 'btn btn-small' %>
+          
+          <%= button_to "Marcar como Concluída", 
+                task_path(task), 
+                method: :patch,
+                params: { task: { gtd_status: 'completed', status: 'completed' } },
+                class: 'btn btn-small btn-success' %>
+          
+          <%= button_to "Voltar para Next Actions", 
+                task_path(task), 
+                method: :patch,
+                params: { task: { gtd_status: 'next_action', status: 'planned' } },
+                class: 'btn btn-small btn-info' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="empty-message">Nenhum item aguardando no momento. 🎉</p>
+<% end %>
