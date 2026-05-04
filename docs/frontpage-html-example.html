@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doce Lar - Family Management Platform</title>
+  <link rel="stylesheet" href="/assets/application.css">
+</head>
+<body>
+  <!-- Skip Link for Accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Mobile Bottom Navigation (visible < 640px) -->
+  <nav class="nav-bottom" aria-label="Mobile navigation">
+    <a href="/dashboard" class="nav-bottom-item active" aria-label="Dashboard">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+      </svg>
+      <span>Home</span>
+    </a>
+    <a href="/finance" class="nav-bottom-item" aria-label="Finance">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375c-.621 0-1.125-.504-1.125-1.125V18.75zm0-7.5a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375c-.621 0-1.125-.504-1.125-1.125V11.25zm0-7.5a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375C2.754 6.75 2.25 6.246 2.25 5.625V3.75z" />
+      </svg>
+      <span>Finance</span>
+      <span class="nav-badge">3</span>
+    </a>
+    <a href="/health" class="nav-bottom-item" aria-label="Health">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+      </svg>
+      <span>Health</span>
+    </a>
+    <a href="/calendar" class="nav-bottom-item" aria-label="Calendar">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+      </svg>
+      <span>Calendar</span>
+    </a>
+    <a href="/more" class="nav-bottom-item" aria-label="More modules">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+      </svg>
+      <span>More</span>
+    </a>
+  </nav>
+
+  <!-- Desktop Sidebar Navigation -->
+  <aside class="sidebar-nav" aria-label="Main navigation">
+    <div class="sidebar-header">
+      <a href="/" class="sidebar-logo">
+        <div class="sidebar-logo-icon" aria-hidden="true">D</div>
+        <span class="sidebar-logo-text">Doce Lar</span>
+      </a>
+      <button class="sidebar-close" aria-label="Close menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- GROUP 1: Finance, Legal & Estate -->
+    <nav class="sidebar-group" aria-label="Finance, Legal & Estate">
+      <div class="sidebar-group-title">Finance, Legal & Estate</div>
+      <ul style="list-style:none;margin:0;padding:0;">
+        <li><a href="/cards" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-21 5.25h19.5m-19.5 1.5h19.5m-19.5 1.5h19.5" />
+          </svg>
+          <span class="sidebar-link-text">Cards</span>
+        </a></li>
+        <li><a href="/purchases" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.241H4.244a.998.998 0 01-.967-1.243l1.478-12a1.125 1.125 0 011.118-.993h9.302c.556 0 1.03.385 1.118.993z" />
+          </svg>
+          <span class="sidebar-link-text">Purchases</span>
+          <span class="sidebar-link-badge">2</span>
+        </a></li>
+        <li><a href="/payments" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375c-.621 0-1.125-.504-1.125-1.125V18.75zm0-7.5a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375C2.754 12.75 2.25 12.246 2.25 11.625V9.75zm0-7.5a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375C2.754 4.5 2.25 3.996 2.25 3.375V1.5z" />
+          </svg>
+          <span class="sidebar-link-text">Payments</span>
+          <span class="sidebar-link-badge">3</span>
+        </a></li>
+        <li><a href="/products" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 20.25h16.5M3.75 20.25V4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v15.75M7.5 20.25h9M12 15.75h.008v.008H12v-.008z" />
+          </svg>
+          <span class="sidebar-link-text">Products</span>
+        </a></li>
+      </ul>
+    </nav>
+
+    <!-- GROUP 2: Wellness -->
+    <nav class="sidebar-group" aria-label="Wellness">
+      <div class="sidebar-group-title">Wellness</div>
+      <ul style="list-style:none;margin:0;padding:0;">
+        <li><a href="/patients" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+          </svg>
+          <span class="sidebar-link-text">Patients</span>
+        </a></li>
+        <li><a href="/treatments" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 00.659 1.591L19 14.5M14.25 3.104c.251.023.501.05.75.082M19 14.5l-1.75 6.125a2.25 2.25 0 01-2.124 1.625H8.874a2.25 2.25 0 01-2.124-1.625L5 14.5m14 0H5" />
+          </svg>
+          <span class="sidebar-link-text">Treatments</span>
+        </a></li>
+        <li><a href="/pets" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+          </svg>
+          <span class="sidebar-link-text">Pets</span>
+        </a></li>
+      </ul>
+    </nav>
+
+    <!-- GROUP 3: Growth & Routine -->
+    <nav class="sidebar-group" aria-label="Growth & Routine">
+      <div class="sidebar-group-title">Growth & Routine</div>
+      <ul style="list-style:none;margin:0;padding:0;">
+        <li><a href="/tasks" class="sidebar-link active">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="sidebar-link-text">Tasks</span>
+        </a></li>
+        <li><a href="/notes" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
+          </svg>
+          <span class="sidebar-link-text">Notes</span>
+        </a></li>
+        <li><a href="/tags" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
+          </svg>
+          <span class="sidebar-link-text">Tags</span>
+        </a></li>
+      </ul>
+    </nav>
+
+    <!-- GROUP 4: Family Life -->
+    <nav class="sidebar-group" aria-label="Family Life">
+      <div class="sidebar-group-title">Family Life</div>
+      <ul style="list-style:none;margin:0;padding:0;">
+        <li><a href="/galleries" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+          </svg>
+          <span class="sidebar-link-text">Galleries</span>
+        </a></li>
+        <li><a href="/articles" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+          </svg>
+          <span class="sidebar-link-text">Articles</span>
+        </a></li>
+        <li><a href="/calendar" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+          </svg>
+          <span class="sidebar-link-text">Calendar</span>
+        </a></li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="/settings" class="sidebar-footer-link">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.041.146-.084.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main id="main-content" style="max-width: var(--layout-max-width); margin: 0 auto; padding: var(--layout-container-padding);">
+    
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+      <h1>Welcome to Doce Lar</h1>
+      <p>Your family's complete management platform - 12 pillars, one home</p>
+    </header>
+
+    <!-- Quick Stats -->
+    <section class="quick-stats" aria-label="Quick statistics">
+      <div class="quick-stat-item">
+        <span class="quick-stat-number">4</span>
+        <span class="quick-stat-label">Modules Implemented</span>
+      </div>
+      <div class="quick-stat-item">
+        <span class="quick-stat-number">12</span>
+        <span class="quick-stat-label">Total Pillars</span>
+      </div>
+      <div class="quick-stat-item">
+        <span class="quick-stat-number">3</span>
+        <span class="quick-stat-label">Payments Due</span>
+      </div>
+      <div class="quick-stat-item">
+        <span class="quick-stat-number">2</span>
+        <span class="quick-stat-label">Pet Vaccines Due</span>
+      </div>
+    </section>
+
+    <!-- GROUP 1: Finance, Legal & Estate -->
+    <section class="group-section group-finance" aria-labelledby="group1-title">
+      <div class="group-section-header">
+        <div class="group-section-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375c-.621 0-1.125-.504-1.125-1.125V18.75zm0-7.5a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375c-.621 0-1.125-.504-1.125-1.125V11.25zm0-7.5a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375C2.754 4.5 2.25 3.996 2.25 3.375V1.5z" />
+          </svg>
+        </div>
+        <div>
+          <h2 id="group1-title" class="group-section-title">Group 1: Finance, Legal & Estate</h2>
+          <p class="group-section-subtitle">Manage your family's financial health, legal matters, and estate planning</p>
+        </div>
+      </div>
+
+      <div class="modules-grid">
+        <!-- Budget Control (Implemented) -->
+        <article class="module-card group-finance" aria-labelledby="card-budget-title" aria-describedby="card-budget-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-21 5.25h19.5m-19.5 1.5h19.5m-19.5 1.5h19.5" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-budget-title" class="module-card-title">Budget Control</h3>
+              <p class="module-card-subtitle">Cards, Purchases, Payments</p>
+            </div>
+          </div>
+          <div class="module-card-status implemented">
+            <span class="status-indicator implemented"></span>
+            Implemented
+          </div>
+          <p id="card-budget-desc" class="module-card-description">
+            Track expenses with installments, PIX/boleto integration, and Brazilian spending categories.
+          </p>
+          <div class="module-card-actions">
+            <a href="/cards" class="btn btn-primary" aria-label="Open Budget Control">Open</a>
+            <a href="/payments" class="btn btn-secondary" aria-label="View payments due">Payments</a>
+          </div>
+        </article>
+
+        <!-- Debt Relief (Planned) -->
+        <article class="module-card group-finance" aria-labelledby="card-debt-title" aria-describedby="card-debt-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-debt-title" class="module-card-title">Debt Relief</h3>
+              <p class="module-card-subtitle">Snowball & Avalanche Methods</p>
+            </div>
+          </div>
+          <div class="module-card-status planned">
+            <span class="status-indicator planned"></span>
+            Planned
+          </div>
+          <p id="card-debt-desc" class="module-card-description">
+            Escape predatory debt via snowball/avalanche methods and Brazilian renegociação (Serasa, SPC).
+          </p>
+          <div class="module-card-actions">
+            <a href="#" class="btn btn-secondary" aria-label="View roadmap for Debt Relief">Roadmap</a>
+          </div>
+        </article>
+
+        <!-- Savings & Goals (Planned) -->
+        <article class="module-card group-finance" aria-labelledby="card-savings-title" aria-describedby="card-savings-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m1.398-6.586C10.073 5.124 8.998 5.75 8.998 7.207c0 1.176-.54 2.143-1.37 2.836A7.5 7.5 0 011.5 12.932v-1.282a6.006 6.006 0 01.69-2.985L3.75 6.75m0 6v1.5m0-1.5v-1.5m0 0h3m-3 0H1.5m9-1.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm6.5 3a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm3.75-1.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-savings-title" class="module-card-title">Savings & Goals</h3>
+              <p class="module-card-subtitle">Emergency Fund & Education</p>
+            </div>
+          </div>
+          <div class="module-card-status planned">
+            <span class="status-indicator planned"></span>
+            Planned
+          </div>
+          <p id="card-savings-desc" class="module-card-description">
+            Build emergency funds, education savings, and long-term goals with Brazilian savings vehicles.
+          </p>
+          <div class="module-card-actions">
+            <a href="#" class="btn btn-secondary" aria-label="View roadmap for Savings">Roadmap</a>
+          </div>
+        </article>
+
+        <!-- Retirement Planning (Planned) -->
+        <article class="module-card group-finance" aria-labelledby="card-retirement-title" aria-describedby="card-retirement-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-retirement-title" class="module-card-title">Retirement Planning</h3>
+              <p class="module-card-subtitle">INSS & Private Pension</p>
+            </div>
+          </div>
+          <div class="module-card-status planned">
+            <span class="status-indicator planned"></span>
+            Planned
+          </div>
+          <p id="card-retirement-desc" class="module-card-description">
+            Plan for dignified retirement with INSS tracking and private pension (VGBL/PGBL) integration.
+          </p>
+          <div class="module-card-actions">
+            <a href="#" class="btn btn-secondary" aria-label="View roadmap for Retirement">Roadmap</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- GROUP 2: Wellness -->
+    <section class="group-section group-wellness" aria-labelledby="group2-title">
+      <div class="group-section-header">
+        <div class="group-section-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+          </svg>
+        </div>
+        <div>
+          <h2 id="group2-title" class="group-section-title">Group 2: Wellness</h2>
+          <p class="group-section-subtitle">Health, nutrition, and pet care for the whole family</p>
+        </div>
+      </div>
+
+      <div class="modules-grid">
+        <!-- Health & Wellness (Implemented) -->
+        <article class="module-card group-wellness" aria-labelledby="card-health-title" aria-describedby="card-health-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-health-title" class="module-card-title">Health & Wellness</h3>
+              <p class="module-card-subtitle">Patients, Treatments, Medications</p>
+            </div>
+          </div>
+          <div class="module-card-status implemented">
+            <span class="status-indicator implemented"></span>
+            Implemented
+          </div>
+          <p id="card-health-desc" class="module-card-description">
+            Family health management with medical records, treatments, and Brazilian SUS vaccination calendar.
+          </p>
+          <div class="module-card-actions">
+            <a href="/patients" class="btn btn-primary" aria-label="Open Health module">Open</a>
+            <a href="/medications" class="btn btn-secondary" aria-label="View medications">Medications</a>
+          </div>
+        </article>
+
+        <!-- Nutrition (Planned) -->
+        <article class="module-card group-wellness" aria-labelledby="card-nutrition-title" aria-describedby="card-nutrition-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.73.434-3.857 1.308a1.125 1.125 0 01-.332-1.802c.585-.44 1.244-.804 1.96-1.08m-.332 1.802c.16.558.374 1.093.649 1.593m1.88-2.295c.16.557.373 1.093.649 1.593m0 0c.208.74.323 1.5.323 2.25m-1.032-3.843c.16-.558.373-1.093.649-1.593m0 0a4.498 4.498 0 00-4.876c.16-.558.373-1.093.649-1.593m5.882 0c.16.557.373 1.093.649 1.593m0 0a4.498 4.498 0 010 4.876c-.16.558-.373 1.093-.649 1.593M12 15.75V17.25m0-1.5c1.356 0 2.73-.434 3.857-1.308a1.125 1.125 0 01.332 1.802c-.585.44-1.244.804-1.96 1.08m1.628-2.882c-.16-.557-.373-1.093-.649-1.593m0 0c-.208-.74-.323-1.5-.323-2.25m1.032 3.843c-.16.558-.373 1.093-.649 1.593m0 0a4.498 4.498 0 004.876 0c.16-.558.373-1.093.649-1.593m-5.882 0c-.16.557-.373 1.093-.649 1.593M12 3.75v1.5" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-nutrition-title" class="module-card-title">Nutrition</h3>
+              <p class="module-card-subtitle">Meal Planning & Tracking</p>
+            </div>
+          </div>
+          <div class="module-card-status planned">
+            <span class="status-indicator planned"></span>
+            Planned
+          </div>
+          <p id="card-nutrition-desc" class="module-card-description">
+            Meal planning, grocery lists, recipe management, and nutritional tracking for the family.
+          </p>
+          <div class="module-card-actions">
+            <a href="#" class="btn btn-secondary" aria-label="View roadmap for Nutrition">Roadmap</a>
+          </div>
+        </article>
+
+        <!-- Pet Care (Implemented) -->
+        <article class="module-card group-wellness" aria-labelledby="card-pets-title" aria-describedby="card-pets-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-pets-title" class="module-card-title">Pet Care</h3>
+              <p class="module-card-subtitle">Pets, Vaccinations, Vet Visits</p>
+            </div>
+          </div>
+          <div class="module-card-status implemented">
+            <span class="status-indicator implemented"></span>
+            Implemented
+          </div>
+          <p id="card-pets-desc" class="module-card-description">
+            Track pets' health, vaccination schedules, and veterinary visits for multi-pet households.
+          </p>
+          <div class="module-card-actions">
+            <a href="/pets" class="btn btn-primary" aria-label="Open Pet Care module">Open</a>
+            <a href="/pets/vaccinations" class="btn btn-secondary" aria-label="View pet vaccinations">Vaccines</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- GROUP 3: Growth & Routine -->
+    <section class="group-section group-growth" aria-labelledby="group3-title">
+      <div class="group-section-header">
+        <div class="group-section-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div>
+          <h2 id="group3-title" class="group-section-title">Group 3: Growth & Routine</h2>
+          <p class="group-section-subtitle">Education, productivity, and personal development</p>
+        </div>
+      </div>
+
+      <div class="modules-grid">
+        <!-- Family Goals (Planned) -->
+        <article class="module-card group-growth" aria-labelledby="card-goals-title" aria-describedby="card-goals-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0l2.77-.693a9 9 0 016.208.682l.108.054a9 9 0 006.086.68l3.832-.966A1.5 1.5 0 0121 12.972V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15v-1.5m0 0c0-1.355.68-2.566 1.71-3.29l.71-.71" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-goals-title" class="module-card-title">Family Goals</h3>
+              <p class="module-card-subtitle">Collaborative Goal Tracking</p>
+            </div>
+          </div>
+          <div class="module-card-status planned">
+            <span class="status-indicator planned"></span>
+            Planned
+          </div>
+          <p id="card-goals-desc" class="module-card-description">
+            Track progress toward family objectives with collaborative task management and goal visualization.
+          </p>
+          <div class="module-card-actions">
+            <a href="#" class="btn btn-secondary" aria-label="View roadmap for Family Goals">Roadmap</a>
+          </div>
+        </article>
+
+        <!-- Education (Planned) -->
+        <article class="module-card group-growth" aria-labelledby="card-education-title" aria-describedby="card-education-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.15a59.905 59.905 0 0110.399 6.186c-.084.298-.169.591-.254.885" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15.147v4.257" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-education-title" class="module-card-title">Education</h3>
+              <p class="module-card-subtitle">BNCC, ENEM, Vestibular Prep</p>
+            </div>
+          </div>
+          <div class="module-card-status planned">
+            <span class="status-indicator planned"></span>
+            Planned
+          </div>
+          <p id="card-education-desc" class="module-card-description">
+            Student/school profiles, grade tracking, and Brazilian ENEM/vestibular exam preparation.
+          </p>
+          <div class="module-card-actions">
+            <a href="#" class="btn btn-secondary" aria-label="View roadmap for Education">Roadmap</a>
+          </div>
+        </article>
+
+        <!-- Intellectual Life (Planned) -->
+        <article class="module-card group-growth" aria-labelledby="card-intellectual-title" aria-describedby="card-intellectual-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-intellectual-title" class="module-card-title">Intellectual Life</h3>
+              <p class="module-card-subtitle">Study Methods, Reading, Writing</p>
+            </div>
+          </div>
+          <div class="module-card-status planned">
+            <span class="status-indicator planned"></span>
+            Planned
+          </div>
+          <p id="card-intellectual-desc" class="module-card-description">
+            Study methods (Pomodoro, Zettelkasten), reading strategies, and Catholic intellectual tradition.
+          </p>
+          <div class="module-card-actions">
+            <a href="#" class="btn btn-secondary" aria-label="View roadmap for Intellectual Life">Roadmap</a>
+          </div>
+        </article>
+
+        <!-- Productivity (Implemented) -->
+        <article class="module-card group-growth" aria-labelledby="card-productivity-title" aria-describedby="card-productivity-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-productivity-title" class="module-card-title">Productivity</h3>
+              <p class="module-card-subtitle">Tasks, Notes, GTD System</p>
+            </div>
+          </div>
+          <div class="module-card-status implemented">
+            <span class="status-indicator implemented"></span>
+            Implemented
+          </div>
+          <p id="card-productivity-desc" class="module-card-description">
+            Task management, tags, notes, with GTD system, Pomodoro tracker, and habit formation tools.
+          </p>
+          <div class="module-card-actions">
+            <a href="/tasks" class="btn btn-primary" aria-label="Open Tasks">Open</a>
+            <a href="/notes" class="btn btn-secondary" aria-label="View Notes">Notes</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- GROUP 4: Family Life -->
+    <section class="group-section group-family" aria-labelledby="group4-title">
+      <div class="group-section-header">
+        <div class="group-section-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+          </svg>
+        </div>
+        <div>
+          <h2 id="group4-title" class="group-section-title">Group 4: Family Life</h2>
+          <p class="group-section-subtitle">Culture, relationships, and religious life</p>
+        </div>
+      </div>
+
+      <div class="modules-grid">
+        <!-- Culture & Multimedia (Implemented) -->
+        <article class="module-card group-family" aria-labelledby="card-culture-title" aria-describedby="card-culture-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-culture-title" class="module-card-title">Culture & Multimedia</h3>
+              <p class="module-card-subtitle">Galleries, Photos, Articles, Videos</p>
+            </div>
+          </div>
+          <div class="module-card-status implemented">
+            <span class="status-indicator implemented"></span>
+            Implemented
+          </div>
+          <p id="card-culture-desc" class="module-card-description">
+            Family photos, video library, articles, and audio enhancement for your multimedia collection.
+          </p>
+          <div class="module-card-actions">
+            <a href="/galleries" class="btn btn-primary" aria-label="Open Galleries">Open</a>
+            <a href="/articles" class="btn btn-secondary" aria-label="Read Articles">Articles</a>
+          </div>
+        </article>
+
+        <!-- Social & Relationships (Planned) -->
+        <article class="module-card group-family" aria-labelledby="card-social-title" aria-describedby="card-social-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-social-title" class="module-card-title">Social & Relationships</h3>
+              <p class="module-card-subtitle">Friendship, Forgiveness, Community</p>
+            </div>
+          </div>
+          <div class="module-card-status planned">
+            <span class="status-indicator planned"></span>
+            Planned
+          </div>
+          <p id="card-social-desc" class="module-card-description">
+            Relationship management, forgiveness journal, and Catholic friendship theology (Aristotelian-Thomistic).
+          </p>
+          <div class="module-card-actions">
+            <a href="#" class="btn btn-secondary" aria-label="View roadmap for Social & Relationships">Roadmap</a>
+          </div>
+        </article>
+
+        <!-- Religious Life (Planned) -->
+        <article class="module-card group-family" aria-labelledby="card-religious-title" aria-describedby="card-religious-desc">
+          <div class="module-card-header">
+            <div class="module-card-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 12.75c1.148 0 2.278.08 3.383.237 1.037.146 1.866.966 1.866 2.013 0 3.728-2.35 6.75-5.25 6.75S6.75 18.728 6.75 15c0-1.046.83-1.867 1.866-2.013A24.204 24.204 0 0112 12.75zm0 0c2.883 0 5.647.508 8.207 1.44a23.91 23.91 0 01-1.152 6.135c-.237.966-1.21 1.665-2.305 1.665h-9.51c-1.095 0-2.068-.699-2.305-1.665A23.91 23.91 0 013.793 14.19C6.353 13.258 9.117 12.75 12 12.75z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6.75h-9" />
+              </svg>
+            </div>
+            <div>
+              <h3 id="card-religious-title" class="module-card-title">Religious Life</h3>
+              <p class="module-card-subtitle">First Childhood Sacraments, Catequesis</p>
+            </div>
+          </div>
+          <div class="module-card-status planned">
+            <span class="status-indicator planned"></span>
+            Planned
+          </div>
+          <p id="card-religious-desc" class="module-card-description">
+            First Childhood sacraments (Baptism, First Communion), catequesis, and Catholic feast day tracking.
+          </p>
+          <div class="module-card-actions">
+            <a href="#" class="btn btn-secondary" aria-label="View roadmap for Religious Life">Roadmap</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="activity-timeline" aria-label="Recent activity">
+      <div class="activity-timeline-header">
+        <h3>Recent Activity</h3>
+        <a href="#" class="text-sm" style="color: var(--color-link);">View all</a>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="18" height="18">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375c-.621 0-1.125-.504-1.125-1.125V18.75zm0-7.5a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375c-.621 0-1.125-.504-1.125-1.125V11.25zm0-7.5a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375C2.754 4.5 2.25 3.996 2.25 3.375V1.5z" />
+          </svg>
+        </div>
+        <div class="activity-content">
+          <p class="activity-text">Payment due: Credit Card bill - R$ 1,250.00</p>
+          <p class="activity-time">2 hours ago</p>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="18" height="18">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+          </svg>
+        </div>
+        <div class="activity-content">
+          <p class="activity-text">Pet vaccination due: Rex - Multi-protection vaccine</p>
+          <p class="activity-time">Tomorrow</p>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="18" height="18">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="activity-content">
+          <p class="activity-text">Task completed: Schedule pediatrician appointment</p>
+          <p class="activity-time">Yesterday</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FAB Button (Quick Add) -->
+  <div class="fab-container">
+    <button class="fab-button" aria-label="Quick add" aria-expanded="false" aria-controls="fab-menu">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+    </button>
+    <div class="fab-menu" id="fab-menu" role="menu">
+      <a href="/purchases/new" class="fab-menu-item" role="menuitem">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-21 5.25h19.5m-19.5 1.5h19.5m-19.5 1.5h19.5" />
+        </svg>
+        <span>Add Purchase</span>
+      </a>
+      <a href="/tasks/new" class="fab-menu-item" role="menuitem">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Add Task</span>
+      </a>
+      <a href="/appointments/new" class="fab-menu-item" role="menuitem">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+        </svg>
+        <span>Add Appointment</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer style="text-align:center; padding: var(--space-8); color: var(--color-text-secondary); font-size: var(--text-sm);">
+    <p>Doce Lar - Family Management Platform | Catholic Stewardship | Brazilian Context</p>
+  </footer>
+
+  <script>
+    // FAB Menu Toggle
+    document.querySelector('.fab-button')?.addEventListener('click', function() {
+      const menu = document.getElementById('fab-menu');
+      const isOpen = menu.classList.contains('open');
+      menu.classList.toggle('open');
+      this.setAttribute('aria-expanded', !isOpen);
+    });
+
+    // Close FAB menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const fabContainer = document.querySelector('.fab-container');
+      if (!fabContainer.contains(event.target)) {
+        const menu = document.getElementById('fab-menu');
+        menu?.classList.remove('open');
+        document.querySelector('.fab-button')?.setAttribute('aria-expanded', 'false');
+      }
+    });
+  </script>
+</body>
+</html>
