@@ -1,79 +1,404 @@
-<section class="hero">
-  <div class="hero-content">
-    <h1>Bem-vindo ao Docelar!</h1>
-    <p class="hero-date"><%= l(Date.today, format: :long) %></p>
-    <p class="hero-tagline">Sua gestão financeira e cuidados em um só lugar</p>
+<!-- Dashboard Header -->
+<header class="dashboard-header">
+  <h1>Bem-vindo ao Doce Lar</h1>
+  <p class="dashboard-subtitle">Sua família em um só lugar - 12 pilares, uma plataforma</p>
+</header>
+
+<!-- Quick Stats Bar -->
+<section class="quick-stats" aria-label="Estatísticas rápidas">
+  <div class="quick-stat-item">
+    <span class="quick-stat-number"><%= @tasks_pending || 0 %></span>
+    <span class="quick-stat-label">Tarefas pendentes</span>
+  </div>
+  <div class="quick-stat-item">
+    <span class="quick-stat-number"><%= @payments_due || 0 %></span>
+    <span class="quick-stat-label">Pagamentos a vencer</span>
+  </div>
+  <div class="quick-stat-item">
+    <span class="quick-stat-number"><%= @pets_count || 0 %></span>
+    <span class="quick-stat-label">Pets</span>
+  </div>
+  <div class="quick-stat-item">
+    <span class="quick-stat-number"><%= (@photos_count || 0) + (@videos_count || 0) %></span>
+    <span class="quick-stat-label">Mídias</span>
   </div>
 </section>
 
-<% tasks_today = @tasks_today_count || 0 %>
-<% payments_due = @payments_due_count || 0 %>
-<% pets_count = @pets_count || 0 %>
-<% recent_photos = @recent_photos_count || 0 %>
+<!-- Dashboard Widgets -->
+<section class="dashboard-widgets" aria-label="Seus widgets">
+  <% if @upcoming_tasks && !@upcoming_tasks.empty? %>
+    <div class="dashboard-widget">
+      <h2>Tarefas Recentes</h2>
+      <ul class="task-list">
+        <% @upcoming_tasks.take(5).each do |task| %>
+          <li class="task-item">
+            <span class="task-title"><%= task.name %></span>
+          </li>
+        <% end %>
+      </ul>
+      <%= link_to "Ver todas →", tasks_path, class: "widget-link" %>
+    </div>
+  <% end %>
 
-<section class="quick-access">
-  <h2>Acesso Rápido</h2>
-  <div class="quick-access-grid">
-    <%= link_to '/tasks', class: 'quick-card' do %>
-      <div class="card-icon">
-        <%= image_tag 'icons/checklist.svg', alt: 'Tarefas', width: 48 %>
-      </div>
-      <h3>Tarefas</h3>
-      <% if tasks_today > 0 %>
-        <p class="card-badge"><%= tasks_today %> para hoje</p>
-      <% else %>
-        <p>Nenhuma pendente</p>
-      <% end %>
-    <% end %>
+  <% if @recent_activity && !@recent_activity.empty? %>
+    <div class="dashboard-widget recent-activity">
+      <h2>Atividade Recente</h2>
+      <ul class="activity-list">
+        <% @recent_activity.each do |activity| %>
+          <li class="activity-item">
+            <span class="activity-icon <%= activity[:icon] %>"></span>
+            <div class="activity-content">
+              <p class="activity-text"><%= activity[:text] %></p>
+              <span class="activity-time"><%= activity[:time] %></span>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+</section>
 
-    <%= link_to '/payments', class: 'quick-card' do %>
-      <div class="card-icon">
-        <%= image_tag 'icons/despesas.svg', alt: 'Pagamentos', width: 48 %>
-      </div>
-      <h3>Pagamentos</h3>
-      <% if payments_due > 0 %>
-        <p class="card-badge"><%= payments_due %> a vencer</p>
-      <% else %>
-        <p>Em dia</p>
-      <% end %>
-    <% end %>
+<!-- Module Groups (12 Pillars) -->
+<section class="module-groups" aria-label="Módulos do Doce Lar">
+  <h2 class="section-title">12 Pilares do Doce Lar</h2>
+  
+  <!-- Group1: Finance -->
+  <div class="module-group">
+    <h3 class="group-title">💰 Finanças</h3>
+    <div class="module-cards">
+      <article class="module-card group-finance" aria-labelledby="card-budget-title">
+        <div class="module-card-header">
+          <div class="module-card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375c-.621 0-1.125-.504-1.125-1.125V18.75zm0-7.5a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375C2.754 12.75 2.25 12.246 2.25 11.625V9.75zm0-7.5a60.036 60.036 0 0110.5 0v1.875c0 .621-.504 1.125-1.125 1.125H3.375C2.754 4.5 2.25 3.996 2.25 3.375V1.5z" />
+            </svg>
+          </div>
+          <div>
+            <h4 id="card-budget-title" class="module-card-title">Controle de Orçamento</h4>
+            <p class="module-card-subtitle">Cartões, Compras, Pagamentos</p>
+          </div>
+        </div>
+        <div class="module-card-status implemented">
+          <span class="status-indicator implemented"></span>
+          Implementado
+        </div>
+        <p class="module-card-description">
+          Controle de despesas com parcelamento, integração PIX/boleto e categorias brasileiras.
+        </p>
+        <div class="module-card-actions">
+          <%= link_to "Abrir", cards_path, class: "btn btn-primary", "aria-label" => "Abrir Controle de Orçamento" %>
+        </div>
+      </article>
+    </div>
+  </div>
 
-    <%= link_to dogs_path, class: 'quick-card' do %>
-      <div class="card-icon">
-        <%= image_tag 'icons/paw.svg', alt: 'Pets', width: 48 %>
-      </div>
-      <h3>Pets</h3>
-      <p class="card-count"><%= pets_count %> <%= pets_count == 1 ? 'pet' : 'pets' %></p>
-    <% end %>
+  <!-- Group2: Health -->
+  <div class="module-group">
+    <h3 class="group-title">🏥 Saúde</h3>
+    <div class="module-cards">
+      <article class="module-card group-health" aria-labelledby="card-health-title">
+        <div class="module-card-header">
+          <div class="module-card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            </svg>
+          </div>
+          <div>
+            <h4 id="card-health-title" class="module-card-title">Saúde da Família</h4>
+            <p class="module-card-subtitle">Pacientes, Tratamentos, Medicamentos</p>
+          </div>
+        </div>
+        <div class="module-card-status implemented">
+          <span class="status-indicator implemented"></span>
+          Implementado
+        </div>
+        <p class="module-card-description">
+          Prontuário familiar, vacinas (SUS), medicamentos controlados e gestão de saúde.
+        </p>
+        <div class="module-card-actions">
+          <%= link_to "Abrir", patients_path, class: "btn btn-primary", "aria-label" => "Abrir Saúde da Família" %>
+        </div>
+      </article>
+    </div>
+  </div>
 
-    <%= link_to galleries_path, class: 'quick-card' do %>
-      <div class="card-icon">
-        <%= image_tag 'icons/bookLib.svg', alt: 'Galeria', width: 48 %>
-      </div>
-      <h3>Galeria</h3>
-      <p class="card-count"><%= recent_photos %> <%= recent_photos == 1 ? 'fotos' : 'fotos' %></p>
-    <% end %>
+  <!-- Group3: Pets -->
+  <div class="module-group">
+    <h3 class="group-title">🐾 Pets</h3>
+    <div class="module-cards">
+      <article class="module-card group-pets" aria-labelledby="card-pets-title">
+        <div class="module-card-header">
+          <div class="module-card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+            </svg>
+          </div>
+          <div>
+            <h4 id="card-pets-title" class="module-card-title">Saúde dos Pets</h4>
+            <p class="module-card-subtitle">Cães, Vacinas, Veterinário</p>
+          </div>
+        </div>
+        <div class="module-card-status implemented">
+          <span class="status-indicator implemented"></span>
+          Implementado
+        </div>
+        <p class="module-card-description">
+          Gestão de saúde pet: vacinas, vermífugos, consultas veterinárias e histórico.
+        </p>
+        <div class="module-card-actions">
+          <%= link_to "Abrir", dogs_path, class: "btn btn-primary", "aria-label" => "Abrir Saúde dos Pets" %>
+        </div>
+      </article>
+    </div>
+  </div>
 
-    <%= link_to videos_path, class: 'quick-card' do %>
-      <div class="card-icon">
-        <span style="font-size: 48px;">🎬</span>
-      </div>
-      <h3>Vídeos</h3>
-      <p class="card-count"><%= Video.count %> <%= Video.count == 1 ? 'vídeo' : 'vídeos' %></p>
-    <% end %>
+  <!-- Group4: Education -->
+  <div class="module-group">
+    <h3 class="group-title">📚 Educação</h3>
+    <div class="module-cards">
+      <article class="module-card group-education" aria-labelledby="card-early-title">
+        <div class="module-card-header">
+          <div class="module-card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.905 59.905 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.25 0V12a3.75 3.75 0 007.5 0v-3.188a3.75 3.75 0 00-7.5 0z" />
+            </svg>
+          </div>
+          <div>
+            <h4 id="card-early-title" class="module-card-title">Primeira Infância</h4>
+            <p class="module-card-subtitle">0-6 anos, Curriculo BNCC</p>
+          </div>
+        </div>
+        <div class="module-card-status planned">
+          <span class="status-indicator planned"></span>
+          Planejado
+        </div>
+        <p class="module-card-description">
+          Acompanhamento da primeira infância (0-6 anos) com currículo BNCC e marcos de desenvolvimento.
+        </p>
+      </article>
+    </div>
+  </div>
+
+  <!-- Group5: Productivity -->
+  <div class="module-group">
+    <h3 class="group-title">✅ Produtividade</h3>
+    <div class="module-cards">
+      <article class="module-card group-productivity" aria-labelledby="card-tasks-title">
+        <div class="module-card-header">
+          <div class="module-card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <h4 id="card-tasks-title" class="module-card-title">Tarefas</h4>
+            <p class="module-card-subtitle">GTD, Pomodoro, Hábitos</p>
+          </div>
+        </div>
+        <div class="module-card-status implemented">
+          <span class="status-indicator implemented"></span>
+          Implementado
+        </div>
+        <p class="module-card-description">
+          Sistema GTD, técnica Pomodoro, tracking de hábitos e produtividade católica.
+        </p>
+        <div class="module-card-actions">
+          <%= link_to "Abrir", tasks_path, class: "btn btn-primary", "aria-label" => "Abrir Tarefas" %>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- Group6: Media -->
+  <div class="module-group">
+    <h3 class="group-title">📸 Mídia</h3>
+    <div class="module-cards">
+      <article class="module-card group-media" aria-labelledby="card-gallery-title">
+        <div class="module-card-header">
+          <div class="module-card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+            </svg>
+          </div>
+          <div>
+            <h4 id="card-gallery-title" class="module-card-title">Galerias</h4>
+            <p class="module-card-subtitle">Fotos, Vídeos, Organização</p>
+          </div>
+        </div>
+        <div class="module-card-status implemented">
+          <span class="status-indicator implemented"></span>
+          Implementado
+        </div>
+        <p class="module-card-description">
+          Organização de fotos e vídeos familiares com tags, álbuns e galerias.
+        </p>
+        <div class="module-card-actions">
+          <%= link_to "Abrir", galleries_path, class: "btn btn-primary", "aria-label" => "Abrir Galerias" %>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- Group7: Social (planned) -->
+  <div class="module-group">
+    <h3 class="group-title">👥 Social</h3>
+    <div class="module-cards">
+      <article class="module-card group-social" aria-labelledby="card-social-title">
+        <div class="module-card-header">
+          <div class="module-card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+            </svg>
+          </div>
+          <div>
+            <h4 id="card-social-title" class="module-card-title">Vínculos Sociais</h4>
+            <p class="module-card-subtitle">Amizade, Família, Aristotelian-Thomistic</p>
+          </div>
+        </div>
+        <div class="module-card-status planned">
+          <span class="status-indicator planned"></span>
+          Planejado
+        </div>
+        <p class="module-card-description">
+          Fortalecimento de relacionamentos baseado na teologia amizade aristotélica-tomista.
+        </p>
+      </article>
+    </div>
+  </div>
+
+  <!-- Group8: Calendar (planned) -->
+  <div class="module-group">
+    <h3 class="group-title">📅 Calendário</h3>
+    <div class="module-cards">
+      <article class="module-card group-calendar" aria-labelledby="card-calendar-title">
+        <div class="module-card-header">
+          <div class="module-card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+            </svg>
+          </div>
+          <div>
+            <h4 id="card-calendar-title" class="module-card-title">Calendário Familiar</h4>
+            <p class="module-card-subtitle">Eventos, Compromissos, Lembretes</p>
+          </div>
+        </div>
+        <div class="module-card-status planned">
+          <span class="status-indicator planned"></span>
+          Planejado
+        </div>
+        <p class="module-card-description">
+          Calendário unificado com eventos familiares, compromissos e integração com Google Calendar.
+        </p>
+      </article>
+    </div>
   </div>
 </section>
 
-<% unless @upcoming_tasks.empty? %>
-<section class="dashboard-widget">
-  <h2>Tarefas de Hoje</h2>
-  <ul class="task-list">
-    <% @upcoming_tasks.take(3).each do |task| %>
-      <li class="task-item">
-        <span class="task-title"><%= task.name %></span>
-      </li>
-    <% end %>
-  </ul>
-  <%= link_to 'Ver todas →', '/tasks', class: 'widget-link' %>
+  <!-- Group9: Family Management (planned) -->
+  <div class="module-group">
+    <h3 class="group-title">👨‍👩‍👧‍👦 Gestão Familiar</h3>
+    <div class="module-cards">
+      <article class="module-card group-family" aria-labelledby="card-family-title">
+        <div class="module-card-header">
+          <div class="module-card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+            </svg>
+          </div>
+          <div>
+            <h4 id="card-family-title" class="module-card-title">Gestão Familiar</h4>
+            <p class="module-card-subtitle">Membros, Roles, Responsabilidades</p>
+          </div>
+        </div>
+        <div class="module-card-status planned">
+          <span class="status-indicator planned"></span>
+          Planejado
+        </div>
+        <p class="module-card-description">
+          Gestão de membros da família, papéis, responsabilidades e comunicação familiar.
+        </p>
+      </article>
+    </div>
+  </div>
+
+  <!-- Group10: Home Management (planned) -->
+  <div class="module-group">
+    <h3 class="group-title">🏠 Gestão do Lar</h3>
+    <div class="module-cards">
+      <article class="module-card group-home" aria-labelledby="card-home-title">
+        <div class="module-card-header">
+          <div class="module-card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21m-7.5-15h3a2.25 2.25 0 012.25 2.25v10.5A2.25 2.25 0 0114.25 21h-4.5A2.25 2.25 0 017.5 18.75V8.25A2.25 2.25 0 019.75 6h3z" />
+            </svg>
+          </div>
+          <div>
+            <h4 id="card-home-title" class="module-card-title">Gestão do Lar</h4>
+            <p class="module-card-subtitle">Inventário, Manutenção, Organização</p>
+          </div>
+        </div>
+        <div class="module-card-status planned">
+          <span class="status-indicator planned"></span>
+          Planejado
+        </div>
+        <p class="module-card-description">
+          Inventário da casa, controle de manutenção, organização doméstica e tarefas do lar.
+        </p>
+      </article>
+    </div>
+  </div>
+
+  <!-- Group11: Spiritual Life (planned) -->
+  <div class="module-group">
+    <h3 class="group-title">✝️ Vida Espiritual</h3>
+    <div class="module-cards">
+      <article class="module-card group-spiritual" aria-labelledby="card-spiritual-title">
+        <div class="module-card-header">
+          <div class="module-card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75m-3.75 0h7.5M12 11.25m-3.75 0h7.5M12 6.75m-3.75 0h7.5M12 2.25m-3.75 0h7.5" />
+            </svg>
+          </div>
+          <div>
+            <h4 id="card-spiritual-title" class="module-card-title">Vida Espiritual</h4>
+            <p class="module-card-subtitle">Orações, Missa, Sacramentos, Santo Rosário</p>
+          </div>
+        </div>
+        <div class="module-card-status planned">
+          <span class="status-indicator planned"></span>
+          Planejado
+        </div>
+        <p class="module-card-description">
+          Acompanhamento da vida espiritual católica: orações diárias, missa, confissão, terço.
+        </p>
+      </article>
+    </div>
+  </div>
+
+  <!-- Group12: Personal Development (planned) -->
+  <div class="module-group">
+    <h3 class="group-title">🌱 Desenvolvimento Pessoal</h3>
+    <div class="module-cards">
+      <article class="module-card group-personal" aria-labelledby="card-personal-title">
+        <div class="module-card-header">
+          <div class="module-card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.98 14.98 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.98 14.98 0 00-12.12 6.16 14.98 14.98 0 006.16 12.12m6.16-15.98a6 6 0 015.84 5.84v4.8m-11.681 0a14.98 14.98 0 00-2.58 5.841m2.58-5.841a14.98 14.98 0 015.841-2.58" />
+            </svg>
+          </div>
+          <div>
+            <h4 id="card-personal-title" class="module-card-title">Desenvolvimento Pessoal</h4>
+            <p class="module-card-subtitle">Metas, Hábitos, Reflexões, Diário</p>
+          </div>
+        </div>
+        <div class="module-card-status planned">
+          <span class="status-indicator planned"></span>
+          Planejado
+        </div>
+        <p class="module-card-description">
+          Metas pessoais, desenvolvimento de hábitos, reflexões diárias e diário católico.
+        </p>
+      </article>
+    </div>
+  </div>
 </section>
-<% end %>
