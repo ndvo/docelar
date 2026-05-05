@@ -208,10 +208,12 @@
       function toggleSidebar() {
         const sidebar = document.getElementById('sidebar-nav');
         const overlay = document.getElementById('sidebar-overlay');
+        const main = document.getElementById('main-content');
         const isOpen = sidebar.classList.contains('open');
         sidebar.classList.toggle('open');
         overlay.classList.toggle('open');
         document.body.classList.toggle('sidebar-open');
+        main.classList.toggle('sidebar-open');
       }
       
       function toggleFabMenu() {

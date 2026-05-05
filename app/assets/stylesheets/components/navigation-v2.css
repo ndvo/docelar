@@ -195,9 +195,22 @@
 
 /* Desktop: Full Sidebar (> 1024px) */
 @media (min-width: 1025px) {
-  .sidebar-nav {
+  .nav-bottom { display: none; }
+  /* Sidebar stays hidden by default - user prefers collapsed */
+  /* Remove auto-show on desktop */
+  main {
+    margin-left: 0; /* No margin when sidebar is hidden */
+  }
+  
+  /* When sidebar is opened on desktop */
+  .sidebar-nav.open {
     transform: translateX(0);
   }
+  
+  main.sidebar-open {
+    margin-left: var(--layout-sidebar-width);
+  }
+}
 
   main {
     margin-left: var(--layout-sidebar-width);
