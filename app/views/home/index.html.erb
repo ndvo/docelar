@@ -1,25 +1,24 @@
 <!-- Dashboard Header -->
 <header class="dashboard-header">
   <h1>Bem-vindo ao Doce Lar</h1>
-  <p class="dashboard-subtitle">Sua família em um só lugar - 12 pilares, uma plataforma</p>
 </header>
 
 <!-- Quick Stats Bar -->
 <section class="quick-stats" aria-label="Estatísticas rápidas">
   <div class="quick-stat-item">
-    <span class="quick-stat-number"><%= @tasks_pending || 0 %></span>
+    <output class="quick-stat-number"><%= @tasks_pending || 0 %></output>
     <span class="quick-stat-label">Tarefas pendentes</span>
   </div>
   <div class="quick-stat-item">
-    <span class="quick-stat-number"><%= @payments_due || 0 %></span>
+    <output class="quick-stat-number"><%= @payments_due || 0 %></output>
     <span class="quick-stat-label">Pagamentos a vencer</span>
   </div>
   <div class="quick-stat-item">
-    <span class="quick-stat-number"><%= @pets_count || 0 %></span>
+    <output class="quick-stat-number"><%= @pets_count || 0 %></output>
     <span class="quick-stat-label">Pets</span>
   </div>
   <div class="quick-stat-item">
-    <span class="quick-stat-number"><%= (@photos_count || 0) + (@videos_count || 0) %></span>
+    <output class="quick-stat-number"><%= (@photos_count || 0) + (@videos_count || 0) %></output>
     <span class="quick-stat-label">Mídias</span>
   </div>
 </section>
