@@ -45,6 +45,9 @@ class Task < ApplicationRecord
   belongs_to :recurring_task, class_name: 'Task', optional: true
   has_many :recurring_tasks, class_name: 'Task', foreign_key: :recurring_task_id
   has_many :subtasks, class_name: 'Task', foreign_key: :task_id, dependent: :nullify
+  has_many :task_log_entries, dependent: :nullify
+  has_many :task_logs, through: :task_log_entries
+  has_many :pomodoro_sessions, dependent: :nullify
 
   # Explicit attribute declarations for enum columns (must be before enum definitions)
   attribute :energy_level, :integer
@@ -95,6 +98,22 @@ class Task < ApplicationRecord
   scope :gtd_waiting_for, -> { where(gtd_status: :waiting_for) }
   scope :gtd_on_hold, -> { where(gtd_status: :on_hold) }
   scope :gtd_active, -> { where.not(gtd_status: GTD_END_STATUSES) }
+
+  # Task log scopes
+  scope :active_today, -> {
+    joins(:task_log_entries)
+      .joins(:task_logs)
+      .where(task_logs: { log_date: Date.current, status: :active })
+      .where(task_log_entries: { status: [:pending, :in_progress] })
+  }
+
+  # Pomodoro scopes
+  scope :with_pomodoro_time, -> {
+    left_joins(:pomodoro_sessions)
+      .where(pomodoro_sessions: { status: :completed })
+      .select('tasks.*, COALESCE(SUM(pomodoro_sessions.duration), 0) as total_pomodoro_time')
+      .group('tasks.id')
+  }
 
   RECURRENCE_OPTIONS = {
     '' => 'Não repete',
@@ -157,6 +176,16 @@ class Task < ApplicationRecord
 
   def gtd_active?
     !GTD_END_STATUSES.include?(gtd_status)
+  end
+
+  # Returns count of completed pomodoro sessions for this task
+  def pomodoro_count
+    pomodoro_sessions.completed.count
+  end
+
+  # Returns total seconds spent in completed pomodoro sessions
+  def total_pomodoro_time
+    pomodoro_sessions.completed.sum(:duration)
   end
 
   after_update :generate_next_recurring_task, if: :should_generate_next_task?

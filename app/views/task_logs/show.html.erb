@@ -1,0 +1,81 @@
+<h1>Log de Tarefas: <%= @task_log.log_date.strftime('%d/%m/%Y') %></h1>
+
+<div class="task-log-details">
+  <div class="task-log-info">
+    <h2><%= @task_log.title || "Sem título" %></h2>
+    <p>Status: <span class="status-badge <%= @task_log.status %>"><%= t("task_log.status.#{@task_log.status}") %></span></p>
+    <p>Total de tempo: <%= @task_log.total_time_spent %> min</p>
+    <p>Progresso: <%= @task_log.completed_entries_count %> / <%= @task_log.total_entries_count %> tarefas concluídas</p>
+  </div>
+
+<div class="task-log-actions">
+  <%= link_to "Editar", edit_task_log_path(@task_log), class: "btn btn-secondary" %>
+  <%= link_to "Voltar", task_logs_path, class: "btn btn-secondary" %>
+  <% unless @task_log.status_completed? %>
+    <%= button_to "Marcar como Concluído", task_log_path(@task_log, task_log: { status: :completed }),
+          method: :patch, class: "btn btn-primary" %>
+  <% end %>
+</div>
+</div>
+
+<div class="add-tasks-section">
+  <h3>Adicionar Tarefas ao Log</h3>
+  <% if @available_tasks.any? %>
+    <%= form_with url: task_log_entries_path, method: :post, local: true do |f| %>
+      <%= f.hidden_field :task_log_id, value: @task_log.id %>
+      <div class="form-group">
+        <%= f.label :task_id, "Selecionar Tarefa" %>
+        <%= f.select :task_id,
+              @available_tasks.map { |t| ["#{t.title} #{t.project ? "(#{t.project.name})" : ""}", t.id] },
+              { include_blank: "Selecione uma tarefa" },
+              { class: "form-control" } %>
+      </div>
+      <%= f.submit "Adicionar ao Log", class: "btn btn-primary" %>
+    <% end %>
+  <% else %>
+    <p class="empty-state">Nenhuma tarefa ativa disponível para adicionar.</p>
+  <% end %>
+</div>
+
+<div class="task-entries-section">
+  <h3>Tarefas no Log</h3>
+
+  <% if @entries.any? %>
+    <div data-controller="sortable" data-sortable-url-value="<%= task_log_entries_path %>">
+      <div data-sortable-target="list" class="sortable-list">
+        <% @entries.each do |entry| %>
+          <div data-sortable-id="<%= entry.id %>" class="task-entry <%= entry.status %>"
+               draggable="true" style="cursor: move; padding: 10px; margin: 5px; border: 1px solid #ddd; background: #f9f9f9;">
+            <div class="entry-header">
+              <span class="drag-handle">☰</span>
+              <strong><%= entry.task.title %></strong>
+              <span class="status-badge <%= entry.status %>"><%= t("task_log_entry.status.#{entry.status}") %></span>
+            </div>
+            <div class="entry-details">
+              <p>Tempo gasto: <%= entry.time_spent_display %></p>
+              <% if entry.notes.present? %>
+                <p>Notas: <%= entry.notes %></p>
+              <% end %>
+            </div>
+            <div class="entry-actions">
+              <%= button_to "Iniciar", task_sessions_start_path(task_id: entry.task.id),
+                    method: :post, class: "btn btn-small btn-primary",
+                    form: { "data-turbo" => "true" } %>
+              <%= button_to "Concluir", task_sessions_complete_path(task_id: entry.task.id),
+                    method: :post, class: "btn btn-small btn-success",
+                    form: { "data-turbo" => "true" } %>
+              <%= button_to "Pomodoro", start_pomodoro_sessions_path(task_id: entry.task.id),
+                    method: :post, class: "btn btn-small btn-pomodoro" %>
+              <%= button_to "Remover", task_log_entry_path(entry),
+                    method: :delete,
+                    data: { confirm: "Remover esta tarefa do log?" },
+                    class: "btn btn-small btn-danger" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <p class="empty-state">Nenhuma tarefa adicionada a este log ainda.</p>
+  <% end %>
+</div>

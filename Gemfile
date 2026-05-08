@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.9"
+# ruby ">= 3.5.0" # Commented out for dev ruby build
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.0.0"
@@ -81,13 +81,11 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "faker"
-  gem "capybara"
-  gem "selenium-webdriver"
-  
+
   # Accessibility testing
   gem "axe-core-capybara"
   gem "axe-core-rspec"
-  
+
   # W3C HTML validation
   gem "w3c_validators"
 end

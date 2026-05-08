@@ -64,6 +64,43 @@ Rails.application.routes.draw do
       get :waiting_for
     end
   end
+
+  resources :task_logs do
+    collection do
+      get :today
+    end
+  end
+
+  resources :task_log_entries, only: [:update, :destroy] do
+    member do
+      patch :update_position
+    end
+  end
+
+  resources :task_sessions, only: [:create, :update, :destroy] do
+    collection do
+      post :start
+      post :pause
+      post :complete
+      get :status
+    end
+  end
+
+  resources :pomodoro_sessions, except: [:edit, :update] do
+    member do
+      get :timer
+      post :complete
+      post :log_interruption
+    end
+    collection do
+      get :today
+      get :statistics
+      post :start
+      post :pause
+      post :resume
+    end
+  end
+
   resources :projects
   resources :responsibles, only: [:create]
 

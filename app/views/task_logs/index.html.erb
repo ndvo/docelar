@@ -1,0 +1,39 @@
+<h1>Logs de Tarefas</h1>
+
+<div class="task-log-actions">
+  <%= link_to "Hoje", today_task_logs_path, class: "btn btn-primary" %>
+  <%= link_to "Novo Log", new_task_log_path, class: "btn btn-secondary" %>
+</div>
+
+<% if @grouped_logs.any? %>
+  <% @grouped_logs.each do |month_year, logs| %>
+    <div class="month-group">
+      <h2><%= month_year %></h2>
+      <div class="task-logs-list">
+        <% logs.each do |log| %>
+          <div class="task-log-card <%= log.status %>">
+            <div class="task-log-header">
+              <h3>
+                <%= link_to "#{log.log_date.strftime('%d/%m/%Y')} - #{log.title || 'Sem título'}", log %>
+              </h3>
+              <span class="status-badge <%= log.status %>"><%= t("task_log.status.#{log.status}") %></span>
+            </div>
+            <div class="task-log-meta">
+              <span><%= log.total_entries_count %> tarefas</span>
+              <span><%= log.completed_entries_count %> concluídas</span>
+              <span>Tempo: <%= log.total_time_spent %> min</span>
+            </div>
+            <div class="task-log-actions">
+              <%= link_to "Editar", edit_task_log_path(log), class: "btn btn-small" %>
+              <%= button_to "Remover", log, method: :delete,
+                    data: { confirm: "Tem certeza?" },
+                    class: "btn btn-small btn-danger" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <p class="empty-state">Nenhum log de tarefas encontrado. <%= link_to "Crie seu primeiro log", new_task_log_path %>.</p>
+<% end %>

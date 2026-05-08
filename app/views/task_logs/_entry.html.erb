@@ -1,0 +1,43 @@
+<div class="task-entry <%= entry.status %>" data-sortable-id="<%= entry.id %>" draggable="true">
+  <div class="entry-header">
+    <span class="drag-handle">☰</span>
+    <strong><%= entry.task.title %></strong>
+    <span class="status-badge <%= entry.status %>">
+      <%= t("task_log_entry.status.#{entry.status}") %>
+    </span>
+  </div>
+
+  <div class="entry-details">
+    <p><strong>Tempo gasto:</strong> <%= entry.time_spent_display %></p>
+    <% if entry.notes.present? %>
+      <p><strong>Notas:</strong> <%= entry.notes %></p>
+    <% end %>
+    <% if entry.task.project %>
+      <p><strong>Projeto:</strong> <%= entry.task.project.name %></p>
+    <% end %>
+  </div>
+
+  <div class="entry-actions" data-controller="task-timer" data-task-timer-task-id-value="<%= entry.task.id %>">
+    <div class="timer-display" data-task-timer-target="display">00:00</div>
+
+    <%= button_to "Iniciar", task_sessions_start_path(task_id: entry.task.id),
+          method: :post, class: "btn btn-small btn-primary",
+          form: { "data-turbo" => "true" },
+          data: { action: "task-timer#start" } %>
+
+    <%= button_to "Pausar", task_sessions_pause_path(task_id: entry.task.id),
+          method: :post, class: "btn btn-small btn-warning",
+          form: { "data-turbo" => "true" },
+          data: { action: "task-timer#pause" } %>
+
+    <%= button_to "Concluir", task_sessions_complete_path(task_id: entry.task.id),
+          method: :post, class: "btn btn-small btn-success",
+          form: { "data-turbo" => "true" },
+          data: { action: "task-timer#complete" } %>
+
+    <%= button_to "Remover", task_log_entry_path(entry),
+          method: :delete,
+          data: { confirm: "Remover esta tarefa do log?" },
+          class: "btn btn-small btn-danger" %>
+  </div>
+</div>

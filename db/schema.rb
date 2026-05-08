@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_02_200200) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_06_190652) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -442,6 +442,25 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_02_200200) do
     t.index ["person_id"], name: "index_physicians_on_person_id"
   end
 
+  create_table "pomodoro_sessions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "task_id"
+    t.integer "project_id"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.integer "duration"
+    t.integer "status", default: 0, null: false
+    t.integer "interruptions", default: 0, null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_pomodoro_sessions_on_project_id"
+    t.index ["started_at"], name: "index_pomodoro_sessions_on_started_at"
+    t.index ["status"], name: "index_pomodoro_sessions_on_status"
+    t.index ["task_id"], name: "index_pomodoro_sessions_on_task_id"
+    t.index ["user_id"], name: "index_pomodoro_sessions_on_user_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -649,6 +668,32 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_02_200200) do
     t.index ["name"], name: "index_tags_on_name"
   end
 
+  create_table "task_log_entries", force: :cascade do |t|
+    t.integer "task_log_id", null: false
+    t.integer "task_id", null: false
+    t.integer "position", null: false
+    t.integer "time_spent", default: 0
+    t.integer "status", default: 0, null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["task_id"], name: "index_task_log_entries_on_task_id"
+    t.index ["task_log_id", "position"], name: "index_task_log_entries_on_task_log_id_and_position"
+    t.index ["task_log_id", "task_id"], name: "index_task_log_entries_on_task_log_id_and_task_id", unique: true
+    t.index ["task_log_id"], name: "index_task_log_entries_on_task_log_id"
+  end
+
+  create_table "task_logs", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.date "log_date", null: false
+    t.string "title"
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "log_date"], name: "index_task_logs_on_user_id_and_log_date", unique: true
+    t.index ["user_id"], name: "index_task_logs_on_user_id"
+  end
+
   create_table "tasks", force: :cascade do |t|
     t.integer "task_id"
     t.string "name"
@@ -843,6 +888,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_02_200200) do
   add_foreign_key "pharmacotherapies", "medications"
   add_foreign_key "pharmacotherapies", "treatments"
   add_foreign_key "physicians", "people"
+  add_foreign_key "pomodoro_sessions", "projects"
+  add_foreign_key "pomodoro_sessions", "tasks"
+  add_foreign_key "pomodoro_sessions", "users"
   add_foreign_key "projects", "users"
   add_foreign_key "purchases", "cards"
   add_foreign_key "purchases", "products"
@@ -858,6 +906,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_02_200200) do
   add_foreign_key "tagged", "tags"
   add_foreign_key "tagged_photos", "photos"
   add_foreign_key "tagged_photos", "tags"
+  add_foreign_key "task_log_entries", "task_logs"
+  add_foreign_key "task_log_entries", "tasks"
+  add_foreign_key "task_logs", "users"
   add_foreign_key "tasks", "projects", on_delete: :nullify
   add_foreign_key "tasks", "responsibles"
   add_foreign_key "tasks", "tasks"

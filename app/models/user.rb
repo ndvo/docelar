@@ -4,6 +4,9 @@ class User < ApplicationRecord
   has_many :greeting_cards, dependent: :destroy
   has_many :letter_backgrounds, dependent: :destroy
   has_many :projects, dependent: :destroy
+  has_many :tasks, dependent: :destroy
+  has_many :task_logs, dependent: :destroy
+  has_many :pomodoro_sessions, dependent: :destroy
 
   validates :email_address, presence: true, uniqueness: true
   normalizes :email_address, with: ->(e) { e.strip.downcase }
