@@ -1,0 +1,33 @@
+<% active_task = current_user&.tasks&.find_by(id: session[:active_task_id]) if session[:active_task_id] %>
+
+<div id="active-task-bar" class="active-task-bar <%= active_task ? 'visible' : 'hidden' %>">
+  <% if active_task %>
+    <div class="active-task-content" data-controller="task-timer"
+         data-task-timer-task-id-value="<%= active_task.id %>"
+         data-task-timer-start-time-value="<%= session[:timer_start] || 0 %>">
+      <div class="active-task-info">
+        <span class="active-task-label">Tarefa Ativa:</span>
+        <span class="active-task-title"><%= active_task.title %></span>
+        <span class="active-task-timer" data-task-timer-target="display">00:00</span>
+      </div>
+
+      <div class="active-task-actions">
+        <%= button_to "Pausar", task_sessions_pause_path(task_id: active_task.id),
+              method: :post,
+              class: "btn btn-small btn-warning",
+              form: { "data-turbo" => "true" },
+              data: { action: "task-timer#pause" } %>
+
+        <%= button_to "Concluir", task_sessions_complete_path(task_id: active_task.id),
+              method: :post,
+              class: "btn btn-small btn-success",
+              form: { "data-turbo" => "true" },
+              data: { action: "task-timer#complete" } %>
+      </div>
+    </div>
+  <% else %>
+    <div class="no-active-task">
+      <span>Nenhuma tarefa ativa no momento</span>
+    </div>
+  <% end %>
+</div>

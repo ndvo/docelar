@@ -1,0 +1,33 @@
+<%# Simple SVG-based time spent chart for a task %>
+<% if @task.task_log_entries.any? %>
+  <div class="time-spent-chart">
+    <h3>Tempo Gasto por Dia</h3>
+
+    <% entries_by_date = @task.task_log_entries.joins(:task_log).group_by { |e| e.task_log.log_date } %>
+    <% max_time = entries_by_date.values.flatten.sum(&:time_spent).to_f %>
+    <% max_bar = 200 %>
+
+    <div class="chart-container">
+      <% entries_by_date.sort_by { |date, _| date }.reverse_each do |date, entries| %>
+        <% total_time = entries.sum(&:time_spent) %>
+        <% next if total_time.zero? %>
+
+        <div class="chart-row">
+          <div class="chart-label">
+            <%= date.strftime('%d/%m') %>
+          </div>
+          <div class="chart-bar-container">
+            <div class="chart-bar" style="width: <%= (total_time / max_time * max_bar).round %>px; background-color: #007bff;">
+            </div>
+            <span class="chart-value"><%= total_time %> min</span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="chart-summary">
+      <strong>Total:</strong> <%= @task.task_log_entries.sum(:time_spent) %> minutos
+      (<%= (@task.task_log_entries.sum(:time_spent) / 60.0).round(1) %> horas)
+    </div>
+  </div>
+<% end %>

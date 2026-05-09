@@ -283,35 +283,35 @@ WaitingFor
 
 ## Implementation Phases
 
-### Phase 1: Core GTD (Inbox, Next Actions, Projects)
+### Phase 1: Core GTD (Inbox, Next Actions, Projects) ✅
 
-- [ ] Create Task model with GTD fields
-- [ ] Create Project model
-- [ ] Inbox view with quick capture
-- [ ] Process inbox workflow
-- [ ] Next action list by context
-- [ ] Project CRUD with next action calc
-- [ ] Basic navigation integration
+- [x] Create Task model with GTD fields
+- [x] Create Project model
+- [x] Inbox view with quick capture
+- [~] Process inbox workflow (view exists, guided workflow pending)
+- [x] Next action list by context
+- [x] Project CRUD with next action calc
+- [x] Basic navigation integration
 
-### Phase 2: Task Logs & Active Tasks
+### Phase 2: Task Logs & Active Tasks ✅ (uncommitted)
 
-- [ ] Create TaskLog and TaskLogEntry models
-- [ ] Task log creation UI
-- [ ] Active task tracking with timer
-- [ ] Time spent calculation
-- [ ] Visual charts for time tracking
-- [ ] Sticky active task bar
+- [x] Create TaskLog and TaskLogEntry models
+- [x] Task log creation UI
+- [x] Active task tracking with timer
+- [x] Time spent calculation
+- [x] Visual charts for time tracking
+- [x] Sticky active task bar
 
-### Phase 3: Pomodoro Integration
+### Phase 3: Pomodoro Integration ✅ (uncommitted)
 
-- [ ] Create PomodoroSession model
-- [ ] Pomodoro timer UI (full-screen)
-- [ ] Link pomodoros to tasks/projects
-- [ ] Statistics and streak tracking
-- [ ] Interruptions logging
+- [x] Create PomodoroSession model
+- [x] Pomodoro timer UI (full-screen)
+- [x] Link pomodoros to tasks/projects
+- [x] Statistics and streak tracking
+- [x] Interruptions logging
 - [ ] Daily pomodoro goal setting
 
-### Phase 4: Habit Tracking
+### Phase 4: Habit Tracking ❌
 
 - [ ] Create Habit and HabitRecord models
 - [ ] Habit definition UI
@@ -320,24 +320,24 @@ WaitingFor
 - [ ] Catholic habit categories
 - [ ] Family habit sharing
 
-### Phase 5: Eisenhower Matrix & Priorities
+### Phase 5: Eisenhower Matrix & Priorities ⚠️ (partial)
 
-- [ ] Add priority field to tasks
+- [x] Add priority field to tasks
 - [ ] Eisenhower matrix view (4 quadrants)
-- [ ] Q1-Q4 task classification
-- [ ] Energy level and time estimation
+- [x] Q1-Q4 task classification (enum exists)
+- [x] Energy level and time estimation (fields exist)
 - [ ] Smart task suggestions based on context
 
-### Phase 6: Weekly Review & Waiting For
+### Phase 6: Weekly Review & Waiting For ⚠️ (partial)
 
 - [ ] Create WeeklyReview model
 - [ ] Guided weekly review UI
 - [ ] Create WaitingFor model
-- [ ] Waiting for list with follow-ups
+- [x] Waiting for list with follow-ups (view exists)
 - [ ] Someday/Maybe list
 - [ ] Review reminders and notifications
 
-### Phase 7: Reports & Integration
+### Phase 7: Reports & Integration ❌
 
 - [ ] Time tracking reports
 - [ ] Productivity metrics dashboard
@@ -418,20 +418,20 @@ WaitingFor
 
 | Task | Priority | Status |
 |------|----------|--------|
-| Create Task model (GTD fields) | High | Pending |
-| Create Project model | High | Pending |
-| Inbox view + quick capture | High | Pending |
-| Process inbox workflow | High | Pending |
-| Next action list | High | Pending |
-| TaskLog + TaskLogEntry models | High | Pending |
-| Active task tracking + timer | High | Pending |
-| PomodoroSession model | Medium | Pending |
-| Pomodoro timer UI | Medium | Pending |
-| Habit + HabitRecord models | Medium | Pending |
-| Habit tracker UI | Medium | Pending |
-| Eisenhower matrix | Medium | Pending |
-| WeeklyReview model | Medium | Pending |
-| WaitingFor model | Low | Pending |
-| Time tracking reports | Low | Pending |
-| Integration with other modules | Low | Pending |
+| Create Task model (GTD fields) | High | ✅ Done |
+| Create Project model | High | ✅ Done |
+| Inbox view + quick capture | High | ✅ Done |
+| Process inbox workflow | High | ⚠️ Partial |
+| Next action list | High | ✅ Done |
+| TaskLog + TaskLogEntry models | High | ✅ Done |
+| Active task tracking + timer | High | ✅ Done |
+| PomodoroSession model | Medium | ✅ Done |
+| Pomodoro timer UI | Medium | ✅ Done |
+| Habit + HabitRecord models | Medium | ❌ Pending |
+| Habit tracker UI | Medium | ❌ Pending |
+| Eisenhower matrix view | Medium | ❌ Pending |
+| WeeklyReview model | Medium | ❌ Pending |
+| WaitingFor model | Low | ❌ Pending |
+| Time tracking reports | Low | ❌ Pending |
+| Integration with other modules | Low | ❌ Pending |
 
