@@ -69,7 +69,8 @@ picture img {
   flex-direction: column;
   gap: 10px;
   max-width: 90vw;
-  animation: slideDown 0.3s ease-out;
+  animation: slideDown 0.3s ease-out forwards;
+  background: var(--color-background-tertiary);
 }
 
 @keyframes slideDown {
