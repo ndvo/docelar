@@ -1,0 +1,59 @@
+<h1>Hábitos</h1>
+
+<div class="actions">
+  <%= link_to "Novo Hábito", new_habit_path, class: 'btn btn-primary' %>
+</div>
+
+<div class="filters">
+  <%= form_tag(habits_path, method: :get) do %>
+    <div>
+      <%= label_tag :type, "Tipo" %>
+      <%= select_tag :type,
+            options_for_select(Habit.habit_types.keys.map { |t| [t.humanize, t] }, params[:type]),
+            include_blank: "Todos" %>
+    </div>
+    <div>
+      <%= label_tag :frequency, "Frequência" %>
+      <%= select_tag :frequency,
+            options_for_select(Habit.frequency_types.keys.map { |f| [f.humanize, f] }, params[:frequency]),
+            include_blank: "Todos" %>
+    </div>
+    <%= submit_tag "Filtrar" %>
+    <%= link_to "Limpar", habits_path %>
+  <% end %>
+</div>
+
+<% if @habits.any? %>
+  <div class="habits-grid">
+    <% @habits.each do |habit| %>
+      <div class="habit-card <%= habit.active ? 'active' : 'inactive' %>">
+        <div class="habit-header">
+          <h3><%= link_to habit.name, habit %></h3>
+          <span class="status-badge <%= habit.frequency_type %>"><%= habit.frequency_type.humanize %></span>
+          <% if habit.habit_type_catholic_spiritual? %>
+            <span class="status-badge catholic"><%= habit.catholic_category.humanize if habit.catholic_category.present? %></span>
+          <% end %>
+        </div>
+        <% if habit.description.present? %>
+          <p class="habit-description"><%= habit.description %></p>
+        <% end %>
+        <div class="habit-meta">
+          <span>Streak: <%= habit.current_streak %> dias</span>
+          <span>Completude: <%= habit.completion_percentage %>%</span>
+        </div>
+        <div class="habit-actions">
+          <%= link_to "Ver", habit, class: 'btn btn-small' %>
+          <%= link_to "Editar", edit_habit_path(habit), class: 'btn btn-small btn-secondary' %>
+          <%= button_to "Remover", habit, method: :delete,
+                data: { confirm: "Remover hábito '#{habit.name}'?" },
+                class: 'btn btn-small btn-danger' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <p>Nenhum hábito encontrado.</p>
+    <%= link_to "Criar seu primeiro hábito", new_habit_path, class: 'btn btn-primary' %>
+  </div>
+<% end %>

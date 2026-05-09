@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :greeting_cards, dependent: :destroy
   has_many :letter_backgrounds, dependent: :destroy
   has_many :projects, dependent: :destroy
+  has_many :habits, dependent: :destroy
   has_many :tasks, dependent: :destroy
   has_many :task_logs, dependent: :destroy
   has_many :pomodoro_sessions, dependent: :destroy

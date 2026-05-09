@@ -1,0 +1,59 @@
+<%= form_with(model: @habit, local: true) do |form| %>
+  <% if @habit.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@habit.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul>
+        <% @habit.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name, "Nome" %>
+    <%= form.text_field :name, required: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description, "Descrição" %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :habit_type, "Tipo" %>
+    <%= form.select :habit_type, Habit.habit_types.keys.map { |t| [t.humanize, t] } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :catholic_category, "Categoria Católica" %>
+    <%= form.select :catholic_category,
+          Habit.catholic_categories.keys.map { |c| [c.humanize, c] },
+          { include_blank: "Nenhuma" } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :frequency_type, "Frequência" %>
+    <%= form.select :frequency_type, Habit.frequency_types.keys.map { |f| [f.humanize, f] } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :target_streak, "Meta de sequência (dias)" %>
+    <%= form.number_field :target_streak, min: 0 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reminder_time, "Horário do lembrete" %>
+    <%= form.time_field :reminder_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active, "Ativo" %>
+    <%= form.check_box :active %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit class: 'btn btn-primary' %>
+    <%= link_to "Cancelar", habits_path, class: 'btn btn-secondary' %>
+  </div>
+<% end %>

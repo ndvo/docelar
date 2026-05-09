@@ -101,6 +101,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :habits do
+    member do
+      post :toggle
+    end
+  end
+
   resources :projects
   resources :responsibles, only: [:create]
 

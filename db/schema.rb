@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_07_000000) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_07_100001) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -193,6 +193,34 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_000000) do
     t.index ["letter_background_id"], name: "index_greeting_cards_on_letter_background_id"
     t.index ["person_id"], name: "index_greeting_cards_on_person_id"
     t.index ["user_id"], name: "index_greeting_cards_on_user_id"
+  end
+
+  create_table "habit_records", force: :cascade do |t|
+    t.integer "habit_id", null: false
+    t.date "record_date", null: false
+    t.boolean "completed", default: false, null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["habit_id", "record_date"], name: "index_habit_records_on_habit_id_and_record_date", unique: true
+    t.index ["habit_id"], name: "index_habit_records_on_habit_id"
+  end
+
+  create_table "habits", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.integer "frequency_type", default: 0, null: false
+    t.json "frequency_config", default: {}
+    t.integer "habit_type", default: 0, null: false
+    t.integer "catholic_category"
+    t.integer "target_streak"
+    t.time "reminder_time"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "name"], name: "index_habits_on_user_id_and_name", unique: true
+    t.index ["user_id"], name: "index_habits_on_user_id"
   end
 
   create_table "letter_backgrounds", force: :cascade do |t|
@@ -871,6 +899,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_000000) do
   add_foreign_key "exam_requests", "medical_appointments"
   add_foreign_key "exam_requests", "patients"
   add_foreign_key "family_medical_histories", "patients"
+  add_foreign_key "habit_records", "habits"
+  add_foreign_key "habits", "users"
   add_foreign_key "medical_appointments", "appointment_types"
   add_foreign_key "medical_appointments", "patients"
   add_foreign_key "medical_appointments", "physicians"

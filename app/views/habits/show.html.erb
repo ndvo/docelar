@@ -1,0 +1,80 @@
+<h1><%= @habit.name %></h1>
+
+<div class="habit-details">
+  <div class="habit-info">
+    <p><strong>Tipo:</strong> <%= @habit.habit_type.humanize %></p>
+    <% if @habit.catholic_category.present? %>
+      <p><strong>Categoria:</strong> <%= @habit.catholic_category.humanize %></p>
+    <% end %>
+    <p><strong>Frequência:</strong> <%= @habit.frequency_type.humanize %></p>
+    <% if @habit.description.present? %>
+      <p><strong>Descrição:</strong> <%= @habit.description %></p>
+    <% end %>
+    <p><strong>Status:</strong> <%= @habit.active ? "Ativo" : "Inativo" %></p>
+    <p><strong>Sequência atual:</strong> <%= @habit.current_streak %> dias</p>
+    <p><strong>Maior sequência:</strong> <%= @habit.longest_streak %> dias</p>
+  </div>
+
+  <div class="month-navigation">
+    <%= link_to "← Mês anterior",
+          habit_path(@habit, year: @date.prev_month.year, month: @date.prev_month.month),
+          class: 'btn btn-small' %>
+    <h2><%= t('date.month_names')[@month] %> / <%= @year %></h2>
+    <%= link_to "Próximo mês →",
+          habit_path(@habit, year: @date.next_month.year, month: @date.next_month.month),
+          class: 'btn btn-small' %>
+  </div>
+
+  <div class="monthly-grid">
+    <div class="grid-header">
+      <% %w[Dom Seg Ter Qua Qui Sex Sáb].each do |day| %>
+        <div class="grid-cell header"><%= day %></div>
+      <% end %>
+    </div>
+
+    <div class="grid-body">
+      <% first_day = @date.beginning_of_month.wday %>
+      <% first_day.times do %>
+        <div class="grid-cell empty"></div>
+      <% end %>
+
+      <% @date.end_of_month.day.times do |day| %>
+        <% current_date = Date.new(@year, @month, day + 1) %>
+        <% record = @records[current_date] %>
+        <% completed = record&.completed? %>
+        <% is_today = current_date == Date.current %>
+
+        <div class="grid-cell <%= 'today' if is_today %> <%= 'completed' if completed %>">
+          <%= button_to day + 1,
+                toggle_habit_path(@habit, date: current_date),
+                method: :post,
+                class: 'day-btn',
+                aria_label: "#{day + 1} - #{completed ? 'Concluído' : 'Pendente'}" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="stats-section">
+    <h3>Completude (últimos 30 dias)</h3>
+    <div class="progress-bar-container">
+      <% pct = @habit.completion_percentage(30) %>
+      <div class="progress-bar"
+           style="width: <%= pct %>%"
+           role="progressbar"
+           aria-valuenow="<%= pct.round %>"
+           aria-valuemin="0"
+           aria-valuemax="100">
+      </div>
+    </div>
+    <p><%= pct %>% de conclusão</p>
+  </div>
+</div>
+
+<div class="actions">
+  <%= link_to "Editar", edit_habit_path(@habit), class: 'btn btn-primary' %>
+  <%= link_to "Voltar", habits_path, class: 'btn btn-secondary' %>
+  <%= button_to "Remover", @habit, method: :delete,
+        data: { confirm: "Remover hábito '#{@habit.name}'?" },
+        class: 'btn btn-danger' %>
+</div>
