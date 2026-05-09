@@ -212,7 +212,7 @@
   }
 }
 
-  main {
+  body>main {
     margin-left: var(--layout-sidebar-width);
   }
 
