@@ -9,5 +9,6 @@ class User < ApplicationRecord
   has_many :pomodoro_sessions, dependent: :destroy
 
   validates :email_address, presence: true, uniqueness: true
+  validates :daily_pomodoro_goal, numericality: { greater_than_or_equal_to: 1, allow_nil: false }
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 end

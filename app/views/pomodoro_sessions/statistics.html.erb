@@ -10,7 +10,26 @@
     <h3>Total Time</h3>
     <p class="stat-number"><%= (@total_time.to_f / 3600).round(2) %> hours</p>
   </div>
-  
+
+  <div class="stat-card">
+    <h3>Today's Progress</h3>
+    <p class="stat-number"><%= @todays_count %> / <%= @daily_pomodoro_goal %></p>
+    <div class="progress-bar-container">
+      <% progress_pct = @daily_pomodoro_goal > 0 ? [(@todays_count.to_f / @daily_pomodoro_goal * 100).round, 100].min : 0 %>
+      <div class="progress-bar"
+           style="width: <%= progress_pct %>%"
+           role="progressbar"
+           aria-valuenow="<%= @todays_count %>"
+           aria-valuemin="0"
+           aria-valuemax="<%= @daily_pomodoro_goal %>"
+           aria-label="<%= progress_pct %>% da meta diária atingida">
+      </div>
+    </div>
+    <% if @todays_count >= @daily_pomodoro_goal %>
+      <p class="goal-reached">Meta diária atingida! 🎯</p>
+    <% end %>
+  </div>
+
   <div class="stat-card">
     <h3>Current Streak</h3>
     <p class="stat-number"><%= @current_streak %> days</p>

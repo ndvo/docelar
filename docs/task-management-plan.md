@@ -302,14 +302,14 @@ WaitingFor
 - [x] Visual charts for time tracking
 - [x] Sticky active task bar
 
-### Phase 3: Pomodoro Integration ✅ (uncommitted)
+### Phase 3: Pomodoro Integration ✅
 
 - [x] Create PomodoroSession model
 - [x] Pomodoro timer UI (full-screen)
 - [x] Link pomodoros to tasks/projects
 - [x] Statistics and streak tracking
 - [x] Interruptions logging
-- [ ] Daily pomodoro goal setting
+- [x] Daily pomodoro goal setting
 
 ### Phase 4: Habit Tracking ❌
 
@@ -427,6 +427,7 @@ WaitingFor
 | Active task tracking + timer | High | ✅ Done |
 | PomodoroSession model | Medium | ✅ Done |
 | Pomodoro timer UI | Medium | ✅ Done |
+| Daily pomodoro goal setting | Medium | ✅ Done |
 | Habit + HabitRecord models | Medium | ❌ Pending |
 | Habit tracker UI | Medium | ❌ Pending |
 | Eisenhower matrix view | Medium | ❌ Pending |

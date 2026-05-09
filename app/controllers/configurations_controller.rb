@@ -39,6 +39,19 @@ class ConfigurationsController < ApplicationController
     end
   end
 
+  def update_pomodoro_goal
+    if current_user.update(pomodoro_goal_params)
+      redirect_to configuration_path, notice: 'Meta Pomodoro atualizada com sucesso.'
+    else
+      @appointment_types = AppointmentType.order(:name)
+      @new_appointment_type = AppointmentType.new
+      @fonts = Font.order(created_at: :desc)
+      @new_font = Font.new
+      flash.now[:alert] = current_user.errors.full_messages.to_sentence
+      render :show, status: :unprocessable_entity
+    end
+  end
+
   def destroy_font
     @font = Font.find(params[:id])
     @font.destroy
@@ -53,5 +66,9 @@ class ConfigurationsController < ApplicationController
 
   def font_params
     params.require(:font).permit(:name, :description, :file, :active, occasions: [])
+  end
+
+  def pomodoro_goal_params
+    params.require(:user).permit(:daily_pomodoro_goal)
   end
 end

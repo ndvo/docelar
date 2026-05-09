@@ -657,3 +657,28 @@ header nav,
    border-top: 1px solid #ddd;
    font-size: 0.95rem;
  }
+
+ /* ============================================
+    Progress Bar
+    ============================================ */
+ .progress-bar-container {
+   background: #e0e0e0;
+   border-radius: 8px;
+   height: 12px;
+   overflow: hidden;
+   margin: 8px 0;
+ }
+
+ .progress-bar {
+   height: 100%;
+   background: linear-gradient(90deg, #e74c3c, #f39c12, #27ae60);
+   border-radius: 8px;
+   transition: width 0.5s ease;
+   min-width: 4px;
+ }
+
+ .goal-reached {
+   color: #27ae60;
+   font-weight: 600;
+   font-size: 0.9rem;
+ }

@@ -72,6 +72,23 @@
       </table>
     </section>
 
+    <section class="config-section" aria-labelledby="pomodoro-goal-heading">
+      <h2 id="pomodoro-goal-heading">Meta Pomodoro Diária</h2>
+      <p class="section-description">Defina quantos pomodoros (25min) deseja completar por dia.</p>
+
+      <%= form_with model: current_user, url: update_pomodoro_goal_path, method: :patch, local: true do |f| %>
+        <div class="form-row">
+          <div class="field">
+            <%= f.label :daily_pomodoro_goal, "Pomodoros por dia" %>
+            <%= f.number_field :daily_pomodoro_goal, min: 1, max: 50, class: 'input-sm' %>
+          </div>
+          <div class="actions">
+            <%= f.submit "Salvar Meta", class: 'btn btn-primary' %>
+          </div>
+        </div>
+      <% end %>
+    </section>
+
     <section class="config-section" aria-labelledby="fonts-heading">
       <h2 id="fonts-heading">Fontes</h2>
       <p class="section-description">Gerencie as fontes personalizadas para os cartões.</p>

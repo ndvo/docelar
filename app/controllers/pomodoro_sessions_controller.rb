@@ -42,6 +42,8 @@ class PomodoroSessionsController < ApplicationController
   def statistics
     @total_sessions = current_user.pomodoro_sessions.completed.count
     @total_time = current_user.pomodoro_sessions.completed.sum(:duration)
+    @todays_count = current_user.pomodoro_sessions.completed.today.count
+    @daily_pomodoro_goal = current_user.daily_pomodoro_goal
 
     # Daily count for last 30 days
     @daily_counts = current_user.pomodoro_sessions.completed
