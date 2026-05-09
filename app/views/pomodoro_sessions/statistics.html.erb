@@ -1,0 +1,110 @@
+<h1>Pomodoro Statistics</h1>
+
+<div class="stats-summary">
+  <div class="stat-card">
+    <h3>Total Sessions</h3>
+    <p class="stat-number"><%= @total_sessions %></p>
+  </div>
+  
+  <div class="stat-card">
+    <h3>Total Time</h3>
+    <p class="stat-number"><%= (@total_time.to_f / 3600).round(2) %> hours</p>
+  </div>
+  
+  <div class="stat-card">
+    <h3>Current Streak</h3>
+    <p class="stat-number"><%= @current_streak %> days</p>
+  </div>
+  
+  <div class="stat-card">
+    <h3>Avg Interruptions</h3>
+    <p class="stat-number"><%= @avg_interruptions %></p>
+  </div>
+</div>
+
+<div class="stats-section">
+  <h2>Daily Pomodoro Count (Last 30 Days)</h2>
+  <% if @daily_counts.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @daily_counts.sort.each do |date, count| %>
+          <tr>
+            <td><%= date %></td>
+            <td><%= count %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No data for the last 30 days.</p>
+  <% end %>
+</div>
+
+<div class="stats-section">
+  <h2>Weekly Average</h2>
+  <p>Average pomodoros per week: <%= @weekly_average.round(2) %></p>
+</div>
+
+<div class="stats-section">
+  <h2>Hours by Project</h2>
+  <% if @hours_by_project.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Hours</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @hours_by_project.each do |project_name, duration| %>
+          <tr>
+            <td><%= project_name %></td>
+            <td><%= (duration.to_f / 3600).round(2) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No project data available.</p>
+  <% end %>
+</div>
+
+<div class="stats-section">
+  <h2>Hours by Task</h2>
+  <% if @hours_by_task.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Hours</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @hours_by_task.each do |task_name, duration| %>
+          <tr>
+            <td><%= task_name %></td>
+            <td><%= (duration.to_f / 3600).round(2) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No task data available.</p>
+  <% end %>
+</div>
+
+<div class="stats-section">
+  <h2>Interruption Statistics</h2>
+  <p>Total Interruptions: <%= @total_interruptions %></p>
+  <p>Average per Session: <%= @avg_interruptions %></p>
+</div>
+
+<div class="actions">
+  <%= link_to "Back to Sessions", pomodoro_sessions_path, class: 'btn btn-secondary' %>
+</div>

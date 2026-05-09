@@ -30,6 +30,56 @@
   <%= link_to 'Voltar', projects_path, class: 'btn btn-secondary' %>
 </div>
 
+<!-- Pomodoro Statistics Section -->
+<div class="pomodoro-section">
+  <h2>Pomodoro Statistics</h2>
+  
+  <div class="pomodoro-stats">
+    <p><strong>Total Pomodoro Sessions:</strong> <%= @project.pomodoro_count %></p>
+    <p><strong>Total Time:</strong> 
+      <% total_hours = @project.total_pomodoro_hours %>
+      <%= "#{total_hours}h" %>
+    </p>
+  </div>
+
+  <div class="actions">
+    <%= link_to "Start Pomodoro for Project", start_pomodoro_sessions_path(project_id: @project.id), 
+          method: :post, class: 'btn btn-primary' %>
+    <%= link_to "View All Pomodoros", pomodoro_sessions_path(project_id: @project.id), 
+          class: 'btn btn-secondary' %>
+  </div>
+
+  <% if @project.pomodoro_sessions.any? %>
+    <h3>Recent Sessions</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Started At</th>
+          <th>Duration</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @project.pomodoro_sessions.order(started_at: :desc).limit(10).each do |session| %>
+          <tr>
+            <td><%= session.task&.name || "N/A" %></td>
+            <td><%= l(session.started_at, format: :short) if session.started_at %></td>
+            <td>
+              <% if session.duration %>
+                <%= Time.at(session.duration).utc.strftime("%M:%S") %>
+              <% else %>
+                -
+              <% end %>
+            </td>
+            <td><%= session.status.humanize %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+
 <% if @active_tasks.any? %>
   <h2>Tarefas Ativas</h2>
   <div class="tasks-list">
@@ -40,6 +90,8 @@
         <% if task.due_date %>
           <span class="task-due-date">Vence em: <%= l(task.due_date) %></span>
         <% end %>
+        <%= link_to "Pomodoro", start_pomodoro_sessions_path(task_id: task.id), 
+              method: :post, class: 'btn btn-small' %>
       </div>
     <% end %>
   </div>

@@ -1,7 +1,60 @@
 <%= render @task %>
 
-<%= link_to "Incluir nova tarefa", {action: :new, parent_id: @task.id } %>
 <%= render 'task_table' %>
+
+<%= render 'time_spent_chart' %>
+
+<!-- Pomodoro Section -->
+<div class="pomodoro-section">
+  <h2>Pomodoro Sessions</h2>
+
+  <div class="actions">
+    <%= link_to "Start Pomodoro", start_pomodoro_sessions_path(task_id: @task.id), 
+          method: :post, class: 'btn btn-primary' %>
+    <%= link_to "View All Pomodoros", pomodoro_sessions_path(task_id: @task.id), 
+          class: 'btn btn-secondary' %>
+  </div>
+
+  <% if @task.pomodoro_sessions.any? %>
+    <div class="pomodoro-stats">
+      <p><strong>Total Pomodoro Sessions:</strong> <%= @task.pomodoro_count %></p>
+      <p><strong>Total Time:</strong> 
+        <% total_seconds = @task.total_pomodoro_time %>
+        <%= "#{(total_seconds / 3600).floor}h #{((total_seconds % 3600) / 60).floor}m" %>
+      </p>
+    </div>
+
+    <h3>Recent Sessions</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Started At</th>
+          <th>Duration</th>
+          <th>Status</th>
+          <th>Interruptions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @task.pomodoro_sessions.order(started_at: :desc).limit(10).each do |session| %>
+          <tr>
+            <td><%= l(session.started_at, format: :short) if session.started_at %></td>
+            <td>
+              <% if session.duration %>
+                <%= Time.at(session.duration).utc.strftime("%M:%S") %>
+              <% else %>
+                -
+              <% end %>
+            </td>
+            <td><%= session.status.humanize %></td>
+            <td><%= session.interruptions %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No pomodoro sessions for this task yet.</p>
+  <% end %>
+</div>
 
 <div>
   <%= link_to "Edit this task", edit_task_path(@task) %> |

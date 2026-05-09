@@ -1,0 +1,83 @@
+<h1>Pomodoro Sessions</h1>
+
+<div class="filters">
+  <%= form_tag(pomodoro_sessions_path, method: :get) do %>
+    <div>
+      <%= label_tag :start_date, "Start Date" %>
+      <%= date_field_tag :start_date, params[:start_date] %>
+    </div>
+    <div>
+      <%= label_tag :end_date, "End Date" %>
+      <%= date_field_tag :end_date, params[:end_date] %>
+    </div>
+    <div>
+      <%= label_tag :task_id, "Task" %>
+      <%= select_tag :task_id, 
+            options_from_collection_for_select(Task.gtd_active, :id, :name, params[:task_id]),
+            include_blank: "All Tasks" %>
+    </div>
+    <div>
+      <%= label_tag :project_id, "Project" %>
+      <%= select_tag :project_id,
+            options_from_collection_for_select(Project.all, :id, :name, params[:project_id]),
+            include_blank: "All Projects" %>
+    </div>
+    <div>
+      <%= label_tag :status, "Status" %>
+      <%= select_tag :status,
+            options_for_select(PomodoroSession.statuses.keys.map { |s| [s.humanize, s] }, params[:status]),
+            include_blank: "All Statuses" %>
+    </div>
+    <%= submit_tag "Filter" %>
+    <%= link_to "Clear Filters", pomodoro_sessions_path %>
+  <% end %>
+</div>
+
+<div class="actions">
+  <%= link_to "New Pomodoro Session", new_pomodoro_session_path, class: 'btn btn-primary' %>
+  <%= link_to "Today's Sessions", today_pomodoro_sessions_path, class: 'btn btn-secondary' %>
+  <%= link_to "Statistics", statistics_pomodoro_sessions_path, class: 'btn btn-secondary' %>
+</div>
+
+<% if @pomodoro_sessions.any? %>
+  <table class="pomodoro-sessions-table">
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Project</th>
+        <th>Started At</th>
+        <th>Duration</th>
+        <th>Status</th>
+        <th>Interruptions</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @pomodoro_sessions.each do |session| %>
+        <tr>
+          <td><%= session.task&.name || "N/A" %></td>
+          <td><%= session.project&.name || "N/A" %></td>
+          <td><%= l(session.started_at, format: :short) if session.started_at %></td>
+          <td>
+            <% if session.duration %>
+              <%= Time.at(session.duration).utc.strftime("%M:%S") %>
+            <% else %>
+              -
+            <% end %>
+          </td>
+          <td><span class="status-<%= session.status %>"><%= session.status.humanize %></span></td>
+          <td><%= session.interruptions %></td>
+          <td>
+            <%= link_to "Show", session %>
+            <% if session.status_in_progress? %>
+              <%= button_to "Complete", complete_pomodoro_session_path(session), method: :post %>
+            <% end %>
+            <%= button_to "Cancel", session, method: :delete, data: { confirm: "Are you sure?" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No pomodoro sessions found.</p>
+<% end %>

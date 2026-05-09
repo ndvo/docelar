@@ -1,0 +1,50 @@
+<h1>New Pomodoro Session</h1>
+
+<%= form_with(model: @pomodoro_session, local: true) do |form| %>
+  <% if @pomodoro_session.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@pomodoro_session.errors.count, "error") %> prohibited this pomodoro session from being saved:</h2>
+      <ul>
+        <% @pomodoro_session.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :task_id, "Task" %>
+    <%= form.collection_select :task_id, @tasks, :id, :name, include_blank: "No Task" %>
+  </div>
+
+  <div>
+    <%= form.label :project_id, "Project" %>
+    <%= form.collection_select :project_id, @projects, :id, :name, include_blank: "No Project" %>
+  </div>
+
+  <div>
+    <%= form.label :duration, "Duration (minutes)" %>
+    <%= form.number_field :duration, value: (@pomodoro_session.duration || 25 * 60) / 60 %>
+    <small>Default is 25 minutes (1500 seconds)</small>
+  </div>
+
+  <div>
+    <%= form.label :status, "Status" %>
+    <%= form.select :status, PomodoroSession.statuses.keys.map { |s| [s.humanize, s] }, selected: @pomodoro_session.status %>
+  </div>
+
+  <div>
+    <%= form.label :started_at, "Started At" %>
+    <%= form.datetime_local_field :started_at %>
+  </div>
+
+  <div>
+    <%= form.label :notes, "Notes" %>
+    <%= form.text_area :notes %>
+  </div>
+
+  <div>
+    <%= form.submit "Create Pomodoro Session" %>
+    <%= link_to "Cancel", pomodoro_sessions_path %>
+  </div>
+<% end %>

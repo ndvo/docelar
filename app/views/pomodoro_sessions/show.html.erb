@@ -1,0 +1,39 @@
+<h1>Pomodoro Session Details</h1>
+
+<div class="pomodoro-session-details">
+  <p><strong>Status:</strong> <span class="status-<%= @pomodoro_session.status %>"><%= @pomodoro_session.status.humanize %></span></p>
+  
+  <p><strong>Task:</strong> <%= @pomodoro_session.task&.name || "N/A" %></p>
+  
+  <p><strong>Project:</strong> <%= @pomodoro_session.project&.name || "N/A" %></p>
+  
+  <p><strong>Started At:</strong> <%= l(@pomodoro_session.started_at, format: :long) if @pomodoro_session.started_at %></p>
+  
+  <p><strong>Ended At:</strong> <%= l(@pomodoro_session.ended_at, format: :long) if @pomodoro_session.ended_at %></p>
+  
+  <p><strong>Duration:</strong> 
+    <% if @pomodoro_session.duration %>
+      <%= Time.at(@pomodoro_session.duration).utc.strftime("%M:%S") %>
+    <% else %>
+      -
+    <% end %>
+  </p>
+  
+  <p><strong>Interruptions:</strong> <%= @pomodoro_session.interruptions %></p>
+  
+  <% if @pomodoro_session.notes.present? %>
+    <p><strong>Notes:</strong> <%= @pomodoro_session.notes %></p>
+  <% end %>
+</div>
+
+<div class="actions">
+  <% if @pomodoro_session.status_in_progress? %>
+    <%= button_to "Complete", complete_pomodoro_session_path(@pomodoro_session), method: :post, class: 'btn btn-primary' %>
+    <%= button_to "Log Interruption", log_interruption_pomodoro_session_path(@pomodoro_session), method: :post, class: 'btn btn-secondary' %>
+  <% end %>
+  
+  <%= link_to "Back to List", pomodoro_sessions_path, class: 'btn btn-secondary' %>
+  <%= button_to "Cancel Session", @pomodoro_session, method: :delete, 
+        data: { confirm: "Are you sure you want to cancel this session?" }, 
+        class: 'btn btn-danger' %>
+</div>

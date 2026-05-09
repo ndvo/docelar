@@ -1,0 +1,188 @@
+<div data-controller="pomodoro-timer"
+     data-pomodoro-timer-session-id-value="<%= @pomodoro_session.id %>"
+     data-pomodoro-timer-duration-value="<%= @pomodoro_session.duration || 1500 %>"
+     data-pomodoro-timer-start-time-value="<%= @pomodoro_session.started_at ? @pomodoro_session.started_at.to_i : 0 %>"
+     data-pomodoro-timer-elapsed-value="<%= @pomodoro_session.duration ? 0 : 0 %>"
+     data-pomodoro-timer-status-value="<%= @pomodoro_session.status %>"
+     class="full-screen-timer">
+
+  <div class="timer-container">
+    <!-- Progress Circle -->
+    <div class="progress-circle-container">
+      <svg class="progress-circle" width="300" height="300" viewBox="0 0 300 300">
+        <!-- Background circle -->
+        <circle cx="150" cy="150" r="90" 
+                fill="none" 
+                stroke="#e0e0e0" 
+                stroke-width="10"/>
+        <!-- Progress circle -->
+        <circle data-pomodoro-timer-target="progressCircle"
+                cx="150" cy="150" r="90" 
+                fill="none" 
+                stroke="#e74c3c" 
+                stroke-width="10"
+                stroke-linecap="round"
+                transform="rotate(-90 150 150)"
+                style="stroke-dasharray: 565.48 565.48; stroke-dashoffset: 565.48;"/>
+      </svg>
+      <div class="timer-display" data-pomodoro-timer-target="display">25:00</div>
+      <div data-pomodoro-timer-target="progressText" class="progress-text">25 min</div>
+    </div>
+
+    <!-- Task/Project Info -->
+    <div class="session-info">
+      <% if @pomodoro_session.task %>
+        <p><strong>Task:</strong> <span data-pomodoro-timer-target="taskName"><%= @pomodoro_session.task.name %></span></p>
+      <% end %>
+      <% if @pomodoro_session.project %>
+        <p><strong>Project:</strong> <span data-pomodoro-timer-target="projectName"><%= @pomodoro_session.project.name %></span></p>
+      <% end %>
+    </div>
+
+    <!-- Controls -->
+    <div class="timer-controls">
+      <button data-pomodoro-timer-target="startBtn" 
+              data-action="click->pomodoro-timer#start"
+              class="btn btn-primary btn-large">
+        Start
+      </button>
+
+      <button data-pomodoro-timer-target="pauseBtn" 
+              data-action="click->pomodoro-timer#pause"
+              class="btn btn-warning btn-large"
+              style="display: none;">
+        Pause
+      </button>
+
+      <button data-pomodoro-timer-target="resumeBtn" 
+              data-action="click->pomodoro-timer#resume"
+              class="btn btn-primary btn-large"
+              style="display: none;">
+        Resume
+      </button>
+
+      <button data-pomodoro-timer-target="completeBtn" 
+              data-action="click->pomodoro-timer#complete"
+              class="btn btn-success btn-large"
+              style="display: none;">
+        Complete
+      </button>
+
+      <button data-pomodoro-timer-target="interruptionBtn" 
+              data-action="click->pomodoro-timer#logInterruption"
+              class="btn btn-info"
+              style="display: none;">
+        Log Interruption
+      </button>
+
+      <button data-pomodoro-timer-target="cancelBtn" 
+              data-action="click->pomodoro-timer#cancel"
+              class="btn btn-danger">
+        Cancel
+      </button>
+    </div>
+
+    <!-- Interruption Count -->
+    <% if @pomodoro_session.interruptions > 0 %>
+      <div class="interruption-count">
+        Interruptions: <%= @pomodoro_session.interruptions %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+.full-screen-timer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.timer-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.progress-circle-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto 2rem;
+}
+
+.progress-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.timer-display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  font-weight: bold;
+  font-family: monospace;
+}
+
+.progress-text {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.session-info {
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+}
+
+.session-info p {
+  margin: 0.5rem 0;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.btn-large {
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary { background: #3498db; color: white; }
+.btn-primary:hover { background: #2980b9; }
+.btn-warning { background: #f39c12; color: white; }
+.btn-warning:hover { background: #e67e22; }
+.btn-success { background: #27ae60; color: white; }
+.btn-success:hover { background: #229954; }
+.btn-danger { background: #e74c3c; color: white; }
+.btn-danger:hover { background: #c0392b; }
+.btn-info { background: #17a2b8; color: white; }
+.btn-info:hover { background: #138496; }
+
+.interruption-count {
+  margin-top: 1rem;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+</style>

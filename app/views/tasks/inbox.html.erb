@@ -65,6 +65,11 @@
                 method: :patch,
                 params: { task: { gtd_status: 'waiting_for', status: 'waiting' } },
                 class: 'btn btn-small btn-warning' %>
+
+          <%= button_to "Pomodoro", 
+                start_pomodoro_sessions_path(task_id: task.id), 
+                method: :post,
+                class: 'btn btn-small btn-pomodoro' %>
           
           <%= link_to "Editar", edit_task_path(task), class: 'btn btn-small' %>
           

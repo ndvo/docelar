@@ -91,6 +91,10 @@
                     method: :patch,
                     params: { task: { gtd_status: 'completed', status: 'completed' } },
                     class: 'btn btn-small btn-success' %>
+              <%= button_to "Pomodoro", 
+                    start_pomodoro_sessions_path(task_id: task.id), 
+                    method: :post,
+                    class: 'btn btn-small btn-pomodoro' %>
             </div>
           </div>
         <% end %>
