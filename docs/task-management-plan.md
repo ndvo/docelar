@@ -311,14 +311,14 @@ WaitingFor
 - [x] Interruptions logging
 - [x] Daily pomodoro goal setting
 
-### Phase 4: Habit Tracking ❌
+### Phase 4: Habit Tracking ✅
 
-- [ ] Create Habit and HabitRecord models
-- [ ] Habit definition UI
-- [ ] Monthly grid view
-- [ ] Streak calculations
-- [ ] Catholic habit categories
-- [ ] Family habit sharing
+- [x] Create Habit and HabitRecord models
+- [x] Habit definition UI
+- [x] Monthly grid view
+- [x] Streak calculations
+- [x] Catholic habit categories
+- [x] Family habit sharing (habit_type enum includes family; data model supports sharing via user scoping)
 
 ### Phase 5: Eisenhower Matrix & Priorities ⚠️ (partial)
 
@@ -428,8 +428,8 @@ WaitingFor
 | PomodoroSession model | Medium | ✅ Done |
 | Pomodoro timer UI | Medium | ✅ Done |
 | Daily pomodoro goal setting | Medium | ✅ Done |
-| Habit + HabitRecord models | Medium | ❌ Pending |
-| Habit tracker UI | Medium | ❌ Pending |
+| Habit + HabitRecord models | Medium | ✅ Done |
+| Habit tracker UI | Medium | ✅ Done |
 | Eisenhower matrix view | Medium | ❌ Pending |
 | WeeklyReview model | Medium | ❌ Pending |
 | WaitingFor model | Low | ❌ Pending |
